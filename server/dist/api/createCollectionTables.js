@@ -44,13 +44,11 @@ const insertInitialCollections = (connection) => __awaiter(void 0, void 0, void 
     ];
     for (const collection of collections) {
         try {
-            // Kontrollera om kollektionen redan finns
             const [existingCollection] = yield connection.query(`SELECT * FROM Collections WHERE collection_name = ?`, [collection[0]]);
             if (existingCollection.length > 0) {
                 console.log(`Collection ${collection[0]} already exists.`);
             }
             else {
-                // Om kollektionen inte finns, infoga den
                 const [result] = yield connection.query(`INSERT INTO Collections (collection_name, description_short, description_long)
            VALUES (?, ?, ?)`, collection);
                 console.log(`Collection ${collection[0]} added successfully with ID: ${result.insertId}`);

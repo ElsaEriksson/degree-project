@@ -38,10 +38,8 @@ const createProductsTable = (connection) => __awaiter(void 0, void 0, void 0, fu
 });
 const insertInitialProducts = (connection) => __awaiter(void 0, void 0, void 0, function* () {
     yield Promise.all(productsPlaceholderData_1.products.map((product) => __awaiter(void 0, void 0, void 0, function* () {
-        // Kontrollera om produkten redan existerar
         const [existingProduct] = yield connection.query("SELECT * FROM Products WHERE name = ?", [product.name]);
         if (existingProduct.length === 0) {
-            // Om produkten inte existerar, infoga den
             yield connection.query(`INSERT INTO Products (name, main_image, video, additional_image, collection_id, price, description_short, description_long, material, gender, season)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`, [
                 product.name,
