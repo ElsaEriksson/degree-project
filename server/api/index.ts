@@ -5,6 +5,7 @@ import userRoutes from "../routes/userRoutes";
 import collectionRoutes from "../routes/collectionRoutes";
 import productRoutes from "../routes/productRoutes";
 import variantRoutes from "../routes/variantRoutes";
+import authRoutes from "../routes/authRoutes";
 import createTablesForUsers from "./createUserTables";
 import createTablesForCollections from "./createCollectionTables";
 import createTablesForProducts from "./createProductTables";
@@ -33,6 +34,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/collections", collectionRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/variants", variantRoutes);
+app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

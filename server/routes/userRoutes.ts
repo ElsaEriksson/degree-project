@@ -4,16 +4,26 @@ import { ResultSetHeader, RowDataPacket } from "mysql2";
 import pool from "../config/db";
 import { User } from "../models/User";
 import bcrypt from "bcrypt";
+import { authMiddleware } from "../middleware/auth";
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authMiddleware, async (req: Request, res: Response) => {
   try {
-    const [results] = await pool.query<RowDataPacket[]>("SELECT * FROM Users");
-
-    const users: User[] = results as User[];
-
-    res.json(users);
+    if (req.userId) {
+      // Registered user
+      const [results] = await pool.query<RowDataPacket[]>(
+        "SELECT * FROM Users WHERE user_id = ?",
+        [req.userId]
+      );
+      const user = results[0] as User;
+      res.json(user);
+    } else if (req.guestId) {
+      // Guest user
+      res.json({ id: req.guestId, type: "guest" });
+    } else {
+      res.status(401).json({ error: "Unauthorized" });
+    }
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
@@ -22,43 +32,6 @@ router.get("/", async (req: Request, res: Response) => {
 // Add a new user
 router.post("/", async (req: Request, res: Response) => {
   const { first_name, last_name, email, password, role } = req.body;
-
-  // Kontrollera att alla nödvändiga fält finns
-  // if (!first_name || !last_name || !email || !password) {
-  //   return res.status(400).json({ error: "All fields are required." });
-  // }
-
-  // Validera förnamn och efternamn
-  // if (first_name.length < 2 || last_name.length < 2) {
-  //   return res.status(400).json({ error: "First name and last name must be at least 2 characters long." });
-  // }
-
-  // const nameRegex = /^[A-Za-z\s]+$/;
-  // if (!nameRegex.test(first_name) || !nameRegex.test(last_name)) {
-  //   return res.status(400).json({ error: "First name and last name can only contain letters and spaces." });
-  // }
-
-  // // Validera e-postadress
-  // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-  // if (!emailRegex.test(email)) {
-  //   return res.status(400).json({ error: "Invalid email format." });
-  // }
-
-  // // Kontrollera om e-postadressen redan finns
-  // const [existingUser] = await pool.query<RowDataPacket[]>("SELECT * FROM Users WHERE email = ?", [email]);
-  // if (existingUser.length > 0) {
-  //   return res.status(400).json({ error: "Email already exists." });
-  // }
-
-  // // Validera lösenord
-  // if (password.length < 8) {
-  //   return res.status(400).json({ error: "Password must be at least 8 characters long." });
-  // }
-
-  // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  // if (!passwordRegex.test(password)) {
-  //   return res.status(400).json({ error: "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character." });
-  // }
 
   try {
     // Hasha lösenordet innan det lagras i databasen
