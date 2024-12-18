@@ -1,12 +1,11 @@
 export interface Product {
   product_id: number;
   name: string;
-  mainImage: string;
+  main_image: string;
   video: string;
-  additionalImage?: string;
-  category_id: number;
+  additional_image?: string;
+  collection_id: number;
   price: number;
-  salePrice: number;
   description_short: string;
   description_long: string;
   material: string;

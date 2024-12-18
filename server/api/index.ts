@@ -3,8 +3,10 @@ import cors from "cors";
 import dotenv from "dotenv";
 import userRoutes from "../routes/userRoutes";
 import collectionRoutes from "../routes/collectionRoutes";
+import productRoutes from "../routes/productRoutes";
 import createTablesForUsers from "./createUserTables";
 import createTablesForCollections from "./createCollectionTables";
+import createTablesForProducts from "./createProductTables";
 
 dotenv.config();
 
@@ -16,6 +18,7 @@ app.use(express.json());
 
 createTablesForUsers();
 createTablesForCollections();
+createTablesForProducts();
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello world, updated!");
@@ -23,6 +26,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/collections", collectionRoutes);
+app.use("/api/products", productRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
