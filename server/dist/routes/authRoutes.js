@@ -34,7 +34,7 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
             return;
         }
         const token = jsonwebtoken_1.default.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: "1d" });
-        res.json({ id: user.user_id, email: user.email, token });
+        res.json({ user, token });
     }
     catch (error) {
         res.status(500).json({ error: error.message });

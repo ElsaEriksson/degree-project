@@ -25,6 +25,7 @@ router.post("/login", async (req: Request, res: Response) => {
     }
 
     const user = results[0] as User;
+
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
@@ -38,8 +39,9 @@ router.post("/login", async (req: Request, res: Response) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ id: user.user_id, email: user.email, token });
+    res.json({ user, token });
   } catch (error: any) {
+    console.error("Failed to fetch user:", error);
     res.status(500).json({ error: error.message });
   }
 });
