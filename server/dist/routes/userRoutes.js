@@ -16,22 +16,14 @@ const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("../config/db"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const router = express_1.default.Router();
-// router.get("/", authMiddleware, async (req: Request, res: Response) => {
+// router.get("/", async (req: Request, res: Response) => {
 //   try {
-//     if (req.userId) {
-//       // Registered user
 //       const [results] = await pool.query<RowDataPacket[]>(
 //         "SELECT * FROM Users WHERE user_id = ?",
 //         [req.userId]
 //       );
 //       const user = results[0] as User;
 //       res.json(user);
-//     } else if (req.guestId) {
-//       // Guest user
-//       res.json({ id: req.guestId, type: "guest" });
-//     } else {
-//       res.status(401).json({ error: "Unauthorized" });
-//     }
 //   } catch (error: any) {
 //     res.status(500).json({ error: error.message });
 //   }
