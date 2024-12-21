@@ -39,7 +39,7 @@ router.post("/login", async (req: Request, res: Response) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ user, token });
+    res.json({ user });
   } catch (error: any) {
     console.error("Failed to fetch user:", error);
     res.status(500).json({ error: error.message });

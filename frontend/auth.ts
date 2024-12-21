@@ -4,9 +4,28 @@ import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import { User } from "@/app/models/User";
 import { authConfig } from "./auth.config";
+import { cookies } from "next/headers";
 
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.userId = (user as User).user_id;
+        // Migrera varukorgen från cookies till databasen här
+        if ((user as User).user_id) {
+          await migrateCartFromCookiesToDatabase((user as User).user_id);
+        }
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token.userId) {
+        session.user.id = token.userId.toString();
+      }
+      return session;
+    },
+  },
   providers: [
     Credentials({
       async authorize(credentials) {
@@ -43,3 +62,21 @@ export const { auth, signIn, signOut } = NextAuth({
     }),
   ],
 });
+
+async function migrateCartFromCookiesToDatabase(userId: number) {
+  const cookieStore = await cookies();
+
+  const cartCookie = cookieStore.get("cart");
+  if (cartCookie) {
+    const cart = JSON.parse(cartCookie.value);
+    // Implementera logik för att spara varukorgen i databasen
+    await saveCartToDatabase(userId, cart);
+    // Ta bort cookie efter migrering
+    const cookieStore = await cookies();
+    cookieStore.delete("cart");
+  }
+}
+
+async function saveCartToDatabase(userId: number, cart: any) {
+  // Implementera logik för att spara varukorgen i databasen
+}
