@@ -12,7 +12,6 @@ export const { auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.userId = (user as User).user_id;
-        // Migrera varukorgen från cookies till databasen här
         if ((user as User).user_id) {
           await migrateCartFromCookiesToDatabase((user as User).user_id);
         }
@@ -65,8 +64,8 @@ export const { auth, signIn, signOut } = NextAuth({
 
 async function migrateCartFromCookiesToDatabase(userId: number) {
   const cookieStore = await cookies();
-
   const cartCookie = cookieStore.get("cart");
+
   if (cartCookie) {
     const cart = JSON.parse(cartCookie.value);
     // Implementera logik för att spara varukorgen i databasen

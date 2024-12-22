@@ -1,7 +1,11 @@
 "use server";
 import { AuthError } from "next-auth";
-import { signIn } from "../../../auth";
+import { auth, signIn } from "../../../auth";
 import { z } from "zod";
+import { cookies } from "next/headers";
+import { Cart, CartItems } from "../models/Cart";
+import { Product, Variant } from "../models/Product";
+import { fetchActiveCartForUser, fetchCartItem } from "./data";
 
 const RegisterSchema = z.object({
   firstName: z
@@ -95,5 +99,152 @@ export async function register(
       return { error: error.message };
     }
     return { error: "An unexpected error occurred during registration" };
+  }
+}
+
+export async function addToCart(
+  product: Product,
+  variant: Variant,
+  quantity: number = 1
+) {
+  const session = await auth();
+
+  if (session?.user?.id) {
+    // Hantera inloggade användare med databas
+    return await addToCartForLoggedInUser(
+      Number(session.user.id),
+      product,
+      variant,
+      quantity
+    );
+  } else {
+    // Hantera gästanvändare med cookies
+    return await addToCartForGuestUser(product, variant, quantity);
+  }
+}
+
+async function addToCartForLoggedInUser(
+  userId: number,
+  product: Product,
+  variant: Variant,
+  quantity: number
+) {
+  let cartId = await fetchActiveCartForUser(userId);
+
+  if (!cartId) {
+    cartId = await createNewCart(userId);
+  }
+
+  // Kontrollera att cartId inte är null innan användning
+  if (cartId === null) {
+    throw new Error("Failed to create or fetch a cart.");
+  }
+
+  const existingCartItem = await fetchCartItem(cartId, variant.variant_id);
+
+  if (existingCartItem) {
+    await updateCartItemQuantity(
+      existingCartItem.cart_item_id,
+      existingCartItem.quantity + quantity
+    );
+  } else {
+    await createCartItem(
+      cartId,
+      product.product_id,
+      variant.variant_id,
+      quantity,
+      product.price
+    );
+  }
+
+  return await fetchCartItem(cartId, variant.variant_id);
+}
+
+async function addToCartForGuestUser(
+  product: Product,
+  variant: Variant,
+  quantity: number
+) {
+  const cookieStore = await cookies();
+  const cartCookie = cookieStore.get("cart");
+  let cart: CartItems[] = cartCookie ? JSON.parse(cartCookie.value) : [];
+
+  const existingItemIndex = cart.findIndex(
+    (item) => item.variant_id === variant.variant_id
+  );
+
+  if (existingItemIndex > -1) {
+    cart[existingItemIndex].quantity += quantity;
+  } else {
+    cart.push({
+      product_id: product.product_id,
+      variant_id: variant.variant_id,
+      name: product.name,
+      size: variant.size,
+      quantity: quantity,
+      price: product.price,
+    });
+  }
+
+  cookieStore.set("cart", JSON.stringify(cart));
+  return cart;
+}
+
+export async function createNewCart(
+  userId: number | null
+): Promise<number | null> {
+  const res = await fetch("http://localhost:5000/api/carts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: userId }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to create a new cart");
+  }
+
+  const data = await res.json();
+  return data.cart_id;
+}
+
+export async function updateCartItemQuantity(
+  cartItemId: number,
+  newQuantity: number
+): Promise<void> {
+  const res = await fetch(
+    `http://localhost:5000/api/cart-items/${cartItemId}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ quantity: newQuantity }),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to update cart item quantity");
+  }
+}
+
+export async function createCartItem(
+  cartId: number,
+  productId: number,
+  variantId: number,
+  quantity: number,
+  price: number
+): Promise<void> {
+  const res = await fetch("http://localhost:5000/api/cart-items", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      cart_id: cartId,
+      product_id: productId,
+      variant_id: variantId,
+      quantity,
+      price,
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to create cart item");
   }
 }
