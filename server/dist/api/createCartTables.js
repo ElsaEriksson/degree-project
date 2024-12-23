@@ -18,9 +18,9 @@ const createCartsTable = (connection) => __awaiter(void 0, void 0, void 0, funct
       CREATE TABLE IF NOT EXISTS Carts (
         cart_id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT DEFAULT NULL,
-        guest_id VARCHAR(255) DEFAULT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        status ENUM('active', 'completed', 'cancelled') DEFAULT 'active',
         FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
         INDEX idx_guest_id (guest_id)
       );
@@ -32,10 +32,12 @@ const createCartItemsTable = (connection) => __awaiter(void 0, void 0, void 0, f
       CREATE TABLE IF NOT EXISTS CartItems (
         cart_item_id INT AUTO_INCREMENT PRIMARY KEY,
         cart_id INT NOT NULL,
+        product_id INT NOT NULL,
         variant_id INT NOT NULL,
         quantity INT NOT NULL,
         price DECIMAL(10, 2) NOT NULL,
         FOREIGN KEY (cart_id) REFERENCES Carts(cart_id) ON DELETE CASCADE,
+        FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE CASCADE,
         FOREIGN KEY (variant_id) REFERENCES Variants(variant_id) ON DELETE CASCADE,
         UNIQUE KEY unique_cart_variant (cart_id, variant_id)
       );

@@ -11,6 +11,7 @@ const collectionRoutes_1 = __importDefault(require("../routes/collectionRoutes")
 const productRoutes_1 = __importDefault(require("../routes/productRoutes"));
 const variantRoutes_1 = __importDefault(require("../routes/variantRoutes"));
 const authRoutes_1 = __importDefault(require("../routes/authRoutes"));
+const cartRoutes_1 = __importDefault(require("../routes/cartRoutes"));
 const createUserTables_1 = __importDefault(require("./createUserTables"));
 const createCollectionTables_1 = __importDefault(require("./createCollectionTables"));
 const createProductTables_1 = __importDefault(require("./createProductTables"));
@@ -29,11 +30,12 @@ app.use(express_1.default.json());
 app.get("/", (req, res) => {
     res.send("Hello world, updated!");
 });
-app.use("/api/users", userRoutes_1.default);
+app.use("/users", userRoutes_1.default);
 app.use("/api/collections", collectionRoutes_1.default);
 app.use("/api/products", productRoutes_1.default);
 app.use("/api/variants", variantRoutes_1.default);
-app.use("/api/auth", authRoutes_1.default);
+app.use("/test", authRoutes_1.default);
+app.use("/api/carts", cartRoutes_1.default);
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });

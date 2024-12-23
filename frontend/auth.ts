@@ -2,29 +2,14 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
-import { User } from "@/app/models/User";
+import { ModestUser, User } from "@/app/models/User";
 import { authConfig } from "./auth.config";
 import { cookies } from "next/headers";
+import { deleteSession } from "@/app/lib/session";
+import { redirect } from "next/navigation";
 
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.userId = (user as User).user_id;
-        if ((user as User).user_id) {
-          await migrateCartFromCookiesToDatabase((user as User).user_id);
-        }
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token.userId) {
-        session.user.id = token.userId.toString();
-      }
-      return session;
-    },
-  },
   providers: [
     Credentials({
       async authorize(credentials) {
@@ -36,7 +21,7 @@ export const { auth, signIn, signOut } = NextAuth({
           const { email, password } = parsedCredentials.data;
 
           try {
-            const res = await fetch("http://localhost:5000/api/auth/login", {
+            const res = await fetch("http://localhost:5000/test/login", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ email, password }),
@@ -47,7 +32,7 @@ export const { auth, signIn, signOut } = NextAuth({
               throw new Error(errorData.error || "Log in failed");
             }
 
-            const user: User = await res.json();
+            const user: ModestUser = await res.json();
             return user;
           } catch (error) {
             console.error("Authentication error:", error);
@@ -78,4 +63,9 @@ async function migrateCartFromCookiesToDatabase(userId: number) {
 
 async function saveCartToDatabase(userId: number, cart: any) {
   // Implementera logik för att spara varukorgen i databasen
+}
+
+export async function logout() {
+  deleteSession();
+  redirect("/login");
 }

@@ -3,19 +3,21 @@ import Credentials from "next-auth/providers/credentials";
 
 export const authConfig = {
   pages: {
-    signIn: "/login",
+    signIn: "/", // This ensures we don't redirect to a separate sign-in page
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
-      if (isOnDashboard) {
+      const isProfilePage = nextUrl.pathname.startsWith("/profile");
+
+      if (isProfilePage) {
         if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
+        return false; // Redirect to home if not logged in and trying to access profile
       } else if (isLoggedIn) {
-        return Response.redirect(new URL("/dashboard", nextUrl));
+        return Response.redirect(new URL("/", nextUrl));
       }
-      return true;
+
+      return true; // Allow access to all other pages
     },
   },
   providers: [Credentials({})],

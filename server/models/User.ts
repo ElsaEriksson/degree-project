@@ -8,3 +8,9 @@ export interface User {
   created_at: string;
   updated_at: string;
 }
+
+export interface ModestUser {
+  user_id: number;
+  first_name: string;
+  email: string;
+}

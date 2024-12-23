@@ -33,12 +33,6 @@ router.post("/login", async (req: Request, res: Response) => {
       return;
     }
 
-    const token = jwt.sign(
-      { id: user.user_id },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "1d" }
-    );
-
     res.json({ user });
   } catch (error: any) {
     console.error("Failed to fetch user:", error);
@@ -123,22 +117,13 @@ router.post("/register", async (req: Request, res: Response) => {
 
     const newUserId = result.insertId;
 
-    // Generate token for the new user
-    const token = jwt.sign(
-      { id: newUserId },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "1d" }
-    );
-
     res.status(201).json({
       user: {
         user_id: newUserId,
         first_name,
-        last_name,
         email,
         role: role || "user",
       },
-      token,
     });
   } catch (error) {
     console.error("Registration error:", error);

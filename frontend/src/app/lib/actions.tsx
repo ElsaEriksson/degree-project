@@ -1,11 +1,14 @@
 "use server";
 import { AuthError } from "next-auth";
-import { auth, signIn } from "../../../auth";
+import { auth, signIn, signOut } from "../../../auth";
 import { z } from "zod";
 import { cookies } from "next/headers";
 import { Cart, CartItems } from "../models/Cart";
 import { Product, Variant } from "../models/Product";
 import { fetchActiveCartForUser, fetchCartItem } from "./data";
+import { createSession, deleteSession } from "./session";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 const RegisterSchema = z.object({
   firstName: z
@@ -55,6 +58,15 @@ export async function authenticate(
   }
 }
 
+export async function logOut() {
+  try {
+    await signOut({ redirect: false });
+    await deleteSession();
+  } catch (error) {
+    console.error("Sign out failed:", error);
+  }
+}
+
 export async function register(
   prevState: State | undefined,
   formData: FormData
@@ -76,7 +88,7 @@ export async function register(
   try {
     const { firstName, lastName, email, password } = validatedFields.data;
 
-    const response = await fetch("http://localhost:5000/api/auth/register", {
+    const response = await fetch("http://localhost:5000/test/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -93,6 +105,10 @@ export async function register(
     }
 
     const user = await response.json();
+    const userId = user.user_id;
+
+    await createSession(userId);
+    // redirect("/");
     return { success: true, user };
   } catch (error) {
     if (error instanceof Error) {

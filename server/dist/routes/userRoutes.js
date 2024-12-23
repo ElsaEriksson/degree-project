@@ -14,38 +14,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("../config/db"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const router = express_1.default.Router();
-// router.get("/", async (req: Request, res: Response) => {
-//   try {
-//       const [results] = await pool.query<RowDataPacket[]>(
-//         "SELECT * FROM Users WHERE user_id = ?",
-//         [req.userId]
-//       );
-//       const user = results[0] as User;
-//       res.json(user);
-//   } catch (error: any) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-router.post("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/user/:sessionId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, password } = req.body;
-        if (!email) {
+        const { sessionId } = req.body;
+        if (!sessionId) {
             res.status(400).json({ error: "Email is required" });
             return;
         }
-        const [rows] = yield db_1.default.query("SELECT * FROM users WHERE email = ?", [email]);
+        const [rows] = yield db_1.default.query("SELECT id, name, email FROM users WHERE user_id = ?", [sessionId]);
         if (rows.length === 0) {
             res.status(404).json({ error: "User not found" });
             return;
         }
         const user = rows[0];
-        const isValidPassword = yield bcrypt_1.default.compare(password, user.password);
-        if (!isValidPassword) {
-            res.status(401).json({ error: "Invalid credentials" });
-            return;
-        }
         res.json(user);
         return;
     }
@@ -54,30 +36,27 @@ router.post("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         throw new Error("Failed to fetch user.");
     }
 }));
-// Add a new user
-router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { first_name, last_name, email, password, role } = req.body;
-    try {
-        // Hasha lösenordet innan det lagras i databasen
-        const hashedPassword = yield bcrypt_1.default.hash(password, 10);
-        // Kör frågan
-        const [result] = yield db_1.default.query(`INSERT INTO Users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)`, [first_name, last_name, email, hashedPassword, role || "user"]);
-        // Returnera det skapade objektet
-        res.status(201).json({
-            id: result.insertId,
-            first_name,
-            last_name,
-            email,
-            role: role || "user",
-        });
-    }
-    catch (error) {
-        if (error.code === "ER_DUP_ENTRY") {
-            res.status(400).json({ error: "Email already exists." });
-        }
-        else {
-            res.status(500).json({ error: error.message });
-        }
-    }
-}));
+// router.post("/", async (req: Request, res: Response) => {
+//   const { first_name, last_name, email, password, role } = req.body;
+//   try {
+//     const hashedPassword = await bcrypt.hash(password, 10);
+//     const [result] = await pool.query<ResultSetHeader>(
+//       `INSERT INTO Users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)`,
+//       [first_name, last_name, email, hashedPassword, role || "user"]
+//     );
+//     res.status(201).json({
+//       id: (result as any).insertId,
+//       first_name,
+//       last_name,
+//       email,
+//       role: role || "user",
+//     });
+//   } catch (error: any) {
+//     if (error.code === "ER_DUP_ENTRY") {
+//       res.status(400).json({ error: "Email already exists." });
+//     } else {
+//       res.status(500).json({ error: error.message });
+//     }
+//   }
+// });
 exports.default = router;

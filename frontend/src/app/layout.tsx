@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { cookies } from "next/headers";
-import SessionProvider from "./components/sessionProvider";
+import { Header } from "./components/header";
+import { getUser } from "./lib/dal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,16 +24,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get("session")?.value;
+  const user = await getUser();
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider initialSession={sessionToken}>
-          {children}
-        </SessionProvider>
+        <Header user={user} />
+        <main className="flex min-h-screen flex-col">{children}</main>
       </body>
     </html>
   );

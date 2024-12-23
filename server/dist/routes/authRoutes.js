@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = __importDefault(require("../config/db"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -33,9 +32,7 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
             res.status(401).json({ error: "Invalid credentials" });
             return;
         }
-        const token = jsonwebtoken_1.default.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: "1d" });
-        const response = { user, token };
-        res.json(response);
+        res.json({ user });
     }
     catch (error) {
         console.error("Failed to fetch user:", error);
@@ -98,17 +95,13 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
         // Insert new user
         const [result] = yield db_1.default.query(`INSERT INTO Users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)`, [first_name, last_name, email, hashedPassword, role || "user"]);
         const newUserId = result.insertId;
-        // Generate token for the new user
-        const token = jsonwebtoken_1.default.sign({ id: newUserId }, process.env.JWT_SECRET, { expiresIn: "1d" });
         res.status(201).json({
             user: {
                 user_id: newUserId,
                 first_name,
-                last_name,
                 email,
                 role: role || "user",
             },
-            token,
         });
     }
     catch (error) {

@@ -31,11 +31,11 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello world, updated!");
 });
 
-app.use("/api/users", userRoutes);
+app.use("/users", userRoutes);
 app.use("/api/collections", collectionRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/variants", variantRoutes);
-app.use("/api/auth", authRoutes);
+app.use("/test", authRoutes);
 app.use("/api/carts", cartRoutes);
 
 app.listen(PORT, () => {
