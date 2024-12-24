@@ -7,15 +7,18 @@ import { CounterBadge } from "./counterBadge";
 import { cn } from "../utils/utils";
 import { SlidingPanel } from "./slidingPanel";
 import AuthFormSwitcher from "./authFormSwitcher";
-import { ModestUser } from "../models/User";
 import { logOut } from "../lib/actions";
+import { useSession } from "next-auth/react";
 
-export function Header({ user }: { user: ModestUser | null }) {
+export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHomePage, setIsHomePage] = useState(true);
   const [isLoginOpen, setLoginOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { data: session, status } = useSession();
+  console.log(session);
 
   const favoritesCount = 2;
   const cartCount = 3;
@@ -51,9 +54,9 @@ export function Header({ user }: { user: ModestUser | null }) {
           </a>
 
           <div className="flex items-center gap-4">
-            {user && user ? (
+            {status === "authenticated" && session ? (
               <button
-                onClick={() => logOut()}
+                onClick={logOut}
                 className="rounded-lg px-6 py-3 text-sm font-medium text-black transition-colors hover:bg-gray-100 md:text-base"
               >
                 <span className="uppercase">Sign Out</span>

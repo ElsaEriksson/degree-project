@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "./components/header";
-import { getUser } from "./lib/dal";
+import Provider from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,14 +24,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser();
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header user={user} />
-        <main className="flex min-h-screen flex-col">{children}</main>
+        <Provider>
+          <Header />
+          <main className="flex min-h-screen flex-col">{children}</main>
+        </Provider>
       </body>
     </html>
   );

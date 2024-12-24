@@ -3,11 +3,9 @@ import { AuthError } from "next-auth";
 import { auth, signIn, signOut } from "../../../auth";
 import { z } from "zod";
 import { cookies } from "next/headers";
-import { Cart, CartItems } from "../models/Cart";
+import { CartItems } from "../models/Cart";
 import { Product, Variant } from "../models/Product";
 import { fetchActiveCartForUser, fetchCartItem } from "./data";
-import { createSession, deleteSession } from "./session";
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 const RegisterSchema = z.object({
@@ -60,8 +58,8 @@ export async function authenticate(
 
 export async function logOut() {
   try {
-    await signOut({ redirect: false });
-    await deleteSession();
+    await signOut();
+    revalidatePath("/");
   } catch (error) {
     console.error("Sign out failed:", error);
   }
@@ -105,10 +103,6 @@ export async function register(
     }
 
     const user = await response.json();
-    const userId = user.user_id;
-
-    await createSession(userId);
-    // redirect("/");
     return { success: true, user };
   } catch (error) {
     if (error instanceof Error) {

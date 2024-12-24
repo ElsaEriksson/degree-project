@@ -32,7 +32,11 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
             res.status(401).json({ error: "Invalid credentials" });
             return;
         }
-        res.json({ user });
+        res.json({
+            user_id: user.user_id,
+            email: user.email,
+            first_name: user.first_name,
+        });
     }
     catch (error) {
         console.error("Failed to fetch user:", error);

@@ -33,7 +33,11 @@ router.post("/login", async (req: Request, res: Response) => {
       return;
     }
 
-    res.json({ user });
+    res.json({
+      user_id: user.user_id,
+      email: user.email,
+      first_name: user.first_name,
+    });
   } catch (error: any) {
     console.error("Failed to fetch user:", error);
     res.status(500).json({ error: error.message });

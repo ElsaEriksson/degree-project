@@ -1,14 +1,31 @@
-"use server";
-import NextAuth from "next-auth";
+import NextAuth, { DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
-import { ModestUser, User } from "@/app/models/User";
+import { ModestUser } from "@/app/models/User";
 import { authConfig } from "./auth.config";
 import { cookies } from "next/headers";
-import { deleteSession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
+import { JWT } from "next-auth/jwt";
 
-export const { auth, signIn, signOut } = NextAuth({
+declare module "next-auth" {
+  interface Session {
+    user: {
+      userId: number;
+      email: string;
+      firstName: string;
+    } & DefaultSession["user"];
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: number;
+    email: string;
+    name: string;
+  }
+}
+
+export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
@@ -45,6 +62,32 @@ export const { auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = (user as ModestUser).user_id;
+        token.email = (user as ModestUser).email;
+        token.name = (user as ModestUser).first_name;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user = {
+          ...session.user,
+          userId: token.id,
+          email: token.email,
+          firstName: token.name,
+        };
+      }
+      return session;
+    },
+  },
+  secret: process.env.SESSION_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
 });
 
 async function migrateCartFromCookiesToDatabase(userId: number) {
@@ -66,6 +109,6 @@ async function saveCartToDatabase(userId: number, cart: any) {
 }
 
 export async function logout() {
-  deleteSession();
+  // deleteSession();
   redirect("/login");
 }
