@@ -59,9 +59,16 @@ export async function authenticate(
 export async function logOut() {
   try {
     await signOut();
-    revalidatePath("/");
   } catch (error) {
-    console.error("Sign out failed:", error);
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return "Invalid credentials.";
+        default:
+          return "Something went wrong.";
+      }
+    }
+    throw error;
   }
 }
 

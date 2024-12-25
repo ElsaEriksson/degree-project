@@ -5,15 +5,15 @@ import LoginForm from "./loginFrom";
 import RegisterForm from "./registerForm";
 
 export default function AuthFormSwitcher({
-  isOpen,
-  onClose,
+  isAuthFormOpen,
+  closeAuthForm,
 }: {
-  isOpen: boolean;
-  onClose: () => void;
+  isAuthFormOpen: boolean;
+  closeAuthForm: () => void;
 }) {
   const [authMode, setAuthMode] = useState("login");
 
-  if (!isOpen) return null;
+  if (!isAuthFormOpen) return null;
 
   const handleAuthModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuthMode(event.target.value);
@@ -22,12 +22,12 @@ export default function AuthFormSwitcher({
   return (
     <>
       <div
-        onClick={onClose}
+        onClick={closeAuthForm}
         className="fixed inset-0 bg-black opacity-50 cursor-pointer z-20 "
       />
       <div className="modal absolute z-30 left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
         <div className="modal-content mb-4">
-          <button onClick={onClose}>Stäng</button>
+          <button onClick={closeAuthForm}>Stäng</button>
 
           <label className="mr-4">
             <input

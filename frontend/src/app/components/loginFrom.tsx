@@ -7,17 +7,12 @@ import {
 import { Button } from "./ui/button";
 import { useActionState } from "react";
 import { authenticate } from "../lib/actions";
-import { signIn } from "../../../auth";
 
 export default function LoginForm() {
   const [errorMessage, loginFormAction, isPending2] = useActionState(
     authenticate,
     undefined
   );
-
-  // const handleLogin = () => {
-  //   signIn(undefined, { callbackUrl: window.location.href });
-  // };
 
   return (
     <>
@@ -63,11 +58,7 @@ export default function LoginForm() {
               <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
 
-            <Button
-              // onClick={handleLogin}
-              className="mt-4 w-full"
-              aria-disabled={isPending2}
-            >
+            <Button className="mt-4 w-full" aria-disabled={isPending2}>
               Log in
               <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
             </Button>

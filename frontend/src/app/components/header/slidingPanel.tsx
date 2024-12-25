@@ -1,7 +1,7 @@
 "use client";
 
+import { cn } from "@/app/utils/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../utils/utils";
 
 interface SlidingPanelProps {
   isOpen: boolean;
@@ -33,7 +33,7 @@ export function SlidingPanel({
             exit={{ x: side === "left" ? "-100%" : "100%" }}
             transition={{ type: "tween", duration: 0.3 }}
             className={cn(
-              "fixed top-0 bottom-0 w-[40%] bg-white z-50",
+              "fixed top-0 bottom-0 w-[90%] md:w-[60%] lg:w-[30%] bg-white z-50",
               side === "left" ? "left-0" : "right-0"
             )}
           >

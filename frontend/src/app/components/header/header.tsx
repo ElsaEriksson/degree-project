@@ -3,22 +3,23 @@
 import { useState, useEffect } from "react";
 import { Menu, Heart, ShoppingBag, User2 } from "lucide-react";
 import { RotatingBanner } from "./rotatingBanner";
-import { CounterBadge } from "./counterBadge";
-import { cn } from "../utils/utils";
-import { SlidingPanel } from "./slidingPanel";
-import AuthFormSwitcher from "./authFormSwitcher";
-import { logOut } from "../lib/actions";
+import { CounterBadge } from "../counterBadge";
+import { cn } from "../../utils/utils";
+import AuthFormSwitcher from "../authFormSwitcher";
+import { logOut } from "../../lib/actions";
 import { useSession } from "next-auth/react";
+import NavLinks from "./navLinks";
+import { SlidingPanel } from "./slidingPanel";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHomePage, setIsHomePage] = useState(true);
-  const [isLoginOpen, setLoginOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAuthFormOpen, setAuthFormOpen] = useState(false);
   const { data: session, status } = useSession();
-  console.log(session);
+
+  const isLoggedIn = status === "authenticated" && session;
 
   const favoritesCount = 2;
   const cartCount = 3;
@@ -41,30 +42,33 @@ export function Header() {
         )}
       >
         <RotatingBanner />
-        <div className="h-16 px-4 flex items-center justify-between border-b">
+        <div className="h-16 px-4 grid grid-cols-3 items-center border-b">
           <button
             onClick={() => setIsMenuOpen(true)}
-            className="p-2 hover:bg-gray-100 rounded-full"
+            className="p-2 hover:bg-gray-100 rounded-full text-left w-max"
           >
             <Menu className="h-6 w-6" />
           </button>
 
-          <a href="/" className="text-2xl font-bold">
+          <a href="/" className="text-2xl font-bold text-center">
             H&H
           </a>
 
-          <div className="flex items-center gap-4">
-            {status === "authenticated" && session ? (
-              <button
-                onClick={logOut}
-                className="rounded-lg px-6 py-3 text-sm font-medium text-black transition-colors hover:bg-gray-100 md:text-base"
+          <div className="flex items-center justify-end gap-4 text-right">
+            {isLoggedIn ? (
+              <form
+                action={async () => {
+                  await logOut();
+                }}
               >
-                <span className="uppercase">Sign Out</span>
-              </button>
+                <button className="rounded-lg px-6 py-3 hidden lg:block text-sm font-medium text-black transition-colors hover:bg-gray-100 md:text-base">
+                  <div className="uppercase">Sign Out</div>
+                </button>
+              </form>
             ) : (
               <button
-                onClick={() => setLoginOpen(true)}
-                className="rounded-lg px-6 py-3 text-sm font-medium text-black transition-colors hover:bg-gray-100 md:text-base"
+                onClick={() => setAuthFormOpen(true)}
+                className="rounded-lg px-6 py-3 text-sm font-medium text-black transition-colors hover:bg-gray-100 md:text-base hidden lg:block"
               >
                 <span className="uppercase">Log in / Register</span>
               </button>
@@ -74,9 +78,11 @@ export function Header() {
               <CounterBadge count={favoritesCount} />
             </button>
 
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <User2 className="h-6 w-6" />
-            </button>
+            {isLoggedIn && (
+              <button className="p-2 hidden hover:bg-gray-100 rounded-full lg:block">
+                <User2 className="h-6 w-6" />
+              </button>
+            )}
 
             <button
               onClick={() => setIsCartOpen(true)}
@@ -90,8 +96,8 @@ export function Header() {
       </header>
 
       <AuthFormSwitcher
-        isOpen={isLoginOpen}
-        onClose={() => setLoginOpen(false)}
+        isAuthFormOpen={isAuthFormOpen}
+        closeAuthForm={() => setAuthFormOpen(false)}
       />
 
       <SlidingPanel
@@ -99,9 +105,12 @@ export function Header() {
         onClose={() => setIsMenuOpen(false)}
         side="left"
       >
-        <div className="p-4">
+        <div className="p-4 h-full flex grow flex-col justify-between">
           <h2 className="text-xl font-bold mb-4">Menu</h2>
-          {/* Add your menu items here */}
+          <NavLinks
+            openAuthForm={() => setAuthFormOpen(true)}
+            closeMenu={() => setIsMenuOpen(false)}
+          />
         </div>
       </SlidingPanel>
 
