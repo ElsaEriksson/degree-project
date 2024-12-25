@@ -4,7 +4,9 @@ export async function fetchVariantsFromDatabase(): Promise<
   Variant[] | undefined
 > {
   try {
-    const res = await fetch(`http://localhost:5000/api/variants`);
+    const res = await fetch(`http://localhost:5000/api/variants`, {
+      next: { revalidate: 60 },
+    });
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
@@ -20,7 +22,9 @@ export async function fetchProductsFromDatabase(): Promise<
   Product[] | undefined
 > {
   try {
-    const res = await fetch(`http://localhost:5000/api/products`);
+    const res = await fetch(`http://localhost:5000/api/products`, {
+      next: { revalidate: 60 },
+    });
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
@@ -36,7 +40,9 @@ export async function fetchCollectionsFromDatabase(): Promise<
   Collection[] | undefined
 > {
   try {
-    const res = await fetch(`http://localhost:5000/api/collections`);
+    const res = await fetch(`http://localhost:5000/api/collections`, {
+      next: { revalidate: 60 },
+    });
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
@@ -52,7 +58,10 @@ export async function fetchActiveCartForUser(
   userId: number
 ): Promise<number | null> {
   const res = await fetch(
-    `http://localhost:5000/api/carts/active?user_id=${userId}`
+    `http://localhost:5000/api/carts/active?user_id=${userId}`,
+    {
+      next: { revalidate: 60 },
+    }
   );
 
   if (!res.ok) {
@@ -70,7 +79,10 @@ export async function fetchCartItem(
   variantId: number
 ): Promise<{ cart_item_id: number; quantity: number } | null> {
   const res = await fetch(
-    `http://localhost:5000/api/cart-items?cart_id=${cartId}&variant_id=${variantId}`
+    `http://localhost:5000/api/cart-items?cart_id=${cartId}&variant_id=${variantId}`,
+    {
+      next: { revalidate: 60 },
+    }
   );
 
   if (!res.ok) {
