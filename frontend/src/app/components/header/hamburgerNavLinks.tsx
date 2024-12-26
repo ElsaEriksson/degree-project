@@ -12,6 +12,7 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { logOut } from "@/app/lib/actions";
+import { useHeader } from "@/app/providers";
 
 const links = [
   { name: "Home", href: "/", icon: HomeIcon },
@@ -28,13 +29,8 @@ const collections = [
   { name: "Colorfur", href: "/collections/colorfur" },
 ];
 
-export default function NavLinks({
-  openAuthForm,
-  closeMenu,
-}: {
-  openAuthForm: () => void;
-  closeMenu: () => void;
-}) {
+export default function HamburgerNavLinks() {
+  const { setAuthFormOpen, setIsMenuOpen } = useHeader();
   const { data: session, status } = useSession();
   const pathname = usePathname();
 
@@ -113,7 +109,7 @@ export default function NavLinks({
             <form
               action={async () => {
                 await logOut();
-                closeMenu();
+                setIsMenuOpen(false);
               }}
             >
               <button className="w-full flex h-[48px] items-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 lg:hidden">
@@ -124,8 +120,8 @@ export default function NavLinks({
           ) : (
             <button
               onClick={() => {
-                openAuthForm();
-                closeMenu();
+                setAuthFormOpen(true);
+                setIsMenuOpen(false);
               }}
               className="w-full flex h-[48px] items-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 lg:hidden"
             >

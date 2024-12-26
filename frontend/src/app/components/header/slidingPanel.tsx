@@ -1,21 +1,24 @@
 "use client";
 
+import { useHeader } from "@/app/providers";
 import { cn } from "@/app/utils/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface SlidingPanelProps {
-  isOpen: boolean;
-  onClose: () => void;
   side: "left" | "right";
   children: React.ReactNode;
 }
 
-export function SlidingPanel({
-  isOpen,
-  onClose,
-  side,
-  children,
-}: SlidingPanelProps) {
+export function SlidingPanel({ side, children }: SlidingPanelProps) {
+  const { isMenuOpen, setIsMenuOpen, isCartOpen, setIsCartOpen } = useHeader();
+
+  const isOpen = side === "left" ? isMenuOpen : isCartOpen;
+
+  const handleClick = () => {
+    setIsMenuOpen(false);
+    setIsCartOpen(false);
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -25,7 +28,7 @@ export function SlidingPanel({
             animate={{ opacity: 0.5 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black cursor-pointer z-40"
-            onClick={onClose}
+            onClick={() => handleClick()}
           />
           <motion.div
             initial={{ x: side === "left" ? "-100%" : "100%" }}

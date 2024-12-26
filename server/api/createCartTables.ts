@@ -8,8 +8,7 @@ const createCartsTable = async (connection: any) => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         status ENUM('active', 'completed', 'cancelled') DEFAULT 'active',
-        FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-        INDEX idx_guest_id (guest_id)
+        FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
       );
     `);
   console.log("Carts table created successfully!");

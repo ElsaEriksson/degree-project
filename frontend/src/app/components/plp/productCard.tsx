@@ -1,15 +1,22 @@
-import { Product } from "@/app/models/Product";
+"use client";
+import { Product, ProductWithVariants } from "@/app/models/Product";
 import Image from "next/image";
 import { useState } from "react";
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({
+  product,
+}: {
+  product: ProductWithVariants;
+}) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <>
-      {" "}
       <div className="max-w-md mx-auto bg-white p-2 md:p-4">
-        <button></button>
+        <p>{product.product_id}</p>
+        {product.variants.map((variant) => (
+          <button key={variant.variant_id}>{variant.size}</button>
+        ))}
         {/* <div className="relative">
           <Image
             src={isHovered ? product.additional_image : product.main_image}

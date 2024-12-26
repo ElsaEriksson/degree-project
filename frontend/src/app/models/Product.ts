@@ -22,6 +22,10 @@ export interface Variant {
   stock_quantity: number;
 }
 
+export interface ProductWithVariants extends Product {
+  variants: { variant_id: number; size: string; stock_quantity: number }[];
+}
+
 export interface Collection {
   collection_id: number;
   name: string;

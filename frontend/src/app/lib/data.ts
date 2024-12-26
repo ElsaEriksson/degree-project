@@ -1,4 +1,9 @@
-import { Collection, Product, Variant } from "../models/Product";
+import {
+  Collection,
+  Product,
+  ProductWithVariants,
+  Variant,
+} from "../models/Product";
 
 export async function fetchVariantsFromDatabase(): Promise<
   Variant[] | undefined
@@ -93,4 +98,25 @@ export async function fetchCartItem(
   }
 
   return await res.json();
+}
+
+export async function fetchProductVariantsFromDatabase(): Promise<
+  ProductWithVariants[] | undefined
+> {
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/products/variants-with-product-info`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const data: ProductWithVariants[] = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    return undefined; // Hanterar fall där det blir fel
+  }
 }
