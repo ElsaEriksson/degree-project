@@ -1,3 +1,4 @@
+import { CartItems } from "../models/Cart";
 import {
   Collection,
   Product,
@@ -19,7 +20,7 @@ export async function fetchVariantsFromDatabase(): Promise<
     return data;
   } catch (error) {
     console.error("Database Error:", error);
-    return undefined; // Hanterar fall där det blir fel
+    return undefined;
   }
 }
 
@@ -37,7 +38,7 @@ export async function fetchProductsFromDatabase(): Promise<
     return data;
   } catch (error) {
     console.error("Database Error:", error);
-    return undefined; // Hanterar fall där det blir fel
+    return undefined;
   }
 }
 
@@ -55,19 +56,16 @@ export async function fetchCollectionsFromDatabase(): Promise<
     return data;
   } catch (error) {
     console.error("Database Error:", error);
-    return undefined; // Hanterar fall där det blir fel
+    return undefined;
   }
 }
 
 export async function fetchActiveCartForUser(
-  userId: number
-): Promise<number | null> {
-  const res = await fetch(
-    `http://localhost:5000/api/carts/active?user_id=${userId}`,
-    {
-      next: { revalidate: 60 },
-    }
-  );
+  user_id: number
+): Promise<{ cart_id: number } | null> {
+  const res = await fetch(`http://localhost:5000/api/carts/active/${user_id}`, {
+    next: { revalidate: 60 },
+  });
 
   if (!res.ok) {
     if (res.status === 404) {
@@ -80,11 +78,11 @@ export async function fetchActiveCartForUser(
 }
 
 export async function fetchCartItem(
-  cartId: number,
-  variantId: number
+  cart_id: number,
+  variant_id: number
 ): Promise<{ cart_item_id: number; quantity: number } | null> {
   const res = await fetch(
-    `http://localhost:5000/api/cart-items?cart_id=${cartId}&variant_id=${variantId}`,
+    `http://localhost:5000/api/carts/cart-items/${cart_id}/${variant_id}`,
     {
       next: { revalidate: 60 },
     }
@@ -96,7 +94,6 @@ export async function fetchCartItem(
     }
     throw new Error("Failed to fetch cart item");
   }
-
   return await res.json();
 }
 
@@ -117,6 +114,27 @@ export async function fetchProductVariantsFromDatabase(): Promise<
     return data;
   } catch (error) {
     console.error("Database Error:", error);
-    return undefined; // Hanterar fall där det blir fel
+    return undefined;
+  }
+}
+
+export async function fetchCartItemsForUser(
+  user_id: number
+): Promise<CartItems[] | undefined> {
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/carts/cart-items/${user_id}`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const data: CartItems[] = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    return undefined;
   }
 }

@@ -17,7 +17,7 @@ export interface Product {
 
 export interface Variant {
   variant_id: number;
-  product_id: number;
+  product_id?: number;
   size: string;
   stock_quantity: number;
 }

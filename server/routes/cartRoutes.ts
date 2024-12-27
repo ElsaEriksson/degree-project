@@ -1,34 +1,43 @@
 import { Router, Request, Response } from "express";
 import pool from "../config/db";
-import { RowDataPacket } from "mysql2";
+import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { CartItems } from "../models/Cart";
 
 const router = Router();
 
 router.post("/", async (req: Request, res: Response) => {
-  const { userId } = req.body; // userId kan vara null för gäster
+  const { user_id } = req.body;
+
   try {
-    const [result] = await pool.query(
+    const [result] = await pool.query<ResultSetHeader>(
       "INSERT INTO Carts (user_id, created_at, status) VALUES (?, NOW(), 'active')",
-      [userId]
+      [user_id]
     );
 
-    const cartId = (result as any).insertId;
-    res.status(201).json({ cartId });
+    const cartId = result.insertId;
+
+    res.status(201).json({ cart_id: cartId });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error("Error creating cart:", error);
+    res.status(500).json({ error: "Failed to create cart" });
   }
 });
 
 router.get("/active/:userId", async (req: Request, res: Response) => {
-  const { userId } = req.params;
+  const user_id = Number(req.params.userId);
+
+  if (isNaN(user_id)) {
+    res.status(400).json({ error: "Invalid user ID" });
+    return;
+  }
   try {
     const [results] = await pool.query<RowDataPacket[]>(
       "SELECT cart_id FROM Carts WHERE user_id = ? AND status = 'active' ORDER BY created_at DESC LIMIT 1",
-      [userId]
+      [user_id]
     );
 
     if (results.length > 0) {
-      res.json(results[0]); // Returnera första träffen
+      res.json(results[0]);
     } else {
       res.status(404).json({ message: "No active cart found for this user" });
     }
@@ -40,11 +49,23 @@ router.get("/active/:userId", async (req: Request, res: Response) => {
 router.get(
   "/cart-items/:cartId/:variantId",
   async (req: Request, res: Response) => {
-    const { cartId, variantId } = req.params;
+    const cart_id = Number(req.params.cartId);
+    const variant_id = Number(req.params.variantId);
+
+    if (isNaN(cart_id)) {
+      res.status(400).json({ error: "Invalid cart ID" });
+      return;
+    }
+
+    if (isNaN(variant_id)) {
+      res.status(400).json({ error: "Invalid variant ID" });
+      return;
+    }
+
     try {
       const [results] = await pool.query<RowDataPacket[]>(
         "SELECT cart_item_id, quantity FROM CartItems WHERE cart_id = ? AND variant_id = ?",
-        [cartId, variantId]
+        [cart_id, variant_id]
       );
 
       if (results.length > 0) {
@@ -59,13 +80,18 @@ router.get(
 );
 
 router.patch("/cart-items/:cartItemId", async (req: Request, res: Response) => {
-  const { cartItemId } = req.params;
-  const { newQuantity } = req.body;
+  const cart_item_id = Number(req.params.cartItemId);
+  const { quantity } = req.body;
+
+  if (isNaN(cart_item_id)) {
+    res.status(400).json({ error: "Invalid cart item ID" });
+    return;
+  }
 
   try {
     const [result] = await pool.query(
       "UPDATE CartItems SET quantity = ? WHERE cart_item_id = ?",
-      [newQuantity, cartItemId]
+      [quantity, cart_item_id]
     );
 
     if ((result as any).affectedRows > 0) {
@@ -79,12 +105,12 @@ router.patch("/cart-items/:cartItemId", async (req: Request, res: Response) => {
 });
 
 router.post("/cart-items", async (req: Request, res: Response) => {
-  const { cartId, productId, variantId, quantity, price } = req.body;
+  const { cart_id, product_id, variant_id, quantity, price } = req.body;
 
   try {
     const [result] = await pool.query(
-      "INSERT INTO CartItems (cart_id, product_id, variant_id, quantity) VALUES (?, ?, ?, ?, ?)",
-      [cartId, productId, variantId, quantity, price]
+      "INSERT INTO CartItems (cart_id, product_id, variant_id, quantity, price) VALUES (?, ?, ?, ?, ?)",
+      [cart_id, product_id, variant_id, quantity, price]
     );
 
     const cartItemId = (result as any).insertId;
@@ -93,5 +119,82 @@ router.post("/cart-items", async (req: Request, res: Response) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.get("/cart-items/:userId", async (req: Request, res: Response) => {
+  const user_id = Number(req.params.userId);
+
+  if (isNaN(user_id)) {
+    res.status(400).json({ error: "Invalid user ID" });
+    return;
+  }
+
+  try {
+    const [rows] = await pool.query<RowDataPacket[]>(
+      `
+      SELECT 
+          ci.cart_item_id,
+          ci.cart_id,
+          ci.product_id,
+          ci.variant_id,
+          ci.quantity,
+          ci.price,
+          v.size,
+          v.stock_quantity
+      FROM 
+          CartItems ci
+      JOIN 
+          Carts c ON ci.cart_id = c.cart_id
+      JOIN 
+          Variants v ON ci.variant_id = v.variant_id
+      WHERE 
+          c.user_id = ? 
+          AND c.status = 'active'
+          AND c.cart_id = (
+              SELECT cart_id
+              FROM Carts
+              WHERE user_id = ?
+              AND status = 'active'
+              ORDER BY created_at DESC
+              LIMIT 1
+          )
+      `,
+      [user_id, user_id]
+    );
+
+    res.status(200).json(rows); // Skicka tillbaka rader som JSON
+  } catch (error) {
+    console.error("Error fetching active cart items:", error);
+    res.status(500).json({ error: "Failed to fetch active cart items" });
+  }
+});
+
+router.delete(
+  "/cart-items/:cartItemId",
+  async (req: Request, res: Response) => {
+    const cart_item_id = Number(req.params.cartItemId);
+
+    if (isNaN(cart_item_id)) {
+      res.status(400).json({ error: "Invalid cart item ID" });
+      return;
+    }
+
+    try {
+      const [result] = await pool.query<ResultSetHeader>(
+        "DELETE FROM CartItems WHERE cart_item_id = ?",
+        [cart_item_id]
+      );
+
+      if (result.affectedRows === 0) {
+        res.status(404).json({ error: "Cart item not found" });
+        return;
+      }
+
+      res.status(200).json({ message: "Cart item deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting cart item:", error);
+      res.status(500).json({ error: "Failed to delete cart item" });
+    }
+  }
+);
 
 export default router;

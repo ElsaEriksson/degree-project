@@ -6,6 +6,7 @@ import { authConfig } from "./auth.config";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { JWT } from "next-auth/jwt";
+import { migrateCartFromCookiesToDatabase } from "@/app/lib/actions";
 
 declare module "next-auth" {
   interface Session {
@@ -50,6 +51,9 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
             }
 
             const user: ModestUser = await res.json();
+
+            await migrateCartFromCookiesToDatabase(user.user_id);
+
             return user;
           } catch (error) {
             console.error("Authentication error:", error);
@@ -89,26 +93,3 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 });
-
-async function migrateCartFromCookiesToDatabase(userId: number) {
-  const cookieStore = await cookies();
-  const cartCookie = cookieStore.get("cart");
-
-  if (cartCookie) {
-    const cart = JSON.parse(cartCookie.value);
-    // Implementera logik för att spara varukorgen i databasen
-    await saveCartToDatabase(userId, cart);
-    // Ta bort cookie efter migrering
-    const cookieStore = await cookies();
-    cookieStore.delete("cart");
-  }
-}
-
-async function saveCartToDatabase(userId: number, cart: any) {
-  // Implementera logik för att spara varukorgen i databasen
-}
-
-export async function logout() {
-  // deleteSession();
-  redirect("/login");
-}
