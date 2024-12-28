@@ -15,7 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("../config/db"));
 const router = express_1.default.Router();
+const ITEMS_PER_PAGE = 12;
 router.get("/variants-with-product-info", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const page = parseInt(req.query.page) || 1;
+    const offset = (page - 1) * ITEMS_PER_PAGE;
+    // First, get the total count of products
+    const [countResult] = yield db_1.default.query(`
+      SELECT COUNT(DISTINCT p.product_id) as total
+      FROM Products p
+    `);
+    const totalProducts = countResult[0].total;
+    const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
     try {
         const [results] = yield db_1.default.query(`
       SELECT 
@@ -40,7 +50,9 @@ router.get("/variants-with-product-info", (req, res) => __awaiter(void 0, void 0
         Variants v ON p.product_id = v.product_id
       GROUP BY 
         p.product_id
-    `);
+      LIMIT ?
+      OFFSET ?
+    `, [ITEMS_PER_PAGE, offset]);
         const products = results.map((product) => ({
             product_id: product.product_id,
             name: product.name,
@@ -67,10 +79,16 @@ router.get("/variants-with-product-info", (req, res) => __awaiter(void 0, void 0
                 })
                 : [],
         }));
-        res.json(products);
+        res.json({
+            products,
+            currentPage: page,
+            totalPages,
+            totalProducts,
+        });
     }
     catch (error) {
         res.status(500).json({ error: error.message });
     }
 }));
+router.get("/product-pages", (req, res) => __awaiter(void 0, void 0, void 0, function* () { }));
 exports.default = router;

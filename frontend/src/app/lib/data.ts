@@ -118,12 +118,20 @@ export async function fetchCartItem(
   return await res.json();
 }
 
-export async function fetchProductVariantsFromDatabase(): Promise<
-  ProductWithVariants[] | undefined
+export async function fetchProductVariantsFromDatabase(
+  page: number = 1
+): Promise<
+  | {
+      products: ProductWithVariants[];
+      currentPage: number;
+      totalPages: number;
+      totalProducts: number;
+    }
+  | undefined
 > {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/products/variants-with-product-info`,
+      `http://localhost:5000/api/products/variants-with-product-info?page=${page}`,
       {
         next: { revalidate: 60 },
       }
@@ -131,7 +139,7 @@ export async function fetchProductVariantsFromDatabase(): Promise<
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
-    const data: ProductWithVariants[] = await res.json();
+    const data = await res.json();
     return data;
   } catch (error) {
     console.error("Database Error:", error);

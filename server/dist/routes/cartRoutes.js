@@ -136,7 +136,7 @@ router.get("/cart-items/:userId", (req, res) => __awaiter(void 0, void 0, void 0
               LIMIT 1
           )
       `, [user_id, user_id]);
-        res.status(200).json(rows); // Skicka tillbaka rader som JSON
+        res.status(200).json(rows);
     }
     catch (error) {
         console.error("Error fetching active cart items:", error);

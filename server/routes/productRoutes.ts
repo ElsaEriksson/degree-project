@@ -9,11 +9,25 @@ interface ProductWithVariants extends Product {
   variants: { variant_id: number; size: string; stock_quantity: number }[];
 }
 
+const ITEMS_PER_PAGE = 12;
+
 router.get(
   "/variants-with-product-info",
   async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string) || 1;
+    const offset = (page - 1) * ITEMS_PER_PAGE;
+
+    // First, get the total count of products
+    const [countResult] = await pool.query<RowDataPacket[]>(`
+      SELECT COUNT(DISTINCT p.product_id) as total
+      FROM Products p
+    `);
+    const totalProducts = countResult[0].total;
+    const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
+
     try {
-      const [results] = await pool.query<RowDataPacket[]>(`
+      const [results] = await pool.query<RowDataPacket[]>(
+        `
       SELECT 
         p.product_id,
         p.name,
@@ -36,7 +50,11 @@ router.get(
         Variants v ON p.product_id = v.product_id
       GROUP BY 
         p.product_id
-    `);
+      LIMIT ?
+      OFFSET ?
+    `,
+        [ITEMS_PER_PAGE, offset]
+      );
 
       const products: ProductWithVariants[] = results.map((product) => ({
         product_id: product.product_id,
@@ -65,11 +83,18 @@ router.get(
           : [],
       }));
 
-      res.json(products);
+      res.json({
+        products,
+        currentPage: page,
+        totalPages,
+        totalProducts,
+      });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
   }
 );
+
+router.get("/product-pages", async (req: Request, res: Response) => {});
 
 export default router;
