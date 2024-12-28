@@ -8,11 +8,9 @@ export default async function Products({
   searchParams,
 }: {
   searchParams?: {
-    // query?: string;
     page?: string;
   };
 }) {
-  // const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
 
   const data = await fetchProductVariantsFromDatabase(currentPage);
@@ -23,16 +21,17 @@ export default async function Products({
 
   return (
     <>
-      <div className="container mx-auto p-2">
+      <div className="relative mx-6">
+        <h2 className="p-1">All Products</h2>
         <Suspense fallback={"loading..."}>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 w-full">
             {data.products.map((product: ProductWithVariants) => (
               <ProductCard key={product.product_id} product={product} />
             ))}
           </div>
         </Suspense>
+        <Pagination totalPages={data.totalPages} />
       </div>
-      <Pagination totalPages={data.totalPages} />
     </>
   );
 }

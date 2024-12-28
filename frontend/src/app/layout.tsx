@@ -34,7 +34,9 @@ export default async function RootLayout({
             <HeaderProvider>
               <Header />
             </HeaderProvider>
-            <main className="flex min-h-screen flex-col">{children}</main>
+            <main className="flex min-h-screen flex-col mt-20 pt-10">
+              {children}
+            </main>
           </CartProvider>
         </Provider>
       </body>
