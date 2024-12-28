@@ -65,10 +65,18 @@ export async function authenticate(
 export async function logOut() {
   try {
     await signOut({ redirect: false });
+
+    const cookieStore = await cookies();
+
+    // Rensa eventuella cookies som är relaterade till användarens session
+    cookieStore.delete("authjs.session-token");
+    cookieStore.delete("authjs.csrf-token");
+    cookieStore.delete("authjs.callback-url");
+
+    return { success: true };
   } catch (error) {
-    if (error instanceof AuthError) {
-      return "Something went wrong.";
-    }
+    console.error("Logout error:", error);
+    return { success: false, error: "Något gick fel vid utloggning." };
   }
 }
 
@@ -124,14 +132,12 @@ export async function addToCart(
   variant: Variant,
   quantity: number = 1
 ) {
-  // Kontrollera om varianten finns i lager
   if (variant.stock_quantity <= 0) {
     throw new Error(
       "This variant is out of stock and cannot be added to the cart."
     );
   }
 
-  // Kontrollera om tillräckligt antal finns i lager
   if (variant.stock_quantity < quantity) {
     throw new Error(
       `Only ${variant.stock_quantity} items of this variant are available in stock.`
@@ -175,7 +181,7 @@ async function addToCartForLoggedInUser(
 
   if (existingCartItem) {
     await updateCartItemQuantity(
-      variant.variant_id,
+      // variant.variant_id,
       existingCartItem.cart_item_id,
       existingCartItem.quantity + quantity
     );
@@ -190,6 +196,10 @@ async function addToCartForLoggedInUser(
   }
 
   return await fetchCartItem(cartId.cart_id, variant.variant_id);
+}
+
+function generateCartItemId(): number {
+  return Date.now() + Math.floor(Math.random() * 1000);
 }
 
 async function addToCartForGuestUser(
@@ -209,6 +219,7 @@ async function addToCartForGuestUser(
     cart[existingItemIndex].quantity += quantity;
   } else {
     cart.push({
+      cart_item_id: generateCartItemId(),
       product_id: product.product_id,
       variant_id: variant.variant_id,
       name: product.name,
@@ -244,24 +255,22 @@ export async function createNewCart(userId: number) {
 
 export async function updateCartItemQuantity(
   cart_item_id: number,
-  newQuantity: number,
-  variantId: number
+  newQuantity: number
+  // variantId: number
 ): Promise<void> {
-  const variant = await fetchVariantFromDatabase(variantId);
+  // const variant = await fetchVariantFromDatabase(variantId);
 
-  // const variant = variants?.find((v) => v.variant_id === variantId);
+  // if (variant && variant.stock_quantity <= 0) {
+  //   throw new Error(
+  //     "This variant is out of stock and cannot be added to the cart."
+  //   );
+  // }
 
-  if (variant && variant.stock_quantity <= 0) {
-    throw new Error(
-      "This variant is out of stock and cannot be added to the cart."
-    );
-  }
-
-  if (variant && variant.stock_quantity < newQuantity) {
-    throw new Error(
-      `Only ${variant.stock_quantity} items of this variant are available in stock.`
-    );
-  }
+  // if (variant && variant.stock_quantity < newQuantity) {
+  //   throw new Error(
+  //     `Only ${variant.stock_quantity} items of this variant are available in stock.`
+  //   );
+  // }
 
   const res = await fetch(
     `http://localhost:5000/api/carts/cart-items/${cart_item_id}`,
@@ -275,6 +284,18 @@ export async function updateCartItemQuantity(
   if (!res.ok) {
     throw new Error("Failed to update cart item quantity");
   }
+}
+
+export async function updateCookieCart(updatedCart: CartItems[]) {
+  const cookieStore = await cookies();
+  cookieStore.set("cart", JSON.stringify(updatedCart), {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+  });
+
+  return { success: true };
 }
 
 export async function createCartItem(
@@ -338,7 +359,7 @@ export async function saveCartToDatabase(userId: number, cart: CartItems[]) {
 
     if (existingCartItem) {
       await updateCartItemQuantity(
-        item.variant_id,
+        // item.variant_id,
         existingCartItem.cart_item_id,
         existingCartItem.quantity + item.quantity
       );

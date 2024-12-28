@@ -1,7 +1,6 @@
 import { Router, Request, Response } from "express";
 import pool from "../config/db";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { CartItems } from "../models/Cart";
 
 const router = Router();
 
@@ -161,7 +160,7 @@ router.get("/cart-items/:userId", async (req: Request, res: Response) => {
       [user_id, user_id]
     );
 
-    res.status(200).json(rows); // Skicka tillbaka rader som JSON
+    res.status(200).json(rows);
   } catch (error) {
     console.error("Error fetching active cart items:", error);
     res.status(500).json({ error: "Failed to fetch active cart items" });

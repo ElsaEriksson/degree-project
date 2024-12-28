@@ -16,3 +16,5 @@
 //     return NextResponse.json(cart ? JSON.parse(cart) : []);
 //   }
 // }
+
+// app/api/cart/route.ts

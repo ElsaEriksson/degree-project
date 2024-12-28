@@ -16,6 +16,7 @@ export default function CartItem() {
   }, []);
 
   const cartIsEmpty = cart && cart.length === 0;
+  const cartWithItems = !cartIsEmpty && cart;
 
   const handleSetCart = (updatedCart: CartItems[]) => {
     setCart(updatedCart);
@@ -24,8 +25,7 @@ export default function CartItem() {
   return (
     <>
       {cartIsEmpty && <p>Your cart is empty</p>}
-      {!cartIsEmpty &&
-        cart &&
+      {cartWithItems &&
         cart.map((item: CartItems, index: number) => (
           <div key={index}>
             <p>

@@ -1,6 +1,8 @@
 "use client";
-import { addToCart } from "@/app/lib/actions";
+import { addToCart, getCartItems } from "@/app/lib/actions";
+import { CartItems } from "@/app/models/Cart";
 import { Product, ProductWithVariants, Variant } from "@/app/models/Product";
+import { useCart } from "@/app/providers";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -10,10 +12,23 @@ export default function ProductCard({
   product: ProductWithVariants;
 }) {
   const [isHovered, setIsHovered] = useState(false);
+  const { setCartItems } = useCart();
 
   const handleClick = async (variant: Variant) => {
     try {
-      await addToCart(product, variant);
+      const result = await addToCart(product, variant);
+
+      let total = 0;
+      if (Array.isArray(result)) {
+        total = result.reduce((sum, item) => sum + item.quantity, 0);
+      } else if (result && "quantity" in result) {
+        const cartItems = await getCartItems();
+        total = cartItems.reduce(
+          (sum: number, item: CartItems) => sum + item.quantity,
+          0
+        );
+      }
+      setCartItems(total);
     } catch (error: any) {
       alert(error.message);
     }
