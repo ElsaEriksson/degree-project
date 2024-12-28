@@ -1,12 +1,12 @@
+import { authenticate } from "@/app/lib/actions";
 import {
   ArrowRightIcon,
   AtSymbolIcon,
   ExclamationCircleIcon,
   KeyIcon,
 } from "@heroicons/react/24/outline";
-import { Button } from "./ui/button";
 import { useActionState } from "react";
-import { authenticate } from "../lib/actions";
+import { Button } from "../ui/button";
 
 export default function LoginForm() {
   const [errorMessage, loginFormAction, isPending2] = useActionState(

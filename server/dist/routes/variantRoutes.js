@@ -25,4 +25,23 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(500).json({ error: error.message });
     }
 }));
+router.get("/:variantId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const variant_id = Number(req.params.variantId);
+    if (isNaN(variant_id)) {
+        res.status(400).json({ error: "Invalid user ID" });
+        return;
+    }
+    try {
+        const [results] = yield db_1.default.query("SELECT * FROM Variants WHERE variant_id = ?", [variant_id]);
+        const variant = results[0];
+        if (!variant) {
+            res.status(404).json({ error: "Variant not found" });
+            return;
+        }
+        res.json(variant);
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}));
 exports.default = router;

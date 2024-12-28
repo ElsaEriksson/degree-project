@@ -1,8 +1,8 @@
-import AuthFormSwitcher from "../authFormSwitcher";
 import { SlidingPanel } from "./slidingPanel";
-import CartItem from "../cartItem";
+import CartItem from "../cart/cartItem";
 import HeaderInteractions from "./headerInteractions";
 import HamburgerNavLinks from "./hamburgerNavLinks";
+import AuthFormSwitcher from "../loginAndRegistration/authFormSwitcher";
 
 export function Header() {
   return (

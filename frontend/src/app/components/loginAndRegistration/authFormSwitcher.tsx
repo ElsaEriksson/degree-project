@@ -1,9 +1,9 @@
 "use client";
 
+import { useHeader } from "@/app/providers";
 import { useState } from "react";
-import LoginForm from "./loginFrom";
 import RegisterForm from "./registerForm";
-import { useHeader } from "../providers";
+import LoginForm from "./loginFrom";
 
 export default function AuthFormSwitcher() {
   const { isAuthFormOpen, setAuthFormOpen } = useHeader();

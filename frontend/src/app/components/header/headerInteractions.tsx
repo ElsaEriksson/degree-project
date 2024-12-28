@@ -7,10 +7,12 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { logOut } from "@/app/lib/actions";
 import { useHeader } from "@/app/providers";
+import { usePathname } from "next/navigation";
 
 export default function HeaderInteractions() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHomePage, setIsHomePage] = useState(true);
+  const pathname = usePathname();
   const { setAuthFormOpen, setIsCartOpen, setIsMenuOpen } = useHeader();
   const { data: session, status } = useSession();
 
@@ -27,6 +29,10 @@ export default function HeaderInteractions() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    setIsHomePage(pathname === "/");
+  }, [pathname]);
 
   return (
     <>
@@ -74,7 +80,11 @@ export default function HeaderInteractions() {
             </button>
 
             {isLoggedIn && (
-              <button className="p-2 hidden hover:bg-gray-100 rounded-full lg:block">
+              <button
+                className="p-2 hidden hover:bg-gray-100 rounded-full lg:block"
+                aria-label={session.user.email}
+                title={session.user.email}
+              >
                 <User2 className="h-6 w-6" />
               </button>
             )}

@@ -24,6 +24,27 @@ export async function fetchVariantsFromDatabase(): Promise<
   }
 }
 
+export async function fetchVariantFromDatabase(
+  variant_id: number
+): Promise<Variant | undefined> {
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/variants/${variant_id}`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const data: Variant = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    return undefined;
+  }
+}
+
 export async function fetchProductsFromDatabase(): Promise<
   Product[] | undefined
 > {

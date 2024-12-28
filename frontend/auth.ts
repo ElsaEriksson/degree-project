@@ -3,8 +3,6 @@ import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import { ModestUser } from "@/app/models/User";
 import { authConfig } from "./auth.config";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { JWT } from "next-auth/jwt";
 import { migrateCartFromCookiesToDatabase } from "@/app/lib/actions";
 
@@ -90,6 +88,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
   secret: process.env.SESSION_SECRET,
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
 });

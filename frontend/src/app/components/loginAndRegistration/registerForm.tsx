@@ -6,8 +6,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { useActionState } from "react";
-import { register, State } from "../lib/actions";
-import { Button } from "./ui/button";
+import { register, State } from "@/app/lib/actions";
+import { Button } from "../ui/button";
 
 export default function RegisterForm({ authMode }: { authMode: string }) {
   const initialState: State = { message: null, errors: {} };

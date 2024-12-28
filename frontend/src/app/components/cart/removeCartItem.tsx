@@ -1,8 +1,8 @@
 "use client";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { removeCartItem } from "../lib/actions";
+import { removeCartItem } from "../../lib/actions";
 import { useTransition } from "react";
-import { CartItems } from "../models/Cart";
+import { CartItems } from "../../models/Cart";
 
 export default function RemoveCartItem({
   cart_item_id,

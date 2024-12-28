@@ -9,6 +9,7 @@ import {
   fetchActiveCartForUser,
   fetchCartItem,
   fetchCartItemsForUser,
+  fetchVariantFromDatabase,
   fetchVariantsFromDatabase,
 } from "./data";
 import { revalidatePath } from "next/cache";
@@ -246,17 +247,16 @@ export async function updateCartItemQuantity(
   newQuantity: number,
   variantId: number
 ): Promise<void> {
-  const variants = await fetchVariantsFromDatabase();
+  const variant = await fetchVariantFromDatabase(variantId);
 
-  const variant = variants?.find((v) => v.variant_id === variantId);
-  // Kontrollera om varianten finns i lager
+  // const variant = variants?.find((v) => v.variant_id === variantId);
+
   if (variant && variant.stock_quantity <= 0) {
     throw new Error(
       "This variant is out of stock and cannot be added to the cart."
     );
   }
 
-  // Kontrollera om tillräckligt antal finns i lager
   if (variant && variant.stock_quantity < newQuantity) {
     throw new Error(
       `Only ${variant.stock_quantity} items of this variant are available in stock.`

@@ -1,8 +1,8 @@
 "use client";
 import RemoveCartItem from "./removeCartItem";
-import { CartItems } from "../models/Cart";
+import { CartItems } from "../../models/Cart";
 import { useEffect, useState } from "react";
-import { getCartItems } from "../lib/actions";
+import { getCartItems } from "../../lib/actions";
 
 export default function CartItem() {
   const [cart, setCart] = useState<CartItems[]>([]);
