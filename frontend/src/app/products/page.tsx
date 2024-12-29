@@ -21,7 +21,7 @@ export default async function Products({
 
   return (
     <>
-      <div className="relative mx-6">
+      <div className="relative mx-6 mt-20 pt-10">
         <h2 className="p-1">All Products</h2>
         <Suspense fallback={"loading..."}>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 w-full">

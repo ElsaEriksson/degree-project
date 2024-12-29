@@ -16,14 +16,13 @@ export default function HeaderInteractions() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
   const { setAuthFormOpen, setIsCartOpen, setIsMenuOpen } = useHeader();
-  const { cartItems } = useCart();
   const { data: session, status } = useSession();
+  const { cartCount } = useCart();
 
   const isLoggedIn = status === "authenticated" && session;
 
   const favoritesCount = 2;
-  const cartCount = 3;
-  console.log(cartItems);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
@@ -122,7 +121,7 @@ export default function HeaderInteractions() {
               className="p-2 hover:bg-gray-100 rounded-full relative"
             >
               <ShoppingBag className="h-6 w-6" />
-              <CounterBadge count={cartItems} />
+              <CounterBadge count={cartCount} />
             </button>
           </div>
         </div>

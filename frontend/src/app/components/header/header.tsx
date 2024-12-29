@@ -4,7 +4,7 @@ import HeaderInteractions from "./headerInteractions";
 import HamburgerNavLinks from "./hamburgerNavLinks";
 import AuthFormSwitcher from "../loginAndRegistration/authFormSwitcher";
 
-export async function Header() {
+export default function Header() {
   return (
     <header>
       <HeaderInteractions />

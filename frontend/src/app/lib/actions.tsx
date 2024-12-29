@@ -12,7 +12,6 @@ import {
   fetchVariantFromDatabase,
   fetchVariantsFromDatabase,
 } from "./data";
-import { revalidatePath } from "next/cache";
 
 const RegisterSchema = z.object({
   firstName: z
@@ -68,7 +67,6 @@ export async function logOut() {
 
     const cookieStore = await cookies();
 
-    // Rensa eventuella cookies som är relaterade till användarens session
     cookieStore.delete("authjs.session-token");
     cookieStore.delete("authjs.csrf-token");
     cookieStore.delete("authjs.callback-url");
@@ -130,7 +128,7 @@ export async function register(
 export async function addToCart(
   product: Product,
   variant: Variant,
-  quantity: number = 1
+  quantity: number
 ) {
   if (variant.stock_quantity <= 0) {
     throw new Error(
@@ -147,14 +145,16 @@ export async function addToCart(
   const session = await auth();
 
   if (session?.user.userId) {
-    return await addToCartForLoggedInUser(
+    const result = await addToCartForLoggedInUser(
       Number(session.user.userId),
       product,
       variant,
       quantity
     );
+    return { success: true, data: result };
   } else {
-    return await addToCartForGuestUser(product, variant, quantity);
+    const result = await addToCartForGuestUser(product, variant, quantity);
+    return { success: true, data: result };
   }
 }
 
@@ -220,6 +220,7 @@ async function addToCartForGuestUser(
   } else {
     cart.push({
       cart_item_id: generateCartItemId(),
+      cart_id: generateCartItemId(),
       product_id: product.product_id,
       variant_id: variant.variant_id,
       name: product.name,
@@ -256,22 +257,7 @@ export async function createNewCart(userId: number) {
 export async function updateCartItemQuantity(
   cart_item_id: number,
   newQuantity: number
-  // variantId: number
 ): Promise<void> {
-  // const variant = await fetchVariantFromDatabase(variantId);
-
-  // if (variant && variant.stock_quantity <= 0) {
-  //   throw new Error(
-  //     "This variant is out of stock and cannot be added to the cart."
-  //   );
-  // }
-
-  // if (variant && variant.stock_quantity < newQuantity) {
-  //   throw new Error(
-  //     `Only ${variant.stock_quantity} items of this variant are available in stock.`
-  //   );
-  // }
-
   const res = await fetch(
     `http://localhost:5000/api/carts/cart-items/${cart_item_id}`,
     {

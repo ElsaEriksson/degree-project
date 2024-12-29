@@ -1,44 +1,31 @@
 "use client";
+import { useCart } from "@/app/providers";
 import RemoveCartItem from "./removeCartItem";
-import { CartItems } from "../../models/Cart";
-import { useEffect, useState } from "react";
-import { getCartItems } from "../../lib/actions";
+import UpdateCartItem from "./updateCartItem";
 
 export default function CartItem() {
-  const [cart, setCart] = useState<CartItems[]>([]);
+  const { cartItems, loading } = useCart();
 
-  useEffect(() => {
-    async function fetchCart() {
-      const cartItems: CartItems[] = await getCartItems();
-      setCart(cartItems || []);
-    }
-    fetchCart();
-  }, []);
+  if (loading) {
+    return <div>Loading cart...</div>;
+  }
 
-  const cartIsEmpty = cart && cart.length === 0;
-  const cartWithItems = !cartIsEmpty && cart;
-
-  const handleSetCart = (updatedCart: CartItems[]) => {
-    setCart(updatedCart);
-  };
+  if (cartItems.length === 0) {
+    return <div>Your cart is empty.</div>;
+  }
 
   return (
     <>
-      {cartIsEmpty && <p>Your cart is empty</p>}
-      {cartWithItems &&
-        cart.map((item: CartItems, index: number) => (
-          <div key={index}>
-            <p>
-              {item.variant_id}, {item.size}, {item.product_id}, {item.quantity}
-            </p>
-
-            <RemoveCartItem
-              cart_item_id={item.cart_item_id}
-              setCart={handleSetCart}
-              cart={cart}
-            ></RemoveCartItem>
-          </div>
-        ))}
+      {cartItems.map((item) => (
+        <div key={item.cart_item_id}>
+          <h3>{item.name}</h3>
+          <p>Size: {item.size}</p>
+          <p>Price: ${item.price}</p>
+          <p>Quantity: {item.quantity}</p>
+          <UpdateCartItem item={item}></UpdateCartItem>
+          <RemoveCartItem cart_item_id={item.cart_item_id}></RemoveCartItem>
+        </div>
+      ))}
     </>
   );
 }

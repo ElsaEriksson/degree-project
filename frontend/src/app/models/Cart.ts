@@ -6,8 +6,8 @@ export interface Cart {
 }
 
 export interface CartItems {
-  cart_item_id?: number;
-  cart_id?: number;
+  cart_item_id: number;
+  cart_id: number;
   product_id: number;
   variant_id: number;
   name: string;

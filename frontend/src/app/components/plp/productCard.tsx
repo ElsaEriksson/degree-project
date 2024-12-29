@@ -3,7 +3,8 @@ import { addToCart, getCartItems } from "@/app/lib/actions";
 import { CartItems } from "@/app/models/Cart";
 import { ProductWithVariants, Variant } from "@/app/models/Product";
 import { useCart } from "@/app/providers";
-import { Heart } from "lucide-react";
+import { QuestionMarkCircleIcon } from "@heroicons/react/20/solid";
+import { CheckIcon, Heart } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -13,23 +14,33 @@ export default function ProductCard({
   product: ProductWithVariants;
 }) {
   const [isHovered, setIsHovered] = useState(false);
-  const { setCartItems } = useCart();
+  const [addedVariants, setAddedVariants] = useState<Record<number, boolean>>(
+    {}
+  );
 
-  const handleClick = async (variant: Variant) => {
+  const { addItemToCart, loading } = useCart();
+
+  const handleClick = async (variant: Variant, quantity = 1) => {
     try {
-      const result = await addToCart(product, variant);
+      const result = await addItemToCart(product, variant, quantity);
 
-      let total = 0;
-      if (Array.isArray(result)) {
-        total = result.reduce((sum, item) => sum + item.quantity, 0);
-      } else if (result && "quantity" in result) {
-        const cartItems = await getCartItems();
-        total = cartItems.reduce(
-          (sum: number, item: CartItems) => sum + item.quantity,
-          0
-        );
+      if ("success" in result) {
+        if (result.success) {
+          setAddedVariants((prev) => ({
+            ...prev,
+            [variant.variant_id]: true,
+          }));
+
+          setTimeout(() => {
+            setAddedVariants((prev) => ({
+              ...prev,
+              [variant.variant_id]: false,
+            }));
+          }, 2000);
+        } else {
+          console.log("Operation failed.");
+        }
       }
-      setCartItems(total);
     } catch (error: any) {
       alert(error.message);
     }
@@ -73,11 +84,17 @@ export default function ProductCard({
                 {isHovered &&
                   product.variants.map((variant) => (
                     <button
-                      className="bg-white h-full mr-2 hover:bg-gray-200"
+                      type="submit"
+                      className="bg-white h-full mr-2 hover:bg-gray-200 flex justify-center items-center"
                       onClick={() => handleClick(variant)}
                       key={variant.variant_id}
+                      disabled={variant.stock_quantity === 0}
                     >
-                      {variant.size}
+                      {addedVariants[variant.variant_id] ? (
+                        <CheckIcon className="h-5 w-5" />
+                      ) : (
+                        variant.size
+                      )}
                     </button>
                   ))}
               </div>
