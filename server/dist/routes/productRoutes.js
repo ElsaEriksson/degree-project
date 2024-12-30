@@ -90,5 +90,4 @@ router.get("/variants-with-product-info", (req, res) => __awaiter(void 0, void 0
         res.status(500).json({ error: error.message });
     }
 }));
-router.get("/product-pages", (req, res) => __awaiter(void 0, void 0, void 0, function* () { }));
 exports.default = router;

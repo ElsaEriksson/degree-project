@@ -1,10 +1,11 @@
 "use server";
 import { AuthError } from "next-auth";
-import { auth, signIn, signOut } from "../../../auth";
+import { auth, signIn } from "../../auth";
 import { z } from "zod";
 import { cookies } from "next/headers";
 import { CartItems } from "../models/Cart";
 import { Product, Variant } from "../models/Product";
+import { signOut } from "next-auth/react";
 import {
   fetchActiveCartForUser,
   fetchCartItem,
@@ -64,12 +65,8 @@ export async function authenticate(
 export async function logOut() {
   try {
     await signOut({ redirect: false });
-
     const cookieStore = await cookies();
-
     cookieStore.delete("authjs.session-token");
-    cookieStore.delete("authjs.csrf-token");
-    cookieStore.delete("authjs.callback-url");
 
     return { success: true };
   } catch (error) {
@@ -266,6 +263,7 @@ export async function updateCartItemQuantity(
       body: JSON.stringify({ quantity: newQuantity }),
     }
   );
+  console.error("Response from API:", res);
 
   if (!res.ok) {
     throw new Error("Failed to update cart item quantity");

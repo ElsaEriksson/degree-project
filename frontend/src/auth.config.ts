@@ -12,12 +12,10 @@ export const authConfig = {
 
       if (isProfilePage) {
         if (isLoggedIn) return true;
-        return false; // Redirect to home if not logged in and trying to access profile
-      } else if (isLoggedIn) {
         return Response.redirect(new URL("/", nextUrl));
       }
 
-      return true; // Allow access to all other pages
+      return true;
     },
   },
   providers: [Credentials({})],

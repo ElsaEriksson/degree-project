@@ -136,6 +136,7 @@ export async function fetchProductVariantsFromDatabase(
         next: { revalidate: 60 },
       }
     );
+
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }

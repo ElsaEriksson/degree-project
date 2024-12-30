@@ -17,8 +17,9 @@ export default function ProductCard({
   const [addedVariants, setAddedVariants] = useState<Record<number, boolean>>(
     {}
   );
+  const [isFavorited, setIsFavorited] = useState(false);
 
-  const { addItemToCart, loading } = useCart();
+  const { addItemToCart } = useCart();
 
   const handleClick = async (variant: Variant, quantity = 1) => {
     try {
@@ -58,6 +59,10 @@ export default function ProductCard({
     }, 100);
   }
 
+  const toggleFavorite = () => {
+    setIsFavorited((prev) => !prev);
+  };
+
   return (
     <>
       <div className="bg-white p-1">
@@ -85,10 +90,15 @@ export default function ProductCard({
                   product.variants.map((variant) => (
                     <button
                       type="submit"
-                      className="bg-white h-full mr-2 hover:bg-gray-200 flex justify-center items-center"
+                      className={
+                        variant.stock_quantity === 0
+                          ? "bg-white/70 h-full mr-2 cursor-not-allowed"
+                          : "bg-white h-full mr-2 border hover:border-black flex justify-center items-center"
+                      }
                       onClick={() => handleClick(variant)}
                       key={variant.variant_id}
                       disabled={variant.stock_quantity === 0}
+                      title={variant.stock_quantity === 0 ? "sold out" : ""}
                     >
                       {addedVariants[variant.variant_id] ? (
                         <CheckIcon className="h-5 w-5" />
@@ -99,9 +109,18 @@ export default function ProductCard({
                   ))}
               </div>
               <div className="flex justify-end">
-                <button className="bg-white rounded-full h-9 w-9 flex justify-center items-center">
-                  <Heart />
-                  <span className="sr-only">Add to favorites</span>
+                <button
+                  onClick={toggleFavorite}
+                  className="bg-white rounded-full h-9 w-9 flex justify-center items-center"
+                  aria-label={
+                    isFavorited ? "Remove from favorites" : "Add to favorites"
+                  }
+                >
+                  {isFavorited ? (
+                    <Heart className="stroke-1 fill-red-500" />
+                  ) : (
+                    <Heart className="stroke-1 hover:fill-red-500/50" />
+                  )}
                 </button>
               </div>
             </div>

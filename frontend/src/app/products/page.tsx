@@ -4,14 +4,15 @@ import ProductCard from "../components/plp/productCard";
 import { fetchProductVariantsFromDatabase } from "../lib/data";
 import { ProductWithVariants } from "../models/Product";
 
-export default async function Products({
-  searchParams,
-}: {
-  searchParams?: {
-    page?: string;
-  };
-}) {
-  const currentPage = Number(searchParams?.page) || 1;
+type PageProps = {
+  params: Promise<{ slug: string[] }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+};
+
+export default async function Products(
+  props: Readonly<PageProps>
+): Promise<React.ReactElement> {
+  const currentPage = Number(await props.searchParams) || 1;
 
   const data = await fetchProductVariantsFromDatabase(currentPage);
 

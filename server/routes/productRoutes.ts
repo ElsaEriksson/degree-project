@@ -95,6 +95,4 @@ router.get(
   }
 );
 
-router.get("/product-pages", async (req: Request, res: Response) => {});
-
 export default router;

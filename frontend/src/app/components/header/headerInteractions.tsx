@@ -3,12 +3,13 @@ import { cn } from "@/app/utils/utils";
 import { RotatingBanner } from "./rotatingBanner";
 import { Heart, Menu, ShoppingBag, User2 } from "lucide-react";
 import { CounterBadge } from "./counterBadge";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { logOut } from "@/app/lib/actions";
 import { useCart, useHeader } from "@/app/providers";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import FadeStaggerCircles from "./fadeStaggerCircles";
+import Link from "next/link";
 
 export default function HeaderInteractions() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -18,6 +19,7 @@ export default function HeaderInteractions() {
   const { setAuthFormOpen, setIsCartOpen, setIsMenuOpen } = useHeader();
   const { data: session, status } = useSession();
   const { cartCount } = useCart();
+  const router = useRouter();
 
   const isLoggedIn = status === "authenticated" && session;
 
@@ -38,10 +40,7 @@ export default function HeaderInteractions() {
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
-    const result = await logOut();
-    if (!result.success) {
-      console.error(result.error);
-    }
+    await signOut();
     setIsLoggingOut(false);
   };
 
@@ -52,6 +51,10 @@ export default function HeaderInteractions() {
       console.log("User is not logged in");
     }
   }, [status, session]);
+
+  const handleClick = () => {
+    router.push("/profile");
+  };
 
   return (
     <>
@@ -106,15 +109,16 @@ export default function HeaderInteractions() {
               <CounterBadge count={favoritesCount} />
             </button>
 
-            {isLoggedIn && (
-              <button
-                className="p-2 hidden hover:bg-gray-100 rounded-full lg:block"
-                aria-label={session.user.email}
-                title={session.user.email}
-              >
-                <User2 className="h-6 w-6" />
-              </button>
-            )}
+            {/* {isLoggedIn && ( */}
+            <button
+              className="p-2 hidden hover:bg-gray-100 rounded-full lg:block"
+              onClick={handleClick}
+              // aria-label={session.user.email}
+              // title={session.user.email}
+            >
+              <User2 className="h-6 w-6" />
+            </button>
+            {/* )} */}
 
             <button
               onClick={() => setIsCartOpen(true)}
