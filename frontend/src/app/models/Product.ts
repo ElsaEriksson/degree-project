@@ -11,6 +11,7 @@ export interface Product {
   material: string;
   gender: string;
   season: string;
+  is_favorite: boolean;
   created_at: string;
   updated_at: string;
 }

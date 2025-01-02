@@ -1,7 +1,7 @@
 import NextAuth, { DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
-import { ModestUser } from "@/app/models/User";
+import { LoggedInUser } from "@/app/models/User";
 import { authConfig } from "./auth.config";
 import { JWT } from "next-auth/jwt";
 import { migrateCartFromCookiesToDatabase } from "@/app/lib/actions";
@@ -48,7 +48,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
               throw new Error(errorData.error || "Log in failed");
             }
 
-            const user: ModestUser = await res.json();
+            const user: LoggedInUser = await res.json();
 
             await migrateCartFromCookiesToDatabase(user.user_id);
 
@@ -67,9 +67,9 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = (user as ModestUser).user_id;
-        token.email = (user as ModestUser).email;
-        token.name = (user as ModestUser).first_name;
+        token.id = (user as LoggedInUser).user_id;
+        token.email = (user as LoggedInUser).email;
+        token.name = (user as LoggedInUser).first_name;
       }
       return token;
     },

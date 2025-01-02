@@ -16,6 +16,7 @@ const createProductsTable = async (connection: any) => {
           material VARCHAR(255) NOT NULL,
           gender VARCHAR(255) NOT NULL,
           season VARCHAR(255) NOT NULL,
+          is_favorite BOOLEAN DEFAULT FALSE,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
           FOREIGN KEY (collection_id) REFERENCES Collections(collection_id) ON DELETE CASCADE

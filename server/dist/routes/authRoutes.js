@@ -94,9 +94,7 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
             res.status(400).json({ error: "Invalid role." });
             return;
         }
-        // Hash the password
         const hashedPassword = yield bcrypt_1.default.hash(password, 10);
-        // Insert new user
         const [result] = yield db_1.default.query(`INSERT INTO Users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)`, [first_name, last_name, email, hashedPassword, role || "user"]);
         const newUserId = result.insertId;
         res.status(201).json({

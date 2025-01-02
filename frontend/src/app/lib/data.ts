@@ -168,3 +168,34 @@ export async function fetchCartItemsForUser(
     return undefined;
   }
 }
+
+export async function fetchFavoritesWithProductVariantsFromDatabase(
+  page: number = 1,
+  favoriteIds: string = ""
+): Promise<
+  | {
+      products: ProductWithVariants[];
+      currentPage: number;
+      totalPages: number;
+      totalProducts: number;
+    }
+  | undefined
+> {
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/products/favorite-variants-with-product-info?page=${page}&favoriteIds=${favoriteIds}`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    return undefined;
+  }
+}

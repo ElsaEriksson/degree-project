@@ -9,12 +9,7 @@ export interface User {
   updated_at: string;
 }
 
-export type SessionPayload = {
-  userId: string | number;
-  expiresAt: Date;
-};
-
-export interface ModestUser {
+export interface LoggedInUser {
   user_id: number;
   first_name: string;
   email: string;

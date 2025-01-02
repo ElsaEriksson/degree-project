@@ -1,21 +1,20 @@
 "use client";
-import { cn } from "@/app/utils/utils";
 import { RotatingBanner } from "./rotatingBanner";
 import { Heart, Menu, ShoppingBag, User2 } from "lucide-react";
 import { CounterBadge } from "./counterBadge";
 import { signOut, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { logOut } from "@/app/lib/actions";
+import { useState } from "react";
 import { useCart, useHeader } from "@/app/providers";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import FadeStaggerCircles from "./fadeStaggerCircles";
-import Link from "next/link";
+import ScrollMode from "./scrollMode";
 
-export default function HeaderInteractions() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isHomePage, setIsHomePage] = useState(true);
+export default function HeaderInteractions({
+  favoritesCount,
+}: {
+  favoritesCount: number;
+}) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const pathname = usePathname();
   const { setAuthFormOpen, setIsCartOpen, setIsMenuOpen } = useHeader();
   const { data: session, status } = useSession();
   const { cartCount } = useCart();
@@ -23,47 +22,15 @@ export default function HeaderInteractions() {
 
   const isLoggedIn = status === "authenticated" && session;
 
-  const favoritesCount = 2;
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    setIsHomePage(pathname === "/");
-  }, [pathname]);
-
   const handleLogout = async () => {
     setIsLoggingOut(true);
     await signOut();
     setIsLoggingOut(false);
   };
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      console.log("User is logged in:", session);
-    } else {
-      console.log("User is not logged in");
-    }
-  }, [status, session]);
-
-  const handleClick = () => {
-    router.push("/profile");
-  };
-
   return (
     <>
-      <div
-        className={cn(
-          "fixed top-0 left-0 right-0 z-30 transition-colors duration-300",
-          isScrolled || !isHomePage ? "bg-white" : "bg-transparent"
-        )}
-      >
+      <ScrollMode>
         <RotatingBanner />
         <div className="h-16 px-4 grid grid-cols-3 items-center border-b">
           <button
@@ -104,21 +71,24 @@ export default function HeaderInteractions() {
                 </div>
               </button>
             )}
-            <button className="p-2 hover:bg-gray-100 rounded-full relative">
+            <button
+              onClick={() => router.push("/favorites")}
+              className="p-2 hover:bg-gray-100 rounded-full relative"
+            >
               <Heart className="h-6 w-6" />
               <CounterBadge count={favoritesCount} />
             </button>
 
-            {/* {isLoggedIn && ( */}
-            <button
-              className="p-2 hidden hover:bg-gray-100 rounded-full lg:block"
-              onClick={handleClick}
-              // aria-label={session.user.email}
-              // title={session.user.email}
-            >
-              <User2 className="h-6 w-6" />
-            </button>
-            {/* )} */}
+            {isLoggedIn && (
+              <button
+                className="p-2 hidden hover:bg-gray-100 rounded-full lg:block"
+                onClick={() => router.push("/profile")}
+                aria-label={session.user.email}
+                title={session.user.email}
+              >
+                <User2 className="h-6 w-6" />
+              </button>
+            )}
 
             <button
               onClick={() => setIsCartOpen(true)}
@@ -129,7 +99,7 @@ export default function HeaderInteractions() {
             </button>
           </div>
         </div>
-      </div>
+      </ScrollMode>
     </>
   );
 }

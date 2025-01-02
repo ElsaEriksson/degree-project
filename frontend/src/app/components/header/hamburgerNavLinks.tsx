@@ -4,14 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { Layers, PowerCircle, User2 } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
-import { logOut } from "@/app/lib/actions";
 import { useHeader } from "@/app/providers";
 
 const links = [
@@ -108,7 +107,7 @@ export default function HamburgerNavLinks() {
           {isLoggedIn ? (
             <form
               action={async () => {
-                await logOut();
+                await signOut();
                 setIsMenuOpen(false);
               }}
             >

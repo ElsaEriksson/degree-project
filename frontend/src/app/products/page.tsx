@@ -3,6 +3,7 @@ import Pagination from "../components/pagination";
 import ProductCard from "../components/plp/productCard";
 import { fetchProductVariantsFromDatabase } from "../lib/data";
 import { ProductWithVariants } from "../models/Product";
+import { HoverProvider } from "../providers";
 
 type PageProps = {
   params: Promise<{ slug: string[] }>;
@@ -27,7 +28,9 @@ export default async function Products(
         <Suspense fallback={"loading..."}>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 w-full">
             {data.products.map((product: ProductWithVariants) => (
-              <ProductCard key={product.product_id} product={product} />
+              <HoverProvider key={product.product_id}>
+                <ProductCard product={product} />
+              </HoverProvider>
             ))}
           </div>
         </Suspense>

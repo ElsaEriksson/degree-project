@@ -1,6 +1,6 @@
 "use client";
 
-import { SessionProvider, useSession } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import React from "react";
 import { CartItems } from "./models/Cart";
@@ -117,13 +117,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     variant: Variant,
     quantity: number
   ) {
-    const test = await addToCart(product, variant, quantity);
+    const result = await addToCart(product, variant, quantity);
     const items = await fetchCartItems();
     setCartItems(items);
     setCartCount(
       items.reduce((total: number, item: CartItems) => total + item.quantity, 0)
     );
-    return test;
+    return result;
   }
 
   async function removeItemFromCart(cartItemId: number) {
@@ -178,6 +178,57 @@ export function useCart() {
   const context = useContext(CartContext);
   if (context === undefined) {
     throw new Error("useCart must be used within a CartProvider");
+  }
+  return context;
+}
+
+interface HoverContextType {
+  isHovered: boolean;
+  buttonIsHovered: boolean;
+  setIsHovered: (value: boolean) => void;
+  setButtonIsHovered: (value: boolean) => void;
+  handleMouseEnter: () => void;
+  handleMouseLeave: () => void;
+}
+
+const HoverContext = createContext<HoverContextType | undefined>(undefined);
+
+export function HoverProvider({ children }: { children: React.ReactNode }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [buttonIsHovered, setButtonIsHovered] = useState(false);
+
+  function handleMouseEnter() {
+    setTimeout(() => {
+      setIsHovered(true);
+      setButtonIsHovered(true);
+    }, 100);
+  }
+
+  function handleMouseLeave() {
+    setTimeout(() => {
+      setIsHovered(false);
+      setButtonIsHovered(false);
+    }, 100);
+  }
+
+  const value = {
+    isHovered,
+    buttonIsHovered,
+    setIsHovered,
+    setButtonIsHovered,
+    handleMouseEnter,
+    handleMouseLeave,
+  };
+
+  return (
+    <HoverContext.Provider value={value}>{children}</HoverContext.Provider>
+  );
+}
+
+export function useHover() {
+  const context = useContext(HoverContext);
+  if (context === undefined) {
+    throw new Error("useHover must be used within a HoverProvider");
   }
   return context;
 }

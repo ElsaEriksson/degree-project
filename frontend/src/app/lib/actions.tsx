@@ -13,6 +13,7 @@ import {
   fetchVariantFromDatabase,
   fetchVariantsFromDatabase,
 } from "./data";
+import { revalidatePath } from "next/cache";
 
 const RegisterSchema = z.object({
   firstName: z
@@ -62,18 +63,18 @@ export async function authenticate(
   }
 }
 
-export async function logOut() {
-  try {
-    await signOut({ redirect: false });
-    const cookieStore = await cookies();
-    cookieStore.delete("authjs.session-token");
+// export async function logOut() {
+//   try {
+//     await signOut({ redirect: false });
+//     const cookieStore = await cookies();
+//     cookieStore.delete("authjs.session-token");
 
-    return { success: true };
-  } catch (error) {
-    console.error("Logout error:", error);
-    return { success: false, error: "Något gick fel vid utloggning." };
-  }
-}
+//     return { success: true };
+//   } catch (error) {
+//     console.error("Logout error:", error);
+//     return { success: false, error: "Något gick fel vid utloggning." };
+//   }
+// }
 
 export async function register(
   prevState: State | undefined,
@@ -401,4 +402,14 @@ export async function getCartItems() {
     const cartItemsFromCookie = cartCookie ? JSON.parse(cartCookie.value) : [];
     return cartItemsFromCookie;
   }
+}
+
+export const revalidateFavorites = async () => {
+  revalidatePath("favorites");
+};
+
+export async function getFavorites() {
+  const cookieStore = await cookies();
+  const favoritesCookie = cookieStore.get("favorites");
+  return favoritesCookie ? JSON.parse(favoritesCookie.value) : [];
 }

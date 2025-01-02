@@ -3,11 +3,14 @@ import CartItem from "../cart/cartItem";
 import HeaderInteractions from "./headerInteractions";
 import HamburgerNavLinks from "./hamburgerNavLinks";
 import AuthFormSwitcher from "../loginAndRegistration/authFormSwitcher";
+import { getFavorites } from "@/app/lib/actions";
 
-export default function Header() {
+export default async function Header() {
+  const favorites = await getFavorites();
+
   return (
     <header>
-      <HeaderInteractions />
+      <HeaderInteractions favoritesCount={favorites.length} />
 
       <AuthFormSwitcher />
 
