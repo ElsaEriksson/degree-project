@@ -22,10 +22,7 @@ export default async function Header() {
       </SlidingPanel>
 
       <SlidingPanel side="right">
-        <div className="p-4">
-          <h2 className="text-xl font-bold mb-4">Shopping Cart</h2>
-          <CartItem />
-        </div>
+        <CartItem />
       </SlidingPanel>
     </header>
   );

@@ -7,13 +7,15 @@ import { HoverProvider } from "../providers";
 
 type PageProps = {
   params: Promise<{ slug: string[] }>;
-  searchParams: Promise<{ [key: string]: string | undefined }>;
+  searchParams: Promise<{
+    page?: string;
+  }>;
 };
 
 export default async function Products(
   props: Readonly<PageProps>
 ): Promise<React.ReactElement> {
-  const currentPage = Number(await props.searchParams) || 1;
+  const currentPage = Number((await props.searchParams).page) || 1;
 
   const data = await fetchProductVariantsFromDatabase(currentPage);
 

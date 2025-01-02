@@ -1,10 +1,6 @@
-// "use client";
-import { ProductWithVariants, Variant } from "@/app/models/Product";
-import { useCart } from "@/app/providers";
+import { ProductWithVariants } from "@/app/models/Product";
 import { QuestionMarkCircleIcon } from "@heroicons/react/20/solid";
-import { CheckIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
 import FavoriteIcon from "./favoriteIcon";
 import ProductImage from "./productImage";
 import SizeButtons from "./sizeButtons";

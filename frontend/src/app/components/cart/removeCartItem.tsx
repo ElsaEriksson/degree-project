@@ -30,7 +30,11 @@ export default function RemoveCartItem({
 
   return (
     <>
-      <button onClick={handleRemove} disabled={isPending}>
+      <button
+        onClick={handleRemove}
+        disabled={isPending}
+        className="flex items-start pt-1"
+      >
         <XMarkIcon className="h-5 w-5" />
       </button>
     </>

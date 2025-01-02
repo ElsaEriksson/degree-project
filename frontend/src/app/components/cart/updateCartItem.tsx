@@ -32,30 +32,33 @@ export default function UpdateCartItem({ item }: { item: CartItems }) {
   };
   return (
     <>
-      <button
-        className="h-6 w-6 border border-black"
-        onClick={async () =>
-          await handleUpdateQuantity(
-            item.cart_item_id,
-            item.quantity - 1,
-            item.variant_id
-          )
-        }
-      >
-        -
-      </button>
-      <button
-        className="h-6 w-6 border border-black"
-        onClick={() =>
-          handleUpdateQuantity(
-            item.cart_item_id,
-            item.quantity + 1,
-            item.variant_id
-          )
-        }
-      >
-        +
-      </button>
+      <div className="flex grow pb-1">
+        <button
+          className="h-6 w-6 border border-black flex justify-center items-center"
+          onClick={async () =>
+            await handleUpdateQuantity(
+              item.cart_item_id,
+              item.quantity - 1,
+              item.variant_id
+            )
+          }
+        >
+          -
+        </button>
+        <p className="px-2">{item.quantity}</p>
+        <button
+          className="h-6 w-6 border border-black"
+          onClick={() =>
+            handleUpdateQuantity(
+              item.cart_item_id,
+              item.quantity + 1,
+              item.variant_id
+            )
+          }
+        >
+          +
+        </button>
+      </div>
     </>
   );
 }

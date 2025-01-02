@@ -117,13 +117,17 @@ router.get("/cart-items/:userId", (req, res) => __awaiter(void 0, void 0, void 0
           ci.quantity,
           ci.price,
           v.size,
-          v.stock_quantity
+          v.stock_quantity,
+          p.name,
+          p.main_image
       FROM 
           CartItems ci
       JOIN 
           Carts c ON ci.cart_id = c.cart_id
       JOIN 
           Variants v ON ci.variant_id = v.variant_id
+      JOIN 
+          Products p ON ci.product_id = p.product_id    
       WHERE 
           c.user_id = ? 
           AND c.status = 'active'

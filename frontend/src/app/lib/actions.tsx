@@ -63,19 +63,6 @@ export async function authenticate(
   }
 }
 
-// export async function logOut() {
-//   try {
-//     await signOut({ redirect: false });
-//     const cookieStore = await cookies();
-//     cookieStore.delete("authjs.session-token");
-
-//     return { success: true };
-//   } catch (error) {
-//     console.error("Logout error:", error);
-//     return { success: false, error: "Något gick fel vid utloggning." };
-//   }
-// }
-
 export async function register(
   prevState: State | undefined,
   formData: FormData
@@ -226,6 +213,7 @@ async function addToCartForGuestUser(
       quantity: quantity,
       price: product.price,
       stock_quantity: variant.stock_quantity,
+      main_image: product.main_image,
     });
   }
 
