@@ -154,9 +154,7 @@ export async function fetchCartItemsForUser(
   try {
     const res = await fetch(
       `http://localhost:5000/api/carts/cart-items/${user_id}`,
-      {
-        next: { revalidate: 60 },
-      }
+      { next: { tags: ["cart"] } }
     );
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);

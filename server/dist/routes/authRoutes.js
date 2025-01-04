@@ -21,6 +21,13 @@ const router = express_1.default.Router();
 router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
+        if (!email ||
+            !password ||
+            typeof email !== "string" ||
+            typeof password !== "string") {
+            res.status(400).json({ error: "Invalid input data" });
+            return;
+        }
         const [results] = yield db_1.default.query("SELECT * FROM Users WHERE email = ?", [email]);
         if (results.length === 0) {
             res.status(401).json({ error: "Invalid credentials" });

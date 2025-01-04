@@ -5,15 +5,12 @@ import { z } from "zod";
 import { cookies } from "next/headers";
 import { CartItems } from "../models/Cart";
 import { Product, Variant } from "../models/Product";
-import { signOut } from "next-auth/react";
 import {
   fetchActiveCartForUser,
   fetchCartItem,
   fetchCartItemsForUser,
-  fetchVariantFromDatabase,
-  fetchVariantsFromDatabase,
 } from "./data";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 const RegisterSchema = z.object({
   firstName: z
@@ -166,7 +163,6 @@ async function addToCartForLoggedInUser(
 
   if (existingCartItem) {
     await updateCartItemQuantity(
-      // variant.variant_id,
       existingCartItem.cart_item_id,
       existingCartItem.quantity + quantity
     );
@@ -180,6 +176,7 @@ async function addToCartForLoggedInUser(
     );
   }
 
+  revalidateTag("cart");
   return await fetchCartItem(cartId.cart_id, variant.variant_id);
 }
 
@@ -233,6 +230,7 @@ export async function createNewCart(userId: number) {
   }
 
   const data = await res.json();
+
   if (!data.cart_id) {
     throw new Error("Server did not return a valid cart_id");
   }
@@ -252,11 +250,12 @@ export async function updateCartItemQuantity(
       body: JSON.stringify({ quantity: newQuantity }),
     }
   );
-  console.error("Response from API:", res);
 
   if (!res.ok) {
     throw new Error("Failed to update cart item quantity");
   }
+
+  revalidateTag("cart");
 }
 
 export async function updateCookieCart(updatedCart: CartItems[]) {
@@ -332,7 +331,6 @@ export async function saveCartToDatabase(userId: number, cart: CartItems[]) {
 
     if (existingCartItem) {
       await updateCartItemQuantity(
-        // item.variant_id,
         existingCartItem.cart_item_id,
         existingCartItem.quantity + item.quantity
       );
@@ -362,6 +360,8 @@ export async function removeCartItem(cart_item_id: number) {
     }
 
     console.log("Cart item deleted successfully");
+
+    revalidateTag("cart");
 
     return { success: true };
   } catch (error) {

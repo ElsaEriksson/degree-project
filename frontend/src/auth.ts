@@ -33,34 +33,35 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           .object({ email: z.string().email(), password: z.string().min(8) })
           .safeParse(credentials);
 
-        if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
-
-          try {
-            const res = await fetch("http://localhost:5000/test/login", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email, password }),
-            });
-
-            if (!res.ok) {
-              const errorData = await res.json();
-              throw new Error(errorData.error || "Log in failed");
-            }
-
-            const user: LoggedInUser = await res.json();
-
-            await migrateCartFromCookiesToDatabase(user.user_id);
-
-            return user;
-          } catch (error) {
-            console.error("Authentication error:", error);
-            return null;
-          }
+        if (!parsedCredentials.success) {
+          console.error("Invalid credentials format");
+          return null;
         }
 
-        console.log("Invalid credentials");
-        return null;
+        const { email, password } = parsedCredentials.data;
+
+        try {
+          const res = await fetch("http://localhost:5000/test/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          if (!res.ok) {
+            const errorData = await res.json();
+            console.error("Login failed:", errorData.error);
+            return null;
+          }
+
+          const user = (await res.json()) as LoggedInUser;
+
+          await migrateCartFromCookiesToDatabase(user.user_id);
+
+          return user;
+        } catch (error) {
+          console.error("Authentication error:", error);
+          return null;
+        }
       },
     }),
   ],

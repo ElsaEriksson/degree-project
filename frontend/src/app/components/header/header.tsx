@@ -3,14 +3,24 @@ import CartItem from "../cart/cartItem";
 import HeaderInteractions from "./headerInteractions";
 import HamburgerNavLinks from "./hamburgerNavLinks";
 import AuthFormSwitcher from "../loginAndRegistration/authFormSwitcher";
-import { getFavorites } from "@/app/lib/actions";
+import { getCartItems, getFavorites } from "@/app/lib/actions";
+import { CartItems } from "@/app/models/Cart";
 
 export default async function Header() {
   const favorites = await getFavorites();
+  const cartItems: CartItems[] = await getCartItems();
+
+  const cartItemsCount = cartItems.reduce(
+    (total: number, item: CartItems) => total + item.quantity,
+    0
+  );
 
   return (
     <header>
-      <HeaderInteractions favoritesCount={favorites.length} />
+      <HeaderInteractions
+        favoritesCount={favorites.length}
+        cartItemsCount={cartItemsCount}
+      />
 
       <AuthFormSwitcher />
 
@@ -22,7 +32,7 @@ export default async function Header() {
       </SlidingPanel>
 
       <SlidingPanel side="right">
-        <CartItem />
+        <CartItem cartItems={cartItems} />
       </SlidingPanel>
     </header>
   );

@@ -1,6 +1,7 @@
 "use client";
+import { addToCart } from "@/app/lib/actions";
 import { ProductWithVariants, Variant } from "@/app/models/Product";
-import { useCart, useHover } from "@/app/providers";
+import { useHover } from "@/app/providers";
 import { CheckIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -12,13 +13,12 @@ export default function SizeButtons({
   const [addedVariants, setAddedVariants] = useState<Record<number, boolean>>(
     {}
   );
-  const { addItemToCart } = useCart();
   const { isHovered, handleMouseEnter, handleMouseLeave, buttonIsHovered } =
     useHover();
 
   const handleClick = async (variant: Variant, quantity = 1) => {
     try {
-      const result = await addItemToCart(product, variant, quantity);
+      const result = await addToCart(product, variant, quantity);
 
       if ("success" in result) {
         if (result.success) {
@@ -52,24 +52,28 @@ export default function SizeButtons({
         {isHovered &&
           buttonIsHovered &&
           product.variants.map((variant) => (
-            <button
-              type="submit"
-              className={
-                variant.stock_quantity === 0
-                  ? "bg-white/70 h-full mr-2 cursor-not-allowed"
-                  : "bg-white h-full mr-2 border hover:border-black flex justify-center items-center"
-              }
-              onClick={() => handleClick(variant)}
+            <form
+              action={() => handleClick(variant)}
               key={variant.variant_id}
-              disabled={variant.stock_quantity === 0}
-              title={variant.stock_quantity === 0 ? "sold out" : ""}
+              className="mr-2"
             >
-              {addedVariants[variant.variant_id] ? (
-                <CheckIcon className="h-5 w-5" />
-              ) : (
-                variant.size
-              )}
-            </button>
+              <button
+                type="submit"
+                className={
+                  variant.stock_quantity === 0
+                    ? "bg-white/70 h-full cursor-not-allowed w-full"
+                    : "bg-white h-full border hover:border-black flex justify-center items-center w-full"
+                }
+                disabled={variant.stock_quantity === 0}
+                title={variant.stock_quantity === 0 ? "sold out" : ""}
+              >
+                {addedVariants[variant.variant_id] ? (
+                  <CheckIcon className="h-5 w-5" />
+                ) : (
+                  variant.size
+                )}
+              </button>
+            </form>
           ))}
       </div>
     </>

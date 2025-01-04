@@ -1,24 +1,40 @@
 "use client";
-import { useCart, useHeader } from "@/app/providers";
+import { useHeader } from "@/app/providers";
 import RemoveCartItem from "./removeCartItem";
 import UpdateCartItem from "./updateCartItem";
 import Image from "next/image";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { CartItems } from "@/app/models/Cart";
+import { useState } from "react";
 
-export default function CartItem() {
-  const { cartItems, loading } = useCart();
+export default function CartItem({ cartItems }: { cartItems: CartItems[] }) {
+  // const [loading, setLoading] = useState(true);
+
   const { setIsCartOpen } = useHeader();
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
 
-  if (loading) {
-    return <div>Loading cart...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading cart...</div>;
+  // }
 
   if (cartItems.length === 0) {
-    return <div>Your cart is empty.</div>;
+    return (
+      <>
+        <div className="px-4 pt-4 flex justify-between w-full items-center border-b-2">
+          <h2 className="text-xl font-bold mb-4">Shopping Cart</h2>
+          <p
+            onClick={() => setIsCartOpen(false)}
+            className="mb-4 cursor-pointer hover:underline"
+          >
+            CLOSE
+          </p>
+        </div>
+        <div className="p-4">Your cart is empty.</div>
+      </>
+    );
   }
 
   return (
@@ -58,10 +74,14 @@ export default function CartItem() {
                     </div>
                     <RemoveCartItem
                       cart_item_id={item.cart_item_id}
+                      cartItems={cartItems}
                     ></RemoveCartItem>
                   </div>
                   <div className="flex">
-                    <UpdateCartItem item={item}></UpdateCartItem>{" "}
+                    <UpdateCartItem
+                      cartItems={cartItems}
+                      item={item}
+                    ></UpdateCartItem>{" "}
                     <p className="font-semibold">${item.price}</p>
                   </div>
                 </div>

@@ -7,11 +7,7 @@ import productRoutes from "../routes/productRoutes";
 import variantRoutes from "../routes/variantRoutes";
 import authRoutes from "../routes/authRoutes";
 import cartRoutes from "../routes/cartRoutes";
-import createTablesForUsers from "./createUserTables";
-import createTablesForCollections from "./createCollectionTables";
-import createTablesForProducts from "./createProductTables";
-import createTablesForVariants from "./createVariantTables";
-import createTablesForCart from "./createCartTables";
+import createTables from "./createTables";
 
 dotenv.config();
 
@@ -21,11 +17,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-createTablesForUsers();
-createTablesForCollections();
-createTablesForProducts();
-createTablesForVariants();
-createTablesForCart();
+createTables();
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello world, updated!");

@@ -1,11 +1,18 @@
+import { updateCartItemQuantity, updateCookieCart } from "@/app/lib/actions";
 import { CartItems } from "@/app/models/Cart";
-import { useCart } from "@/app/providers";
 import { useSession } from "next-auth/react";
 
-export default function UpdateCartItem({ item }: { item: CartItems }) {
-  const { updateItemQuantity, cartItems, updateItemCookieCart } = useCart();
+export default function UpdateCartItem({
+  item,
+  cartItems,
+}: {
+  item: CartItems;
+  cartItems: CartItems[];
+}) {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated" && session;
+  const disabledMinusButton = item.quantity === 1;
+  const disabledPlusButton = item.quantity > item.stock_quantity;
 
   const handleUpdateQuantity = async (
     cart_item_id: number,
@@ -13,7 +20,7 @@ export default function UpdateCartItem({ item }: { item: CartItems }) {
     variantId: number
   ) => {
     if (isLoggedIn) {
-      await updateItemQuantity(cart_item_id, quantity);
+      await updateCartItemQuantity(cart_item_id, quantity);
     } else {
       const existingItemIndex = cartItems.findIndex(
         (item) => item.variant_id === variantId
@@ -26,15 +33,20 @@ export default function UpdateCartItem({ item }: { item: CartItems }) {
           quantity: quantity,
         };
 
-        await updateItemCookieCart(updatedCartItems);
+        await updateCookieCart(updatedCartItems);
       }
     }
   };
+
   return (
     <>
       <div className="flex grow pb-1">
         <button
-          className="h-6 w-6 border border-black flex justify-center items-center"
+          className={
+            disabledMinusButton
+              ? "h-6 w-6 border border-gray-300 flex justify-center items-center"
+              : "h-6 w-6 border border-black flex justify-center items-center"
+          }
           onClick={async () =>
             await handleUpdateQuantity(
               item.cart_item_id,
@@ -42,12 +54,19 @@ export default function UpdateCartItem({ item }: { item: CartItems }) {
               item.variant_id
             )
           }
+          disabled={disabledMinusButton}
         >
-          -
+          <p className={disabledMinusButton ? "text-gray-300" : "text-black"}>
+            -
+          </p>
         </button>
         <p className="px-2">{item.quantity}</p>
         <button
-          className="h-6 w-6 border border-black"
+          className={
+            disabledPlusButton
+              ? "h-6 w-6 border border-gray-300"
+              : "h-6 w-6 border border-black"
+          }
           onClick={() =>
             handleUpdateQuantity(
               item.cart_item_id,
@@ -55,8 +74,11 @@ export default function UpdateCartItem({ item }: { item: CartItems }) {
               item.variant_id
             )
           }
+          disabled={disabledPlusButton}
         >
-          +
+          <p className={disabledPlusButton ? "text-gray-300" : "text-black"}>
+            +
+          </p>
         </button>
       </div>
     </>

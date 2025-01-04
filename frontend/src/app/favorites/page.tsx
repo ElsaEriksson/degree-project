@@ -7,13 +7,15 @@ import { fetchFavoritesWithProductVariantsFromDatabase } from "../lib/data";
 import { HoverProvider } from "../providers";
 
 type PageProps = {
-  searchParams: Promise<{ [key: string]: string | undefined }>;
+  searchParams: Promise<{
+    page?: string;
+  }>;
 };
 
 export default async function Favorites(
   props: Readonly<PageProps>
 ): Promise<React.ReactElement> {
-  const currentPage = Number(await props.searchParams) || 1;
+  const currentPage = Number((await props.searchParams).page) || 1;
 
   const cookieStore = await cookies();
   const favorites = cookieStore.get("favorites");

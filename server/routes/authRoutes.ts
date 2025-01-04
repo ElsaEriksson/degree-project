@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { User } from "../models/User";
 import pool from "../config/db";
@@ -13,6 +12,16 @@ const router = express.Router();
 router.post("/login", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
+
+    if (
+      !email ||
+      !password ||
+      typeof email !== "string" ||
+      typeof password !== "string"
+    ) {
+      res.status(400).json({ error: "Invalid input data" });
+      return;
+    }
 
     const [results] = await pool.query<RowDataPacket[]>(
       "SELECT * FROM Users WHERE email = ?",

@@ -4,20 +4,21 @@ import { Heart, Menu, ShoppingBag, User2 } from "lucide-react";
 import { CounterBadge } from "./counterBadge";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
-import { useCart, useHeader } from "@/app/providers";
+import { useHeader } from "@/app/providers";
 import { useRouter } from "next/navigation";
 import FadeStaggerCircles from "./fadeStaggerCircles";
 import ScrollMode from "./scrollMode";
 
 export default function HeaderInteractions({
   favoritesCount,
+  cartItemsCount,
 }: {
   favoritesCount: number;
+  cartItemsCount: number;
 }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { setAuthFormOpen, setIsCartOpen, setIsMenuOpen } = useHeader();
   const { data: session, status } = useSession();
-  const { cartCount } = useCart();
   const router = useRouter();
 
   const isLoggedIn = status === "authenticated" && session;
@@ -95,7 +96,7 @@ export default function HeaderInteractions({
               className="p-2 hover:bg-gray-100 rounded-full relative"
             >
               <ShoppingBag className="h-6 w-6" />
-              <CounterBadge count={cartCount} />
+              <CounterBadge count={cartItemsCount} />
             </button>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Provider, { CartProvider, HeaderProvider } from "./providers";
+import Provider, { HeaderProvider } from "./providers";
 import Header from "./components/header/header";
 
 const geistSans = Geist({
@@ -30,12 +30,10 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Provider>
-          <CartProvider>
-            <HeaderProvider>
-              <Header />
-            </HeaderProvider>
-            <main className="flex min-h-screen flex-col">{children}</main>
-          </CartProvider>
+          <HeaderProvider>
+            <Header />
+          </HeaderProvider>
+          <main className="flex min-h-screen flex-col">{children}</main>
         </Provider>
       </body>
     </html>
