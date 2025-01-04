@@ -12,6 +12,7 @@ const productRoutes_1 = __importDefault(require("../routes/productRoutes"));
 const variantRoutes_1 = __importDefault(require("../routes/variantRoutes"));
 const authRoutes_1 = __importDefault(require("../routes/authRoutes"));
 const cartRoutes_1 = __importDefault(require("../routes/cartRoutes"));
+const checkoutRoutes_1 = __importDefault(require("../routes/checkoutRoutes"));
 const createTables_1 = __importDefault(require("./createTables"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -28,6 +29,7 @@ app.use("/api/products", productRoutes_1.default);
 app.use("/api/variants", variantRoutes_1.default);
 app.use("/test", authRoutes_1.default);
 app.use("/api/carts", cartRoutes_1.default);
+app.use("/payment", checkoutRoutes_1.default);
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });

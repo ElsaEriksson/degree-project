@@ -401,3 +401,26 @@ export async function getFavorites() {
   const favoritesCookie = cookieStore.get("favorites");
   return favoritesCookie ? JSON.parse(favoritesCookie.value) : [];
 }
+
+export async function stripePayment(cartItems: CartItems[]) {
+  const res = await fetch(
+    "http://localhost:5000/payment/create-payment-intent",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: cartItems }),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to create payment");
+  }
+
+  const data = await res.json();
+
+  if (!data.clientSecret) {
+    throw new Error("Server did not return a valid clientSecret");
+  }
+
+  return data.clientSecret;
+}
