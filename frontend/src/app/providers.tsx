@@ -1,17 +1,8 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import React from "react";
-import { CartItems } from "./models/Cart";
-import { Product, Variant } from "./models/Product";
-import {
-  addToCart,
-  getCartItems,
-  removeCartItem,
-  updateCartItemQuantity,
-  updateCookieCart,
-} from "./lib/actions";
 
 export default function Provider({ children }: { children: React.ReactNode }) {
   return (

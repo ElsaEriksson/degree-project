@@ -100,6 +100,16 @@ router.get("/favorite-variants-with-product-info", (req, res) => __awaiter(void 
         .filter(Boolean);
     let whereClause = "";
     let queryParams = [ITEMS_PER_PAGE, offset];
+    // Om favoriteIds är tom, returnera ett tomt resultat direkt
+    if (favoriteIds.length === 0) {
+        res.json({
+            products: [],
+            currentPage: page,
+            totalPages: 0,
+            totalProducts: 0,
+        });
+        return;
+    }
     if (favoriteIds.length > 0) {
         whereClause = "WHERE p.product_id IN (?)";
         queryParams = [favoriteIds, ITEMS_PER_PAGE, offset];

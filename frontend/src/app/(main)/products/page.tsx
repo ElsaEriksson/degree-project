@@ -1,9 +1,9 @@
 import { Suspense } from "react";
-import Pagination from "../components/pagination";
-import ProductCard from "../components/plp/productCard";
-import { fetchProductVariantsFromDatabase } from "../lib/data";
-import { ProductWithVariants } from "../models/Product";
-import { HoverProvider } from "../providers";
+import Pagination from "../../components/pagination";
+import ProductCard from "../../components/plp/productCard";
+import { fetchProductVariantsFromDatabase } from "../../lib/data";
+import { ProductWithVariants } from "../../models/Product";
+import { HoverProvider } from "../../providers";
 
 type PageProps = {
   params: Promise<{ slug: string[] }>;

@@ -1,10 +1,10 @@
 import { cookies } from "next/headers";
-import ProductCard from "../components/plp/productCard";
+import ProductCard from "../../components/plp/productCard";
 import { Suspense } from "react";
 import { ProductWithVariants } from "@/app/models/Product";
-import Pagination from "../components/pagination";
-import { fetchFavoritesWithProductVariantsFromDatabase } from "../lib/data";
-import { HoverProvider } from "../providers";
+import Pagination from "../../components/pagination";
+import { fetchFavoritesWithProductVariantsFromDatabase } from "../../lib/data";
+import { HoverProvider } from "../../providers";
 
 type PageProps = {
   searchParams: Promise<{
@@ -34,6 +34,14 @@ export default async function Favorites(
   }
 
   const { products, totalPages } = data;
+
+  if (products.length === 0) {
+    return (
+      <div className="relative mx-6 mt-20 pt-10">
+        <div>No favorites saved</div>
+      </div>
+    );
+  }
 
   return (
     <>

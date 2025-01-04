@@ -109,6 +109,17 @@ router.get(
     let whereClause = "";
     let queryParams: any[] = [ITEMS_PER_PAGE, offset];
 
+    // Om favoriteIds är tom, returnera ett tomt resultat direkt
+    if (favoriteIds.length === 0) {
+      res.json({
+        products: [],
+        currentPage: page,
+        totalPages: 0,
+        totalProducts: 0,
+      });
+      return;
+    }
+
     if (favoriteIds.length > 0) {
       whereClause = "WHERE p.product_id IN (?)";
       queryParams = [favoriteIds, ITEMS_PER_PAGE, offset];

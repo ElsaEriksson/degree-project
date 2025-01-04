@@ -6,11 +6,13 @@ import Image from "next/image";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { CartItems } from "@/app/models/Cart";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CartItem({ cartItems }: { cartItems: CartItems[] }) {
   // const [loading, setLoading] = useState(true);
 
   const { setIsCartOpen } = useHeader();
+  const router = useRouter();
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
@@ -95,7 +97,12 @@ export default function CartItem({ cartItems }: { cartItems: CartItems[] }) {
             <p className="font-semibold">TOTAL</p>
             <p className="font-semibold">${totalPrice}</p>
           </div>
-          <button className="h-12 w-full bg-black text-white">Checkout</button>
+          <button
+            onClick={() => router.push("/checkout")}
+            className="h-12 w-full bg-black text-white"
+          >
+            Checkout
+          </button>
         </div>
       </div>
     </>
