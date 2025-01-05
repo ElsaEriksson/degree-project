@@ -1,9 +1,31 @@
+"use client";
 import { AtSymbolIcon } from "@heroicons/react/24/outline";
-import { MapPin, Phone } from "lucide-react";
+import { MapPin, Phone, UserIcon } from "lucide-react";
+import { z } from "zod";
 
-export default function CheckoutForm() {
+interface CheckoutFormProps {
+  formData: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone_number: string;
+    shipping_address: string;
+    postal_code: string;
+    city: string;
+  };
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  errors: z.ZodIssue[];
+}
+export default function CheckoutForm({
+  formData,
+  onChange,
+  errors,
+}: CheckoutFormProps) {
+  const getError = (field: string) => {
+    return errors.find((error) => error.path[0] === field)?.message;
+  };
   return (
-    <form action="">
+    <div>
       <label
         className="mb-3 mt-2 block text-xs font-medium text-gray-900"
         htmlFor="email"
@@ -12,46 +34,108 @@ export default function CheckoutForm() {
       </label>
       <div className="relative">
         <input
-          className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+          className={`peer block w-full rounded-md border ${
+            getError("email") ? "border-red-500" : "border-gray-200"
+          } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
           id="email"
           type="email"
           name="email"
           placeholder="Enter your email address"
           required
+          value={formData.email}
+          onChange={onChange}
         />
         <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
       </div>
+
       <label
         className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-        htmlFor="postalCode"
+        htmlFor="postal_code"
       >
         Postal code
       </label>
       <div className="relative">
         <input
-          className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-          id="postalCode"
-          type="number"
-          name="postalCode"
+          className={`peer block w-full rounded-md border ${
+            getError("postal_code") ? "border-red-500" : "border-gray-200"
+          } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+          id="postal_code"
+          type="text"
+          name="postal_code"
           placeholder="Enter your postal code"
           required
+          value={formData.postal_code}
+          onChange={onChange}
         />
         <MapPin className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
       </div>
+
+      <div className="flex gap-5">
+        <div>
+          <label
+            className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+            htmlFor="first_name"
+          >
+            First name
+          </label>
+          <div className="relative">
+            <input
+              className={`peer block w-full rounded-md border ${
+                getError("first_name") ? "border-red-500" : "border-gray-200"
+              } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+              id="first_name"
+              type="text"
+              name="first_name"
+              placeholder="Enter your first name"
+              required
+              value={formData.first_name}
+              onChange={onChange}
+            />
+            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+          </div>
+        </div>
+        <div>
+          <label
+            className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+            htmlFor="last_name"
+          >
+            Last name
+          </label>
+          <div className="relative">
+            <input
+              className={`peer block w-full rounded-md border ${
+                getError("last_name") ? "border-red-500" : "border-gray-200"
+              } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+              id="last_name"
+              type="text"
+              name="last_name"
+              placeholder="Enter your last name"
+              required
+              value={formData.last_name}
+              onChange={onChange}
+            />
+            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+          </div>
+        </div>
+      </div>
       <label
         className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-        htmlFor="address"
+        htmlFor="shipping_address"
       >
-        Address
+        Shipping address
       </label>
       <div className="relative">
         <input
-          className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-          id="address"
+          className={`peer block w-full rounded-md border ${
+            getError("shipping_address") ? "border-red-500" : "border-gray-200"
+          } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+          id="shipping_address"
           type="text"
-          name="address"
-          placeholder="Enter your address"
+          name="shipping_address"
+          placeholder="Enter your shipping address"
           required
+          value={formData.shipping_address}
+          onChange={onChange}
         />
         <MapPin className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
       </div>
@@ -63,32 +147,40 @@ export default function CheckoutForm() {
       </label>
       <div className="relative">
         <input
-          className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+          className={`peer block w-full rounded-md border ${
+            getError("city") ? "border-red-500" : "border-gray-200"
+          } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
           id="city"
           type="text"
           name="city"
           placeholder="Enter your city"
           required
+          value={formData.city}
+          onChange={onChange}
         />
         <MapPin className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
       </div>
       <label
         className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-        htmlFor="phoneNumber"
+        htmlFor="phone_number"
       >
         Phone number
       </label>
       <div className="relative">
         <input
-          className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-          id="phoneNumber"
+          className={`peer block w-full rounded-md border ${
+            getError("phone_number") ? "border-red-500" : "border-gray-200"
+          } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+          id="phone_number"
           type="text"
-          name="phoneNumber"
+          name="phone_number"
           placeholder="Enter your phone number"
           required
+          value={formData.phone_number}
+          onChange={onChange}
         />
         <Phone className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
       </div>
-    </form>
+    </div>
   );
 }

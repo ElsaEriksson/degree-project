@@ -11,6 +11,7 @@ import {
   fetchCartItemsForUser,
 } from "./data";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { OrderData, OrderItems } from "../models/Orders";
 
 const RegisterSchema = z.object({
   firstName: z
@@ -29,6 +30,19 @@ const RegisterSchema = z.object({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
       "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."
     ),
+});
+
+const orderDataSchema = z.object({
+  user_id: z.number().positive().optional(),
+  cart_id: z.number().positive(),
+  total_price: z.number().positive(),
+  first_name: z.string().min(1, "First name is required"),
+  last_name: z.string().min(1, "Last name is required"),
+  phone_number: z.string().min(1, "Phone number is required"),
+  shipping_address: z.string().min(1, "Shipping address is required"),
+  postal_code: z.string().min(1, "Postal code is required"),
+  city: z.string().min(1, "City is required"),
+  email: z.string().email("Invalid email address"),
 });
 
 export type State = {
@@ -180,8 +194,8 @@ async function addToCartForLoggedInUser(
   return await fetchCartItem(cartId.cart_id, variant.variant_id);
 }
 
-function generateCartItemId(): number {
-  return Date.now() + Math.floor(Math.random() * 1000);
+function generateId(): number {
+  return Math.floor(100000 + Math.random() * 900000);
 }
 
 async function addToCartForGuestUser(
@@ -201,8 +215,8 @@ async function addToCartForGuestUser(
     cart[existingItemIndex].quantity += quantity;
   } else {
     cart.push({
-      cart_item_id: generateCartItemId(),
-      cart_id: generateCartItemId(),
+      cart_item_id: generateId(),
+      cart_id: generateId(),
       product_id: product.product_id,
       variant_id: variant.variant_id,
       name: product.name,
@@ -423,4 +437,95 @@ export async function stripePayment(cartItems: CartItems[]) {
   }
 
   return data.clientSecret;
+}
+
+export async function createOrder(orderData: OrderData, cart_id: number) {
+  try {
+    const session = await auth();
+    if (session) {
+      orderData.user_id = session.user.userId;
+      orderData.guest_id = null;
+      orderData.cart_id = cart_id;
+    } else {
+      orderData.guest_id = generateId();
+      orderData.user_id = null;
+      orderData.cart_id = null;
+    }
+
+    const response = await fetch(`http://localhost:5000/orders`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: orderData.user_id,
+        guest_id: orderData.guest_id,
+        cart_id: orderData.cart_id,
+        ...orderData,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create order");
+    }
+
+    const data = await response.json();
+    return { success: true, orderId: data.orderId };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { success: false, error: error.errors };
+    }
+    console.error("Error creating order:", error);
+    return { success: false, error: "Failed to create order" };
+  }
+}
+
+export async function createOrderItems(orderId: number, items: OrderItems[]) {
+  try {
+    const response = await fetch(`http://localhost:5000/order-items`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ order_id: orderId, items }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create order items");
+    }
+
+    const data = await response.json();
+    return { success: true, message: data.message };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { success: false, error: error.errors };
+    }
+    console.error("Error creating order items:", error);
+    return { success: false, error: "Failed to create order items" };
+  }
+}
+
+export async function createOrderWithItems(
+  orderData: OrderData,
+  items: OrderItems[],
+  cart_id: number
+) {
+  const orderResult = await createOrder(orderData, cart_id);
+
+  if (orderResult.success) {
+    const orderItemsResult = await createOrderItems(orderResult.orderId, items);
+
+    if (orderItemsResult.success) {
+      return {
+        success: true,
+        orderId: orderResult.orderId,
+        message: "Order and items created successfully",
+      };
+    } else {
+      // If order items creation fails, you might want to handle this case (e.g., delete the created order)
+      return { success: false, error: orderItemsResult.error };
+    }
+  } else {
+    return { success: false, error: orderResult.error };
+  }
 }

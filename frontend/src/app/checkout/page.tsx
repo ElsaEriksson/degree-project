@@ -33,13 +33,10 @@ export default async function Checkout() {
         <p className="font-semibold">${totalPrice}</p>
       </div>
       <div className="border border-1 my-2"></div>
-      <div className="uppercase pt-2 pb-2 text-xl tracking-wide	">
-        Your Information
-      </div>
-      <CheckoutForm></CheckoutForm>
-      <div className="border border-1 mb-2 mt-6"></div>
-      <div className="uppercase mt-6 text-xl tracking-wide">Payment</div>
-      <PaymentFormWrapper cartItems={cartItems}></PaymentFormWrapper>
+      <PaymentFormWrapper
+        cartItems={cartItems}
+        totalPrice={totalPrice}
+      ></PaymentFormWrapper>
     </div>
   );
 }

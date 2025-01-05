@@ -8,6 +8,7 @@ import variantRoutes from "../routes/variantRoutes";
 import authRoutes from "../routes/authRoutes";
 import cartRoutes from "../routes/cartRoutes";
 import checkoutRoutes from "../routes/checkoutRoutes";
+import orderRoutes from "../routes/orderRoutes";
 import createTables from "./createTables";
 
 dotenv.config();
@@ -31,6 +32,7 @@ app.use("/api/variants", variantRoutes);
 app.use("/test", authRoutes);
 app.use("/api/carts", cartRoutes);
 app.use("/payment", checkoutRoutes);
+app.use("/", orderRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

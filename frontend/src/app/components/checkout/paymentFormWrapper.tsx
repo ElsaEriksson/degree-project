@@ -12,8 +12,10 @@ const stripePromise = loadStripe(
 
 export default function PaymentFormWrapper({
   cartItems,
+  totalPrice,
 }: {
   cartItems: CartItems[];
+  totalPrice: number;
 }) {
   const [clientSecret, setClientSecret] = useState("");
 
@@ -34,12 +36,15 @@ export default function PaymentFormWrapper({
     clientSecret,
   };
 
-  console.log(cartItems);
   return (
     <>
       {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
-          <PaymentForm />
+          <PaymentForm
+            cartItems={cartItems}
+            totalPrice={totalPrice}
+            clientSecret={clientSecret}
+          />
         </Elements>
       )}
     </>

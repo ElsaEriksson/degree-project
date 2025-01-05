@@ -213,6 +213,49 @@ const createCartItemsTable = async (connection: any) => {
   console.log("CartItems table created successfully!");
 };
 
+const createOrdersTable = async (connection: any) => {
+  await connection.query(`
+    CREATE TABLE IF NOT EXISTS Orders (
+      order_id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NULL,
+      guest_id VARCHAR(255) NULL,
+      cart_id INT NULL,
+      total_price DECIMAL(10, 2) NOT NULL,
+      order_status ENUM('pending', 'confirmed', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
+      first_name VARCHAR(100) NOT NULL,
+      last_name VARCHAR(100) NOT NULL,
+      phone_number VARCHAR(20) NOT NULL,
+      shipping_address VARCHAR(255) NOT NULL,
+      postal_code VARCHAR(20) NOT NULL,
+      city VARCHAR(100) NOT NULL,
+      email VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+      FOREIGN KEY (cart_id) REFERENCES Carts(cart_id) ON DELETE CASCADE
+    );
+  `);
+  console.log("Orders table with personal details created successfully!");
+};
+
+const createOrderItemsTable = async (connection: any) => {
+  await connection.query(`
+    CREATE TABLE IF NOT EXISTS OrderItems (
+      order_item_id INT AUTO_INCREMENT PRIMARY KEY,
+      order_id INT NOT NULL,
+      product_id INT NOT NULL,
+      variant_id INT NOT NULL,
+      quantity INT NOT NULL,
+      price DECIMAL(10, 2) NOT NULL,
+      FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE,
+      FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE CASCADE,
+      FOREIGN KEY (variant_id) REFERENCES Variants(variant_id) ON DELETE CASCADE,
+      UNIQUE KEY unique_order_variant (order_id, variant_id)
+    );
+  `);
+  console.log("OrderItems table created successfully!");
+};
+
 const createTables = async () => {
   let connection;
   try {
@@ -232,6 +275,9 @@ const createTables = async () => {
 
     await createCartsTable(connection);
     await createCartItemsTable(connection);
+
+    await createOrdersTable(connection);
+    await createOrderItemsTable(connection);
   } catch (error) {
     console.error("Error creating tables or inserting user:", error);
   } finally {
