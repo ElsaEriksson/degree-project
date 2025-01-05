@@ -1,10 +1,10 @@
 import { SlidingPanel } from "./slidingPanel";
-import CartItem from "../cart/cartItem";
 import HeaderInteractions from "./headerInteractions";
 import HamburgerNavLinks from "./hamburgerNavLinks";
 import AuthFormSwitcher from "../loginAndRegistration/authFormSwitcher";
 import { getCartItems, getFavorites } from "@/app/lib/actions";
 import { CartItems } from "@/app/models/Cart";
+import Cart from "../cart/cart";
 
 export default async function Header() {
   const favorites = await getFavorites();
@@ -32,7 +32,7 @@ export default async function Header() {
       </SlidingPanel>
 
       <SlidingPanel side="right">
-        <CartItem cartItems={cartItems} />
+        <Cart cartItems={cartItems} />
       </SlidingPanel>
     </header>
   );

@@ -1,14 +1,12 @@
 "use client";
 import { useHeader } from "@/app/providers";
-import RemoveCartItem from "./removeCartItem";
-import UpdateCartItem from "./updateCartItem";
-import Image from "next/image";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { CartItems } from "@/app/models/Cart";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ItemsInCart from "./itemsInCart";
 
-export default function CartItem({ cartItems }: { cartItems: CartItems[] }) {
+export default function Cart({ cartItems }: { cartItems: CartItems[] }) {
   // const [loading, setLoading] = useState(true);
 
   const { setIsCartOpen } = useHeader();
@@ -53,43 +51,7 @@ export default function CartItem({ cartItems }: { cartItems: CartItems[] }) {
         </div>
 
         <ScrollArea className="flex-grow overflow-y-auto scrollbar-hide">
-          {cartItems.map((item) => (
-            <div key={item.cart_item_id}>
-              <div className="flex py-2">
-                <div className="relative">
-                  <Image
-                    src={item.main_image}
-                    alt={item.name}
-                    width={75}
-                    height={100}
-                    className="w-full h-auto transition-opacity duration-300"
-                    priority
-                  />
-                </div>
-                <div className="pl-3 w-full flex flex-col justify-between">
-                  <div className="grid grid-cols-[1fr_auto]">
-                    <div className="flex flex-col">
-                      <h3 className="uppercase font-semibold text-base">
-                        {item.name}
-                      </h3>
-                      <p className="text-sm text-gray-600">Size: {item.size}</p>
-                    </div>
-                    <RemoveCartItem
-                      cart_item_id={item.cart_item_id}
-                      cartItems={cartItems}
-                    ></RemoveCartItem>
-                  </div>
-                  <div className="flex">
-                    <UpdateCartItem
-                      cartItems={cartItems}
-                      item={item}
-                    ></UpdateCartItem>{" "}
-                    <p className="font-semibold">${item.price}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+          <ItemsInCart cartItems={cartItems} />
         </ScrollArea>
 
         <div className="w-full border-t-2 mt-2">

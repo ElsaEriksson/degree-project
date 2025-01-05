@@ -1,95 +1,94 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import {
-  PaymentElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
-
-interface StripePaymentElementOptions {
-  layout?: "tabs" | "accordion" | "auto";
-}
+import { AtSymbolIcon } from "@heroicons/react/24/outline";
+import { MapPin, Phone } from "lucide-react";
 
 export default function CheckoutForm() {
-  const stripe = useStripe();
-  const elements = useElements();
-
-  const [message, setMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (!stripe) {
-      return;
-    }
-
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    );
-
-    if (!clientSecret) {
-      return;
-    }
-
-    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-      switch (paymentIntent?.status) {
-        case "succeeded":
-          setMessage("Payment succeeded!");
-          break;
-        case "processing":
-          setMessage("Your payment is processing.");
-          break;
-        case "requires_payment_method":
-          setMessage("Your payment was not successful, please try again.");
-          break;
-        default:
-          setMessage("Something went wrong.");
-          break;
-      }
-    });
-  }, [stripe]);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-
-    setIsLoading(true);
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: "https://inte-imdb-l62e.vercel.app/",
-      },
-    });
-
-    if (
-      error &&
-      (error.type === "card_error" || error.type === "validation_error")
-    ) {
-      setMessage(error.message || "An error occurred.");
-    } else {
-      setMessage("An unexpected error occurred.");
-    }
-
-    setIsLoading(false);
-  };
-
-  const paymentElementOptions: StripePaymentElementOptions = {
-    layout: "tabs",
-  };
-
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
-        </span>
-      </button>
-      {message && <div id="payment-message">{message}</div>}
+    <form action="">
+      <label
+        className="mb-3 mt-2 block text-xs font-medium text-gray-900"
+        htmlFor="email"
+      >
+        Email
+      </label>
+      <div className="relative">
+        <input
+          className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+          id="email"
+          type="email"
+          name="email"
+          placeholder="Enter your email address"
+          required
+        />
+        <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+      </div>
+      <label
+        className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+        htmlFor="postalCode"
+      >
+        Postal code
+      </label>
+      <div className="relative">
+        <input
+          className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+          id="postalCode"
+          type="number"
+          name="postalCode"
+          placeholder="Enter your postal code"
+          required
+        />
+        <MapPin className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+      </div>
+      <label
+        className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+        htmlFor="address"
+      >
+        Address
+      </label>
+      <div className="relative">
+        <input
+          className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+          id="address"
+          type="text"
+          name="address"
+          placeholder="Enter your address"
+          required
+        />
+        <MapPin className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+      </div>
+      <label
+        className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+        htmlFor="city"
+      >
+        City
+      </label>
+      <div className="relative">
+        <input
+          className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+          id="city"
+          type="text"
+          name="city"
+          placeholder="Enter your city"
+          required
+        />
+        <MapPin className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+      </div>
+      <label
+        className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+        htmlFor="phoneNumber"
+      >
+        Phone number
+      </label>
+      <div className="relative">
+        <input
+          className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+          id="phoneNumber"
+          type="text"
+          name="phoneNumber"
+          placeholder="Enter your phone number"
+          required
+        />
+        <Phone className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+      </div>
     </form>
   );
 }
