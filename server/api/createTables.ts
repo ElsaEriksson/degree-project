@@ -261,6 +261,9 @@ const createTables = async () => {
   try {
     connection = await pool.getConnection();
 
+    await createCollectionsTable(connection);
+    await insertInitialCollections(connection);
+
     await createProductsTable(connection);
     await insertInitialProducts(connection);
 
@@ -269,9 +272,6 @@ const createTables = async () => {
 
     await createVariantsTable(connection);
     await insertInitialVariants(connection);
-
-    await createCollectionsTable(connection);
-    await insertInitialCollections(connection);
 
     await createCartsTable(connection);
     await createCartItemsTable(connection);

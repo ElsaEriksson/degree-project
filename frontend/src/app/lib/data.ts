@@ -63,6 +63,27 @@ export async function fetchProductsFromDatabase(): Promise<
   }
 }
 
+export async function fetchProductFromDatabase(
+  id: string
+): Promise<ProductWithVariants | undefined> {
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/products/product-with-variants/${id}`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const data: ProductWithVariants = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    return undefined;
+  }
+}
+
 export async function fetchCollectionsFromDatabase(): Promise<
   Collection[] | undefined
 > {

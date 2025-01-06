@@ -234,14 +234,14 @@ const createTables = () => __awaiter(void 0, void 0, void 0, function* () {
     let connection;
     try {
         connection = yield db_1.default.getConnection();
+        yield createCollectionsTable(connection);
+        yield insertInitialCollections(connection);
         yield createProductsTable(connection);
         yield insertInitialProducts(connection);
         yield createUsersTable(connection);
         yield insertInitialUser(connection);
         yield createVariantsTable(connection);
         yield insertInitialVariants(connection);
-        yield createCollectionsTable(connection);
-        yield insertInitialCollections(connection);
         yield createCartsTable(connection);
         yield createCartItemsTable(connection);
         yield createOrdersTable(connection);
