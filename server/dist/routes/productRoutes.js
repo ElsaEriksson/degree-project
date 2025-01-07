@@ -264,4 +264,77 @@ router.get("/product-with-variants/:productId", (req, res) => __awaiter(void 0, 
         res.status(500).json({ error: error.message });
     }
 }));
+router.get("/collection-product-with-variants/:collectionId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const collectionId = Number(req.params.collectionId);
+    if (isNaN(collectionId)) {
+        res.status(400).json({ error: "Invalid collection ID" });
+        return;
+    }
+    try {
+        // Fetch the product with the given ID and its variants
+        const [results] = yield db_1.default.query(`
+        SELECT 
+          p.product_id,
+          p.name,
+          p.main_image,
+          p.video,
+          p.additional_image,
+          p.collection_id,
+          p.price,
+          p.description_short,
+          p.description_long,
+          p.material,
+          p.gender,
+          p.season,
+          p.is_favorite,
+          p.created_at,
+          p.updated_at,
+          GROUP_CONCAT(CONCAT(v.variant_id, ':', v.size, ':', v.stock_quantity) SEPARATOR ',') AS variants
+        FROM 
+          Products p
+        LEFT JOIN 
+          Variants v ON p.product_id = v.product_id
+        WHERE 
+          p.collection_id = ?
+        GROUP BY 
+          p.product_id
+      `, [collectionId]);
+        // Check if product was found
+        if (results.length === 0) {
+            res.status(404).json({ error: "Product not found" });
+            return;
+        }
+        const products = results.map((product) => ({
+            product_id: product.product_id,
+            name: product.name,
+            main_image: product.main_image,
+            video: product.video,
+            additional_image: product.additional_image,
+            collection_id: product.collection_id,
+            price: product.price,
+            description_short: product.description_short,
+            description_long: product.description_long,
+            material: product.material,
+            gender: product.gender,
+            season: product.season,
+            is_favorite: product.is_favorite,
+            created_at: product.created_at,
+            updated_at: product.updated_at,
+            variants: product.variants
+                ? product.variants.split(",").map((variant) => {
+                    const [variant_id, size, stock_quantity] = variant.split(":");
+                    return {
+                        variant_id: parseInt(variant_id, 10),
+                        size,
+                        stock_quantity: parseInt(stock_quantity, 10),
+                    };
+                })
+                : [],
+        }));
+        res.json(products);
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}));
 exports.default = router;

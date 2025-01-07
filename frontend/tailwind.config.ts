@@ -20,6 +20,10 @@ export default {
         base: ["14px", "22px"],
         lg: ["18px", "26px"],
         xl: ["22px", "30px"],
+        xxl: ["26px", "34px"],
+      },
+      fontFamily: {
+        inconsolata: ["var(--font-inconsolata)"], // Lägg till Inconsolata.
       },
     },
   },

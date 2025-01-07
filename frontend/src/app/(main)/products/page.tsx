@@ -25,8 +25,10 @@ export default async function Products(
 
   return (
     <>
-      <div className="relative mx-6 mt-20 pt-10">
-        <h2 className="p-1">All Products</h2>
+      <div className="relative mx-2 md:mx-6 pt-28 flex flex-col gap-4">
+        <p className=" uppercase text-[40px] md:text-[70px] lg:text-[100px]">
+          All Products
+        </p>
         <Suspense fallback={"loading..."}>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 w-full">
             {data.products.map((product: ProductWithVariants) => (

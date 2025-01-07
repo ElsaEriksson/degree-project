@@ -41,7 +41,7 @@ export default function HeaderInteractions({
             <Menu className="h-6 w-6" />
           </button>
 
-          <a href="/" className="text-2xl font-bold text-center">
+          <a href="/" className="text-xl font-medium text-center">
             H&H
           </a>
 
@@ -50,9 +50,9 @@ export default function HeaderInteractions({
               <form onSubmit={handleLogout}>
                 <button
                   disabled={isLoggingOut}
-                  className="rounded-lg px-6 py-3 hidden lg:block text-sm font-medium text-black transition-colors hover:underline md:text-base"
+                  className="rounded-lg px-6 py-3 hidden lg:block transition-colors hover:underline"
                 >
-                  <div className="uppercase">
+                  <div className="uppercase font-inconsolata text-black md:text-base lg:text-lg">
                     {isLoggingOut ? <FadeStaggerCircles /> : "Sign Out"}
                   </div>
                 </button>
@@ -61,9 +61,9 @@ export default function HeaderInteractions({
               <button
                 onClick={() => setAuthFormOpen(true)}
                 disabled={status === "loading"}
-                className="rounded-lg px-6 text-sm font-medium text-black transition-colors hover:underline md:text-base hidden lg:block"
+                className="rounded-lg px-6 text-base font-medium text-black transition-colors hover:underline md:text-base hidden lg:block"
               >
-                <div className="uppercase">
+                <div className="uppercase font-inconsolata">
                   {status === "loading" ? (
                     <FadeStaggerCircles />
                   ) : (

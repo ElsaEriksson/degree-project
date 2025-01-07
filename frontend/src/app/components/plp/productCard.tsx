@@ -22,7 +22,7 @@ export default function ProductCard({
 
   return (
     <>
-      <div className="bg-white p-1">
+      <div className="bg-white p-1" id="productCard">
         <div className="flex flex-col items-center">
           <div className="relative w-full h-full">
             <Link href={`product/${product.product_id}-${slug}`}>
@@ -35,8 +35,12 @@ export default function ProductCard({
               </div>
             </div>
           </div>
-          <p className="uppercase text-center text-sb pt-3">{product.name}</p>
-          <p className="text-sb font-semibold pt-1">{product.price} SEK</p>
+          <p className="uppercase text-center text-sm pt-3 tracking-wide md:text-base">
+            {product.name}
+          </p>
+          <p className="text-sm font-semibold pt-1 md:text-base">
+            {product.price} SEK
+          </p>
           {/* <ProductBadges
             product={product}
             selectedVariant={selectedVariant}
