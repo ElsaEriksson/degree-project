@@ -56,7 +56,7 @@ export default function HamburgerNavLinks() {
                 key={link.name}
                 href={link.href}
                 className={clsx(
-                  "flex h-[48px] grow items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-3 uppercase border-gray-400 border-t",
+                  "flex h-[48px] grow items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-3 uppercase border-gray-400 border-b",
                   {
                     "bg-gray-200 text-black": pathname === link.href,
                   }
@@ -71,7 +71,7 @@ export default function HamburgerNavLinks() {
             <AccordionItem value="collections" className="border-gray-400">
               <AccordionTrigger
                 className={clsx(
-                  "w-full flex h-[48px] grow items-center justify-between bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-3 uppercase border-gray-400 border-t",
+                  "w-full flex h-[48px] grow items-center justify-between bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-3 uppercase border-gray-400",
                   {
                     "bg-gray-100 text-black":
                       pathname.startsWith("/collections"),

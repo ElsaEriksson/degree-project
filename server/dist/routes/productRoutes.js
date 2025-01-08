@@ -17,13 +17,13 @@ const db_1 = __importDefault(require("../config/db"));
 const router = express_1.default.Router();
 const ITEMS_PER_PAGE = 12;
 router.get("/variants-with-product-info", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = req.query.query.toLowerCase() || "";
     const page = parseInt(req.query.page) || 1;
     const offset = (page - 1) * ITEMS_PER_PAGE;
-    // First, get the total count of products
     const [countResult] = yield db_1.default.query(`
       SELECT COUNT(DISTINCT p.product_id) as total
       FROM Products p
-    `);
+      WHERE (? = '' OR p.name LIKE ? COLLATE utf8mb4_general_ci)`, [query, `%${query}%`]);
     const totalProducts = countResult[0].total;
     const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
     try {
@@ -49,11 +49,12 @@ router.get("/variants-with-product-info", (req, res) => __awaiter(void 0, void 0
         Products p
       LEFT JOIN 
         Variants v ON p.product_id = v.product_id
+      WHERE (? = '' OR p.name LIKE ? COLLATE utf8mb4_general_ci)      
       GROUP BY 
         p.product_id
       LIMIT ?
       OFFSET ?
-    `, [ITEMS_PER_PAGE, offset]);
+    `, [query, `%${query}%`, ITEMS_PER_PAGE, offset]);
         const products = results.map((product) => ({
             product_id: product.product_id,
             name: product.name,

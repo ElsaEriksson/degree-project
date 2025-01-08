@@ -161,7 +161,8 @@ export async function fetchCartItem(
 }
 
 export async function fetchProductVariantsFromDatabase(
-  page: number = 1
+  page: number = 1,
+  query: string
 ): Promise<
   | {
       products: ProductWithVariants[];
@@ -173,7 +174,7 @@ export async function fetchProductVariantsFromDatabase(
 > {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/products/variants-with-product-info?page=${page}`,
+      `http://localhost:5000/api/products/variants-with-product-info?page=${page}&query=${query}`,
       {
         next: { revalidate: 60 },
       }

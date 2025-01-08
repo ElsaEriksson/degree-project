@@ -14,14 +14,17 @@ const ITEMS_PER_PAGE = 12;
 router.get(
   "/variants-with-product-info",
   async (req: Request, res: Response) => {
+    const query = (req.query.query as string).toLowerCase() || "";
     const page = parseInt(req.query.page as string) || 1;
     const offset = (page - 1) * ITEMS_PER_PAGE;
 
-    // First, get the total count of products
-    const [countResult] = await pool.query<RowDataPacket[]>(`
+    const [countResult] = await pool.query<RowDataPacket[]>(
+      `
       SELECT COUNT(DISTINCT p.product_id) as total
       FROM Products p
-    `);
+      WHERE (? = '' OR p.name LIKE ? COLLATE utf8mb4_general_ci)`,
+      [query, `%${query}%`]
+    );
     const totalProducts = countResult[0].total;
     const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
 
@@ -49,12 +52,13 @@ router.get(
         Products p
       LEFT JOIN 
         Variants v ON p.product_id = v.product_id
+      WHERE (? = '' OR p.name LIKE ? COLLATE utf8mb4_general_ci)      
       GROUP BY 
         p.product_id
       LIMIT ?
       OFFSET ?
     `,
-        [ITEMS_PER_PAGE, offset]
+        [query, `%${query}%`, ITEMS_PER_PAGE, offset]
       );
 
       const products: ProductWithVariants[] = results.map((product) => ({

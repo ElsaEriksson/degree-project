@@ -14,7 +14,7 @@ export default async function Checkout() {
   const totalPrice = itemsTotalPrice + deliveryCost;
 
   return (
-    <div className="m-auto py-4">
+    <div className="m-auto pb-10 pt-24">
       <div className="uppercase text-xl tracking-wide	pb-4">
         Shopping bag items
       </div>
