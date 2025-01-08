@@ -5,21 +5,68 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import { useActionState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useActionState,
+  useEffect,
+  useTransition,
+} from "react";
 import { register, State } from "@/app/lib/actions";
 import { Button } from "../ui/button";
+import { StarsIcon } from "lucide-react";
 
-export default function RegisterForm({ authMode }: { authMode: string }) {
-  const initialState: State = { message: null, errors: {} };
+export default function RegisterForm({
+  authMode,
+  setAuthMode,
+}: {
+  authMode: string;
+  setAuthMode: Dispatch<SetStateAction<string>>;
+}) {
+  const initialState: State = { message: null, errors: {}, success: false };
   const [state, registerFormAction, isPending] = useActionState(
     register,
     initialState
   );
+  const [isPendingTransition, startTransition] = useTransition();
+
+  useEffect(() => {
+    const form = document.querySelector("form") as HTMLFormElement;
+    if (form) {
+      form.reset();
+    }
+  }, [authMode]);
+
+  const handleGoToLogin = () => {
+    startTransition(() => {
+      setAuthMode("login");
+      registerFormAction(new FormData());
+    });
+  };
+
+  if (state.success) {
+    return (
+      <div className="space-y-4 px-6 py-20">
+        <div className="text-xl flex items-center pb-5">
+          <StarsIcon className="mr-2 w-15"></StarsIcon>
+          <p>Registration successful! You can now log in.</p>
+        </div>
+        <Button
+          onClick={handleGoToLogin}
+          className="w-full uppercase"
+          disabled={isPendingTransition}
+        >
+          {isPendingTransition ? "Processing..." : "Go to Sign In"}
+          <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <>
-      <form action={registerFormAction} className="space-y-3">
-        <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
+      <form action={registerFormAction} className="space-y-2">
+        <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4">
           <div>
             <label
               className="mb-3 mt-5 block text-xs font-medium text-gray-900"
@@ -47,7 +94,7 @@ export default function RegisterForm({ authMode }: { authMode: string }) {
           </div>
           <div>
             <label
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+              className="mb-3 mt-3 block text-xs font-medium text-gray-900"
               htmlFor="lastName"
             >
               Last Name
@@ -73,7 +120,7 @@ export default function RegisterForm({ authMode }: { authMode: string }) {
 
           <div>
             <label
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+              className="mb-3 mt-3 block text-xs font-medium text-gray-900"
               htmlFor="email"
             >
               Email
@@ -99,7 +146,7 @@ export default function RegisterForm({ authMode }: { authMode: string }) {
 
           <div className="mt-4">
             <label
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+              className="mb-3 mt-3 block text-xs font-medium text-gray-900"
               htmlFor="password"
             >
               Password
@@ -124,7 +171,7 @@ export default function RegisterForm({ authMode }: { authMode: string }) {
               ))}
           </div>
 
-          <Button className="mt-4 w-full" aria-disabled={isPending}>
+          <Button className="mt-6 w-full uppercase" aria-disabled={isPending}>
             Register
             <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
           </Button>

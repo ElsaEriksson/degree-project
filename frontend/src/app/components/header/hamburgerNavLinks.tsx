@@ -38,6 +38,15 @@ export default function HamburgerNavLinks() {
 
   return (
     <>
+      <div className="flex justify-between w-full items-center border-b-2">
+        <h2 className="text-xl font-semibold mb-4">Menu</h2>
+        <p
+          onClick={() => setIsMenuOpen(false)}
+          className="text-base mb-4 cursor-pointer hover:underline"
+        >
+          CLOSE
+        </p>
+      </div>
       <div className="flex flex-col max-h-screen md:space-y-2 h-full">
         <div>
           {links.map((link) => {

@@ -53,6 +53,7 @@ export type State = {
     password?: string[];
   };
   message?: string | null;
+  success?: boolean;
 };
 
 export async function authenticate(
@@ -87,6 +88,7 @@ export async function register(
 
   if (!validatedFields.success) {
     return {
+      success: false,
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Invalid input. Please check your registration details.",
     };
@@ -108,16 +110,25 @@ export async function register(
 
     if (!response.ok) {
       const errorData = await response.json();
-      return { error: errorData.error || "Registration failed" };
+      return {
+        success: false,
+        error: errorData.error || "Registration failed",
+      };
     }
 
     const user = await response.json();
-    return { success: true, user };
-  } catch (error) {
-    if (error instanceof Error) {
-      return { error: error.message };
+    if (user) {
+      return { success: true, user };
     }
-    return { error: "An unexpected error occurred during registration" };
+    return { success: false, message: "Registration failed" };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred during registration",
+    };
   }
 }
 

@@ -45,8 +45,10 @@ export default async function Favorites(
 
   return (
     <>
-      <div className="relative mx-6 mt-20 pt-10">
-        <h2 className="p-1">Favorites</h2>
+      <div className="relative mx-6 pt-28">
+        <p className=" uppercase text-[40px] md:text-[70px] lg:text-[100px]">
+          Favorites
+        </p>{" "}
         <Suspense fallback={"loading..."}>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 w-full">
             {products.map((product: ProductWithVariants) => (
