@@ -1,5 +1,5 @@
 "use client";
-import { ProductWithVariants } from "@/app/models/Product";
+import { ProductWithVariants, Variant } from "@/app/models/Product";
 import { cn } from "@/app/utils/utils";
 import { useState } from "react";
 import { Button } from "../ui/button";
@@ -7,6 +7,8 @@ import FavoriteIcon from "../plp/favoriteIcon";
 import ScrollableProductList from "./scrollableProducts";
 import PdpAccordion from "./pdpAccordion";
 import ThumbnailsAndMainImage from "./thumbnailsAndMainImage";
+import { addToCart } from "@/app/lib/actions";
+import { CheckIcon } from "lucide-react";
 
 export default function Product({
   product,
@@ -15,17 +17,41 @@ export default function Product({
   product: ProductWithVariants;
   collectionProducts: ProductWithVariants[];
 }) {
-  const [selectedSize, setSelectedSize] = useState<string>();
+  const [selectedSize, setSelectedSize] = useState<Variant>();
   const [error, setError] = useState("");
+  const [addedVariants, setAddedVariants] = useState<Record<number, boolean>>(
+    {}
+  );
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async (quantity = 1) => {
     if (!selectedSize) {
       setError("Please select a size");
       return;
     }
     setError("");
-    // Add to cart logic here
-    console.log("Adding to cart:", { product, selectedSize });
+    try {
+      const result = await addToCart(product, selectedSize, quantity);
+
+      if ("success" in result) {
+        if (result.success) {
+          setAddedVariants((prev) => ({
+            ...prev,
+            [selectedSize.variant_id]: true,
+          }));
+
+          setTimeout(() => {
+            setAddedVariants((prev) => ({
+              ...prev,
+              [selectedSize.variant_id]: false,
+            }));
+          }, 2000);
+        } else {
+          console.log("Operation failed.");
+        }
+      }
+    } catch (error: any) {
+      alert(error.message);
+    }
   };
 
   return (
@@ -65,12 +91,12 @@ export default function Product({
                     <button
                       key={index}
                       onClick={() => {
-                        setSelectedSize(variant.size);
+                        setSelectedSize(variant);
                         setError("");
                       }}
                       className={cn(
                         "py-2 px-4 border-2 hover:border-gray-400 transition-colors text-base lg:text-lg tracking-widest",
-                        selectedSize === variant.size
+                        selectedSize === variant
                           ? "border-black"
                           : "border-gray-200"
                       )}
@@ -83,12 +109,18 @@ export default function Product({
               </div>
 
               {/* Add to cart button */}
-              <Button
-                onClick={handleAddToCart}
-                className="w-full py-6 text-base md:text-lg rounded-none flex justify-center bg-black hover:bg-black/90 tracking-wider"
-              >
-                ADD TO CART
-              </Button>
+              <form action={() => handleAddToCart()}>
+                <Button
+                  type="submit"
+                  className="w-full py-6 text-base md:text-lg rounded-none flex justify-center bg-black hover:bg-black/90 tracking-wider"
+                >
+                  {selectedSize && addedVariants[selectedSize.variant_id] ? (
+                    <CheckIcon className="h-5 w-5" />
+                  ) : (
+                    <p>ADD TO CART</p>
+                  )}
+                </Button>
+              </form>
             </div>
           </div>
         </div>
