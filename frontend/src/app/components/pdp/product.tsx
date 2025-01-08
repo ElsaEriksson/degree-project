@@ -52,7 +52,7 @@ export default function Product({
                 </p>
                 <FavoriteIcon productId={product.product_id}></FavoriteIcon>
               </div>
-              <p className="text-base xl:text-lg text-gray-600 pt-4 md:pt-4 lg:pt-6 xl:pt-8 font-inconsolata">
+              <p className="text-base xl:text-[15px] text-gray-600 pt-4 md:pt-4 lg:pt-6 xl:pt-8 font-inconsolata">
                 {product.description_long}
               </p>
             </div>

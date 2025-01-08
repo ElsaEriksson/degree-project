@@ -23,10 +23,10 @@ export default function ItemsInCart({ cartItems }: { cartItems: CartItems[] }) {
             <div className="pl-3 w-full flex flex-col justify-between">
               <div className="grid grid-cols-[1fr_auto]">
                 <div className="flex flex-col">
-                  <h3 className="uppercase font-semibold text-base">
-                    {item.name}
-                  </h3>
-                  <p className="text-sm text-gray-600">Size: {item.size}</p>
+                  <h3 className=" font-normal text-base">{item.name}</h3>
+                  <p className="text-base text-gray-600 font-inconsolata">
+                    Size: {item.size}
+                  </p>
                 </div>
                 <RemoveCartItem
                   cart_item_id={item.cart_item_id}
@@ -38,7 +38,7 @@ export default function ItemsInCart({ cartItems }: { cartItems: CartItems[] }) {
                   cartItems={cartItems}
                   item={item}
                 ></UpdateCartItem>{" "}
-                <p className="font-semibold">${item.price}</p>
+                <p className="font-medium text-base">${item.price}</p>
               </div>
             </div>
           </div>

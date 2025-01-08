@@ -23,7 +23,8 @@ export default {
         xxl: ["26px", "34px"],
       },
       fontFamily: {
-        inconsolata: ["var(--font-inconsolata)"], // Lägg till Inconsolata.
+        inconsolata: ["var(--font-inconsolata)"],
+        quicksand: ["var(--font-quicksand)"],
       },
     },
   },

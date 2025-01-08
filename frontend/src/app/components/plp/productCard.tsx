@@ -35,10 +35,10 @@ export default function ProductCard({
               </div>
             </div>
           </div>
-          <p className="uppercase text-center text-sm pt-3 tracking-wide md:text-base">
+          <p className="uppercase text-center text-xs pt-3 md:text-sm font-normal xl:text-base">
             {product.name}
           </p>
-          <p className="text-sm font-semibold pt-1 md:text-base">
+          <p className="text-xs font-semibold pt-1 md:text-sm xl:text-base">
             {product.price} SEK
           </p>
           {/* <ProductBadges

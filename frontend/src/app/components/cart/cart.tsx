@@ -41,10 +41,10 @@ export default function Cart({ cartItems }: { cartItems: CartItems[] }) {
     <>
       <div className="p-4 flex flex-col h-full max-h-screen">
         <div className="flex justify-between w-full items-center border-b-2">
-          <h2 className="text-xl font-bold mb-4">Shopping Cart</h2>
+          <h2 className="text-xl font-semibold mb-4">Shopping Cart</h2>
           <p
             onClick={() => setIsCartOpen(false)}
-            className="mb-4 cursor-pointer hover:underline"
+            className="text-base mb-4 cursor-pointer hover:underline"
           >
             CLOSE
           </p>
@@ -61,7 +61,7 @@ export default function Cart({ cartItems }: { cartItems: CartItems[] }) {
           </div>
           <button
             onClick={() => router.push("/checkout")}
-            className="h-12 w-full bg-black text-white"
+            className="h-12 w-full bg-black text-white uppercase hover:bg-black/80"
           >
             Checkout
           </button>

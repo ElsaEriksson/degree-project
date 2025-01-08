@@ -70,7 +70,9 @@ export default function SizeButtons({
                 {addedVariants[variant.variant_id] ? (
                   <CheckIcon className="h-5 w-5" />
                 ) : (
-                  variant.size
+                  <p className="text-xs md:text-sm xl:text-base tracking-widest">
+                    {variant.size}
+                  </p>
                 )}
               </button>
             </form>

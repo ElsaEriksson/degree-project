@@ -23,7 +23,10 @@ export function RotatingBanner() {
         className="flex whitespace-nowrap"
       >
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="flex justify-between gap-8 mx-8 text-sm">
+          <div
+            key={i}
+            className="flex justify-between gap-8 mx-8 text-sm font-normal"
+          >
             {bannerText.map((text, index) => (
               <span key={index}>{text}</span>
             ))}

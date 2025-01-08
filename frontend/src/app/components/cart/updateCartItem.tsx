@@ -1,5 +1,6 @@
 import { updateCartItemQuantity, updateCookieCart } from "@/app/lib/actions";
 import { CartItems } from "@/app/models/Cart";
+import { Minus, Plus } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 export default function UpdateCartItem({
@@ -44,8 +45,8 @@ export default function UpdateCartItem({
         <button
           className={
             disabledMinusButton
-              ? "h-6 w-6 border border-gray-300 flex justify-center items-center"
-              : "h-6 w-6 border border-black flex justify-center items-center"
+              ? "h-6 w-6 border border-gray-300 flex justify-center items-center rounded-sm"
+              : "h-6 w-6 border border-black flex justify-center items-center rounded-sm"
           }
           onClick={async () =>
             await handleUpdateQuantity(
@@ -56,16 +57,18 @@ export default function UpdateCartItem({
           }
           disabled={disabledMinusButton}
         >
-          <p className={disabledMinusButton ? "text-gray-300" : "text-black"}>
-            -
-          </p>
+          <Minus
+            className={
+              disabledMinusButton ? "text-gray-300  w-4" : "text-black w-4"
+            }
+          ></Minus>
         </button>
-        <p className="px-2">{item.quantity}</p>
+        <p className="px-2 text-base">{item.quantity}</p>
         <button
           className={
             disabledPlusButton
-              ? "h-6 w-6 border border-gray-300"
-              : "h-6 w-6 border border-black"
+              ? "h-6 w-6 border border-gray-300 flex justify-center items-center rounded-sm"
+              : "h-6 w-6 border border-black flex justify-center items-center rounded-sm"
           }
           onClick={() =>
             handleUpdateQuantity(
@@ -76,9 +79,11 @@ export default function UpdateCartItem({
           }
           disabled={disabledPlusButton}
         >
-          <p className={disabledPlusButton ? "text-gray-300" : "text-black"}>
-            +
-          </p>
+          <Plus
+            className={
+              disabledPlusButton ? "text-gray-300 w-4" : "text-black w-4"
+            }
+          ></Plus>
         </button>
       </div>
     </>

@@ -26,7 +26,7 @@ export default async function Header() {
 
       <SlidingPanel side="left">
         <div className="p-4 h-full flex grow flex-col justify-between">
-          <h2 className="text-xl font-bold mb-4">Menu</h2>
+          <h2 className="text-xl font-semibold mb-4">Menu</h2>
           <HamburgerNavLinks />
         </div>
       </SlidingPanel>

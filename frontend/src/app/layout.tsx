@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Inconsolata } from "next/font/google";
+import { Inter, Inconsolata, Quicksand } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -8,6 +8,11 @@ const inter = Inter({
 
 const inconsolata = Inconsolata({
   variable: "--font-inconsolata",
+  subsets: ["latin"],
+});
+
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
   subsets: ["latin"],
 });
 
@@ -24,7 +29,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={` ${inter.className} ${inconsolata.variable} antialiased`}
+        className={` ${inter.className} ${inconsolata.variable} ${quicksand.variable} antialiased`}
       >
         {children}
       </body>
