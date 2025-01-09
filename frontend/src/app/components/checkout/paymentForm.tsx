@@ -167,7 +167,6 @@ export default function PaymentForm({
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
       </button>
-      {message && <div id="payment-message">{message}</div>}
     </form>
   );
 }

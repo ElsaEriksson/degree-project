@@ -4,7 +4,7 @@ import ProductCard from "../../components/plp/productCard";
 import { fetchProductVariantsFromDatabase } from "../../lib/data";
 import { ProductWithVariants } from "../../models/Product";
 import { HoverProvider } from "../../providers";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import SearchProduct from "@/app/components/plp/search";
 
 type PageProps = {

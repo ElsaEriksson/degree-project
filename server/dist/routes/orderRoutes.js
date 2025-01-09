@@ -76,6 +76,77 @@ router.post("/order-items", (req, res) => __awaiter(void 0, void 0, void 0, func
         res.status(500).json({ error: error.message });
     }
 }));
+router.get("/orders/:userId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = Number(req.params.userId);
+    if (isNaN(userId)) {
+        res.status(400).json({ error: "Invalid user ID" });
+        return;
+    }
+    try {
+        const [results] = yield db_1.default.query(`
+      SELECT 
+        o.order_id,
+        o.user_id,
+        o.total_price,
+        o.first_name,
+        o.last_name,
+        o.shipping_address,
+        o.postal_code,
+        o.city,
+        o.order_status,
+        o.created_at,
+        p.name,
+        v.size,
+        oi.quantity,
+        oi.price
+      FROM 
+        Orders o
+      JOIN 
+        OrderItems oi ON o.order_id = oi.order_id
+      JOIN
+        Products p ON oi.product_id = p.product_id
+      JOIN
+        Variants v ON oi.variant_id = v.variant_id
+      WHERE 
+        o.user_id = ?
+    `, [userId]);
+        if (results.length === 0) {
+            res.status(404).json({ error: "Order not found" });
+            return;
+        }
+        const ordersMap = new Map();
+        results.forEach((row) => {
+            if (!ordersMap.has(row.order_id)) {
+                ordersMap.set(row.order_id, {
+                    order_id: row.order_id,
+                    user_id: row.user_id,
+                    guest_id: row.guest_id,
+                    total_price: row.total_price,
+                    first_name: row.first_name,
+                    last_name: row.last_name,
+                    shipping_address: row.shipping_address,
+                    postal_code: row.postal_code,
+                    city: row.city,
+                    status: row.order_status,
+                    created_at: row.created_at,
+                    items: [],
+                });
+            }
+            const order = ordersMap.get(row.order_id);
+            order.items.push({
+                product_name: row.name,
+                size: row.size,
+                quantity: row.quantity,
+                price: row.price,
+            });
+        });
+        const ordersList = Array.from(ordersMap.values());
+        res.json(ordersList);
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}));
 router.get("/order/:orderId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const orderId = Number(req.params.orderId);
     if (isNaN(orderId)) {
@@ -83,7 +154,6 @@ router.get("/order/:orderId", (req, res) => __awaiter(void 0, void 0, void 0, fu
         return;
     }
     try {
-        // Fetch the order with the given ID and its items
         const [results] = yield db_1.default.query(`
       SELECT 
         o.order_id,
@@ -111,12 +181,10 @@ router.get("/order/:orderId", (req, res) => __awaiter(void 0, void 0, void 0, fu
       WHERE 
         o.order_id = ?
     `, [orderId]);
-        // Check if order was found
         if (results.length === 0) {
             res.status(404).json({ error: "Order not found" });
             return;
         }
-        // Map the order data with items
         const orderWithExtraData = {
             order_id: results[0].order_id,
             user_id: results[0].user_id,

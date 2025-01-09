@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import pool from "../config/db";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { OrderData } from "../models/Order";
+import { OrderData, OrderItem, OrderStatus } from "../models/Order";
 
 const router = express.Router();
 
@@ -92,6 +92,88 @@ router.post("/order-items", async (req: Request, res: Response) => {
     res.status(201).json({ message: "Order items added successfully!" });
   } catch (error: any) {
     console.error("Error adding order items:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/orders/:userId", async (req: Request, res: Response) => {
+  const userId = Number(req.params.userId);
+
+  if (isNaN(userId)) {
+    res.status(400).json({ error: "Invalid user ID" });
+    return;
+  }
+
+  try {
+    const [results] = await pool.query<RowDataPacket[]>(
+      `
+      SELECT 
+        o.order_id,
+        o.user_id,
+        o.total_price,
+        o.first_name,
+        o.last_name,
+        o.shipping_address,
+        o.postal_code,
+        o.city,
+        o.order_status,
+        o.created_at,
+        p.name,
+        v.size,
+        oi.quantity,
+        oi.price
+      FROM 
+        Orders o
+      JOIN 
+        OrderItems oi ON o.order_id = oi.order_id
+      JOIN
+        Products p ON oi.product_id = p.product_id
+      JOIN
+        Variants v ON oi.variant_id = v.variant_id
+      WHERE 
+        o.user_id = ?
+    `,
+      [userId]
+    );
+
+    if (results.length === 0) {
+      res.status(404).json({ error: "Order not found" });
+      return;
+    }
+
+    const ordersMap = new Map<number, OrderData>();
+
+    results.forEach((row) => {
+      if (!ordersMap.has(row.order_id)) {
+        ordersMap.set(row.order_id, {
+          order_id: row.order_id,
+          user_id: row.user_id,
+          guest_id: row.guest_id,
+          total_price: row.total_price,
+          first_name: row.first_name,
+          last_name: row.last_name,
+          shipping_address: row.shipping_address,
+          postal_code: row.postal_code,
+          city: row.city,
+          status: row.order_status,
+          created_at: row.created_at,
+          items: [],
+        });
+      }
+
+      const order = ordersMap.get(row.order_id)!;
+      order.items.push({
+        product_name: row.name,
+        size: row.size,
+        quantity: row.quantity,
+        price: row.price,
+      });
+    });
+
+    const ordersList: OrderData[] = Array.from(ordersMap.values());
+
+    res.json(ordersList);
+  } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 });

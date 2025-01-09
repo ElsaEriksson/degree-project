@@ -25,7 +25,7 @@ export default function ProductCard({
       <div className="bg-white p-1" id="productCard">
         <div className="flex flex-col items-center">
           <div className="relative w-full h-full">
-            <Link href={`product/${product.product_id}-${slug}`}>
+            <Link href={`/product/${product.product_id}-${slug}`}>
               <ProductImage product={product}></ProductImage>
             </Link>
             <div className="w-full absolute bottom-2 px-2 grid grid-cols-[1fr_auto]">

@@ -1,3 +1,10 @@
+export type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "shipped"
+  | "delivered"
+  | "cancelled";
+
 export interface OrderData {
   order_id?: number;
   user_id?: number | null;
@@ -32,6 +39,7 @@ export interface OrderDataFromDatabase {
   shipping_address: string;
   postal_code: string;
   city: string;
+  status: OrderStatus;
   created_at: string;
   items: OrderItemFromDatabase[];
 }
