@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Inconsolata, Quicksand } from "next/font/google";
 import "./globals.css";
+import Provider from "./providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,7 +32,7 @@ export default async function RootLayout({
       <body
         className={` ${inter.className} ${inconsolata.variable} ${quicksand.variable} antialiased`}
       >
-        {children}
+        <Provider>{children}</Provider>
       </body>
     </html>
   );

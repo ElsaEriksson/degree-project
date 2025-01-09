@@ -84,6 +84,10 @@ export default async function Confirmation(
               {/* Total */}
               <div className="border-t border-dashed pt-2 mb-4">
                 <div className="flex justify-between font-bold">
+                  <span className="text-base">SHIPPING</span>
+                  <span className="text-base">$5.00</span>
+                </div>
+                <div className="flex justify-between font-bold">
                   <span>TOTAL</span>
                   <span>${data.total_price}</span>
                 </div>

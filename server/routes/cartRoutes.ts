@@ -22,6 +22,29 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
+// router.get("/active/:userId", async (req: Request, res: Response) => {
+//   const user_id = Number(req.params.userId);
+
+//   if (isNaN(user_id)) {
+//     res.status(400).json({ error: "Invalid user ID" });
+//     return;
+//   }
+//   try {
+//     const [results] = await pool.query<RowDataPacket[]>(
+//       "SELECT cart_id FROM Carts WHERE user_id = ? AND status = 'active' ORDER BY created_at DESC LIMIT 1",
+//       [user_id]
+//     );
+
+//     if (results.length > 0) {
+//       res.json(results[0]);
+//     } else {
+//       res.status(404).json({ message: "No active cart found for this user" });
+//     }
+//   } catch (error: any) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
 router.get("/active/:userId", async (req: Request, res: Response) => {
   const user_id = Number(req.params.userId);
 
@@ -38,7 +61,12 @@ router.get("/active/:userId", async (req: Request, res: Response) => {
     if (results.length > 0) {
       res.json(results[0]);
     } else {
-      res.status(404).json({ message: "No active cart found for this user" });
+      // Skapa en ny varukorg om ingen aktiv hittas
+      const [newCart] = await pool.query<ResultSetHeader>(
+        "INSERT INTO Carts (user_id, status) VALUES (?, 'active')",
+        [user_id]
+      );
+      res.json({ cart_id: newCart.insertId });
     }
   } catch (error: any) {
     res.status(500).json({ error: error.message });

@@ -32,19 +32,6 @@ const RegisterSchema = z.object({
     ),
 });
 
-const orderDataSchema = z.object({
-  user_id: z.number().positive().optional(),
-  cart_id: z.number().positive(),
-  total_price: z.number().positive(),
-  first_name: z.string().min(1, "First name is required"),
-  last_name: z.string().min(1, "Last name is required"),
-  phone_number: z.string().min(1, "Phone number is required"),
-  shipping_address: z.string().min(1, "Shipping address is required"),
-  postal_code: z.string().min(1, "Postal code is required"),
-  city: z.string().min(1, "City is required"),
-  email: z.string().email("Invalid email address"),
-});
-
 export type State = {
   errors?: {
     firstName?: string[];
@@ -171,14 +158,10 @@ async function addToCartForLoggedInUser(
   variant: Variant,
   quantity: number
 ) {
-  let cartId = await fetchActiveCartForUser(userId);
+  const cartId = await fetchActiveCartForUser(userId);
 
-  if (!cartId) {
-    cartId = await createNewCart(userId);
-  }
-
-  if (cartId === null) {
-    throw new Error("Failed to create or fetch a cart.");
+  if (!cartId || !cartId.cart_id) {
+    throw new Error("Failed to fetch or create a cart.");
   }
 
   const existingCartItem = await fetchCartItem(
@@ -481,6 +464,7 @@ export async function createOrder(orderData: OrderData, cart_id: number) {
     }
 
     const data = await response.json();
+
     return { success: true, orderId: data.orderId };
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -527,6 +511,7 @@ export async function createOrderWithItems(
     const orderItemsResult = await createOrderItems(orderResult.orderId, items);
 
     if (orderItemsResult.success) {
+      revalidatePath("/profile");
       return {
         success: true,
         orderId: orderResult.orderId,

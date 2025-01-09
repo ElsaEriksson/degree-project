@@ -1,5 +1,5 @@
 import { CartItems } from "../models/Cart";
-import { OrderData, OrderDataFromDatabase } from "../models/Orders";
+import { OrderDataFromDatabase } from "../models/Orders";
 import {
   Collection,
   Product,
@@ -126,14 +126,26 @@ export async function fetchCollectionsFromDatabase(): Promise<
 
 export async function fetchActiveCartForUser(
   user_id: number
-): Promise<{ cart_id: number } | null> {
+): Promise<{ cart_id: number }> {
   const res = await fetch(`http://localhost:5000/api/carts/active/${user_id}`, {
     next: { revalidate: 60 },
   });
 
   if (!res.ok) {
     if (res.status === 404) {
-      return null;
+      const newCartRes = await fetch(`http://localhost:5000/api/carts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id }),
+      });
+
+      if (!newCartRes.ok) {
+        throw new Error("Failed to create a new cart");
+      }
+
+      return await newCartRes.json();
     }
     throw new Error("Failed to fetch active cart");
   }

@@ -60,9 +60,18 @@ export default function Order({ order }: { order: OrderDataFromDatabase }) {
                 </div>
               ))}
             </div>
+            <div className="font-mono text-sm mb-4">
+              <h3 className="font-bold mb-2">Additional Charges:</h3>
+              <div className="flex justify-between mb-1">
+                <span>Shipping</span>
+                <span>$5.00</span>
+              </div>
+            </div>
             <div className="font-mono text-sm">
               <h3 className="font-bold mb-2">Shipping Address:</h3>
-              <p className="capitalize">{order.shipping_address}</p>
+              <p className="capitalize">
+                {order.postal_code} {order.shipping_address}, {order.city}
+              </p>
             </div>
           </div>
         )}

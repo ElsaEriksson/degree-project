@@ -9,7 +9,7 @@ export default async function Page() {
 
   return (
     <>
-      <div className="min-h-screen relative pt-28 bg-gray-100">
+      <div className="min-h-screen relative py-28 bg-gray-100">
         <div className=" mx-2 md:mx-6 lg:mx-36 xl:mx-64">
           <h1 className="uppercase text-[40px] md:text-[70px] lg:text-[100px] text-center pb-4">
             Your Orders
