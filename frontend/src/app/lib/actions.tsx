@@ -11,7 +11,7 @@ import {
   fetchCartItemsForUser,
 } from "./data";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { OrderData, OrderItems } from "../models/Orders";
+import { OrderData, OrderItem } from "../models/Orders";
 
 const RegisterSchema = z.object({
   firstName: z
@@ -491,7 +491,7 @@ export async function createOrder(orderData: OrderData, cart_id: number) {
   }
 }
 
-export async function createOrderItems(orderId: number, items: OrderItems[]) {
+export async function createOrderItems(orderId: number, items: OrderItem[]) {
   try {
     const response = await fetch(`http://localhost:5000/order-items`, {
       method: "POST",
@@ -518,7 +518,7 @@ export async function createOrderItems(orderId: number, items: OrderItems[]) {
 
 export async function createOrderWithItems(
   orderData: OrderData,
-  items: OrderItems[],
+  items: OrderItem[],
   cart_id: number
 ) {
   const orderResult = await createOrder(orderData, cart_id);

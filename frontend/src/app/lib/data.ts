@@ -1,4 +1,5 @@
 import { CartItems } from "../models/Cart";
+import { OrderData, OrderDataFromDatabase } from "../models/Orders";
 import {
   Collection,
   Product,
@@ -234,6 +235,24 @@ export async function fetchFavoritesWithProductVariantsFromDatabase(
       throw new Error(`HTTP error! status: ${res.status}`);
     }
     const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    return undefined;
+  }
+}
+
+export async function fetchOrderById(
+  order_id: string
+): Promise<OrderDataFromDatabase | undefined> {
+  try {
+    const res = await fetch(`http://localhost:5000/order/${order_id}`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const data: OrderDataFromDatabase = await res.json();
     return data;
   } catch (error) {
     console.error("Database Error:", error);

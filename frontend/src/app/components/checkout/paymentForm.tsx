@@ -132,8 +132,7 @@ export default function PaymentForm({
         setMessage(`Order created successfully! Order ID: ${result.orderId}`);
         const updateCart: CartItems[] = [];
         await updateCookieCart(updateCart);
-        router.push("/confirmation");
-        // Here you might want to clear the cart or redirect to a confirmation page
+        router.push(`/confirmation/${result.orderId}`);
       } else {
         setMessage(`Failed to create order: ${result.error}`);
       }
