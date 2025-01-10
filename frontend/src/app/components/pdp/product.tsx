@@ -9,6 +9,7 @@ import PdpAccordion from "./pdpAccordion";
 import ThumbnailsAndMainImage from "./thumbnailsAndMainImage";
 import { addToCart } from "@/app/lib/actions";
 import { CheckIcon } from "lucide-react";
+import Breadcrumbs from "../breadcrumbs";
 
 export default function Product({
   product,
@@ -54,9 +55,30 @@ export default function Product({
     }
   };
 
+  const generateSlug = (name: string) => {
+    return name
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "");
+  };
+
+  const nameSlug = generateSlug(product.name);
+
   return (
     <>
-      <div className="container md:px-4 md:py-8 mx-auto">
+      <div className="container mx-auto">
+        <div className="pb-4 md:pt-2 md:pb-6">
+          <Breadcrumbs
+            breadcrumbs={[
+              { label: "Products", href: "/products" },
+              {
+                label: product.name,
+                href: `/product/${product.product_id}-${nameSlug}`,
+                active: true,
+              },
+            ]}
+          />
+        </div>
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Left side - Image gallery */}
           <div className="relative ">

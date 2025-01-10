@@ -37,7 +37,7 @@ export default async function ProductDetails(
 
   return (
     <>
-      <div className="mx-2 md:mx-6 my-20 pt-10">
+      <div className="mx-6 md:mx-6 pt-28 pb-10">
         <Product
           product={product}
           collectionProducts={updatedCollectionProducts}
