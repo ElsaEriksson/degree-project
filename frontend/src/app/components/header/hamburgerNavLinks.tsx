@@ -24,9 +24,9 @@ const links = [
 ];
 
 const collections = [
-  { name: "Howdy", href: "/collections/howdy" },
-  { name: "Beigelace", href: "/collections/beigelace" },
-  { name: "Colorfur", href: "/collections/colorfur" },
+  { name: "Howdy", href: "/collection/howdy" },
+  { name: "Beigelace", href: "/collection/beigelace" },
+  { name: "Colorfur", href: "/collection/colorfur" },
 ];
 
 export default function HamburgerNavLinks() {
@@ -74,7 +74,7 @@ export default function HamburgerNavLinks() {
                   "w-full flex h-[48px] grow items-center justify-between bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-3 uppercase border-gray-400",
                   {
                     "bg-gray-100 text-black":
-                      pathname.startsWith("/collections"),
+                      pathname.startsWith("/collection"),
                   }
                 )}
               >

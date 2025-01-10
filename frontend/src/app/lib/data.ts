@@ -106,17 +106,27 @@ export async function fetchProductFromDatabaseWithCollectionId(
   }
 }
 
-export async function fetchCollectionsFromDatabase(): Promise<
-  Collection[] | undefined
+export async function fetchCollectionFromDatabase(
+  collection_name: string,
+  query: string
+): Promise<
+  | {
+      products: ProductWithVariants[];
+      totalProducts: number;
+    }
+  | undefined
 > {
   try {
-    const res = await fetch(`http://localhost:5000/api/collections`, {
-      next: { revalidate: 60 },
-    });
+    const res = await fetch(
+      `http://localhost:5000/api/collections/collection-product-with-variants/${collection_name}?query=${query}`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
-    const data: Collection[] = await res.json();
+    const data = await res.json();
     return data;
   } catch (error) {
     console.error("Database Error:", error);

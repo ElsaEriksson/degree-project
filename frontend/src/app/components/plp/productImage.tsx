@@ -23,6 +23,7 @@ export default function ProductImage({
   const slug = generateSlug(product.name);
 
   const isOnProductPage = pathname === "/product";
+  const isOnCollectionPage = pathname.includes("/collection");
 
   const linkHref = isOnProductPage
     ? `/${product.product_id}-${slug}`
@@ -30,7 +31,14 @@ export default function ProductImage({
 
   return (
     <>
-      <Link href={linkHref}>
+      <Link
+        href={{
+          pathname: linkHref,
+          query: {
+            page: isOnCollectionPage ? `collection` : "products",
+          },
+        }}
+      >
         <div
           onMouseEnter={() => handleMouseEnter()}
           onMouseLeave={() => handleMouseLeave()}

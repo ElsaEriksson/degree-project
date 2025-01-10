@@ -1,13 +1,9 @@
 import express, { Request, Response } from "express";
 import { RowDataPacket } from "mysql2";
 import pool from "../config/db";
-import { Product } from "../models/Product";
+import { Product, ProductWithVariants } from "../models/Product";
 
 const router = express.Router();
-
-interface ProductWithVariants extends Product {
-  variants: { variant_id: number; size: string; stock_quantity: number }[];
-}
 
 const ITEMS_PER_PAGE = 12;
 
@@ -236,6 +232,7 @@ router.get(
           p.video,
           p.additional_image,
           p.collection_id,
+          c.collection_name,
           p.price,
           p.description_short,
           p.description_long,
@@ -250,6 +247,8 @@ router.get(
           Products p
         LEFT JOIN 
           Variants v ON p.product_id = v.product_id
+        LEFT JOIN 
+          Collections c ON p.collection_id = c.collection_id  
         WHERE 
           p.product_id = ?
         GROUP BY 
@@ -273,6 +272,7 @@ router.get(
         video: product.video,
         additional_image: product.additional_image,
         collection_id: product.collection_id,
+        collection_name: product.collection_name,
         price: product.price,
         description_short: product.description_short,
         description_long: product.description_long,

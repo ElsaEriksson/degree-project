@@ -10,6 +10,7 @@ import ThumbnailsAndMainImage from "./thumbnailsAndMainImage";
 import { addToCart } from "@/app/lib/actions";
 import { CheckIcon } from "lucide-react";
 import Breadcrumbs from "../breadcrumbs";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export default function Product({
   product,
@@ -23,6 +24,7 @@ export default function Product({
   const [addedVariants, setAddedVariants] = useState<Record<number, boolean>>(
     {}
   );
+  const query = useSearchParams();
 
   const handleAddToCart = async (quantity = 1) => {
     if (!selectedSize) {
@@ -63,6 +65,7 @@ export default function Product({
   };
 
   const nameSlug = generateSlug(product.name);
+  const page = query.get("page");
 
   return (
     <>
@@ -70,7 +73,16 @@ export default function Product({
         <div className="pb-4 md:pt-2 md:pb-6">
           <Breadcrumbs
             breadcrumbs={[
-              { label: "Products", href: "/products" },
+              {
+                label:
+                  page === "collection"
+                    ? `Collection ${product.collection_name}`
+                    : "Products",
+                href:
+                  page === "collection"
+                    ? `/collection/${product.collection_name}`
+                    : "/products",
+              },
               {
                 label: product.name,
                 href: `/product/${product.product_id}-${nameSlug}`,

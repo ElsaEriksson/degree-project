@@ -5,6 +5,7 @@ export interface Product {
   video: string;
   additional_image?: string;
   collection_id: number;
+  collection_name?: string;
   price: number;
   description_short: string;
   description_long: string;

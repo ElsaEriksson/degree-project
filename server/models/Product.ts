@@ -5,6 +5,7 @@ export interface Product {
   video: string;
   additional_image?: string;
   collection_id: number;
+  collection_name?: string;
   price: number;
   description_short: string;
   description_long: string;
@@ -21,6 +22,10 @@ export interface Variant {
   product_id: number;
   size: string;
   stock_quantity: number;
+}
+
+export interface ProductWithVariants extends Product {
+  variants: { variant_id: number; size: string; stock_quantity: number }[];
 }
 
 export interface Collection {

@@ -206,6 +206,7 @@ router.get("/product-with-variants/:productId", (req, res) => __awaiter(void 0, 
           p.video,
           p.additional_image,
           p.collection_id,
+          c.collection_name,
           p.price,
           p.description_short,
           p.description_long,
@@ -220,6 +221,8 @@ router.get("/product-with-variants/:productId", (req, res) => __awaiter(void 0, 
           Products p
         LEFT JOIN 
           Variants v ON p.product_id = v.product_id
+        LEFT JOIN 
+          Collections c ON p.collection_id = c.collection_id  
         WHERE 
           p.product_id = ?
         GROUP BY 
@@ -239,6 +242,7 @@ router.get("/product-with-variants/:productId", (req, res) => __awaiter(void 0, 
             video: product.video,
             additional_image: product.additional_image,
             collection_id: product.collection_id,
+            collection_name: product.collection_name,
             price: product.price,
             description_short: product.description_short,
             description_long: product.description_long,

@@ -20,9 +20,11 @@ export default async function ProductDetails(
   const slug = (await props.params).slug || "";
   const productId = slug.split("-")[0];
   const product = await fetchProductFromDatabaseWithId(productId);
+
   if (!product) {
     notFound();
   }
+
   const collectionProducts = await fetchProductFromDatabaseWithCollectionId(
     product.collection_id
   );
