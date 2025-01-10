@@ -5,7 +5,7 @@ import { fetchProductVariantsFromDatabase } from "../../lib/data";
 import { ProductWithVariants } from "../../models/Product";
 import { HoverProvider } from "../../providers";
 import { SlidersHorizontal } from "lucide-react";
-import SearchProduct from "@/app/components/plp/search";
+import SearchProduct from "@/app/components/plp/searchProduct";
 
 type PageProps = {
   searchParams: Promise<{
