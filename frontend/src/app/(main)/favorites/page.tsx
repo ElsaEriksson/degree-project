@@ -37,8 +37,8 @@ export default async function Favorites(
 
   if (products.length === 0) {
     return (
-      <div className="relative mx-6 mt-20 pt-10">
-        <div>No favorites saved</div>
+      <div className="text-center text-gray-500 m-auto uppercase text-base md:text-xl">
+        <div>No favorites saved</div>{" "}
       </div>
     );
   }

@@ -33,7 +33,7 @@ export default function HeaderInteractions({
     <>
       <ScrollMode>
         <RotatingBanner />
-        <div className="h-16 px-4 grid grid-cols-3 items-center border-b">
+        <div className="h-16 px-2 md:px-4 grid grid-cols-3 items-center border-b">
           <button
             onClick={() => setIsMenuOpen(true)}
             className="p-2 hover:bg-gray-100 rounded-full text-left w-max"

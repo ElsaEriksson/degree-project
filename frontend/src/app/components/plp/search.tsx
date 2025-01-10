@@ -52,8 +52,8 @@ export default function SearchProduct({
           }
           onClick={() => setShowSearchInput(true)}
         >
-          <Search className="w-5"></Search>
-          <p className="uppercase">Search</p>
+          <Search className="w-4"></Search>
+          <p className="uppercase text-base">Search</p>
         </div>
       </div>
     </>
