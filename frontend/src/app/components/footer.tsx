@@ -6,7 +6,7 @@ import { AtSymbolIcon } from "@heroicons/react/24/outline";
 export default function Footer() {
   return (
     <>
-      <footer className="w-full px-6 py-12 md:px-auto border-t-2">
+      <footer className="w-full px-6 py-12 border-t-2">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-12 md:grid-cols-3">
             {/* Company Info */}
@@ -24,7 +24,7 @@ export default function Footer() {
                 Store
               </Link>
               <Link href="/our-story" className="hover:underline">
-                Our Story
+                About
               </Link>
               <Link href="/contact" className="hover:underline">
                 Contact
@@ -55,7 +55,7 @@ export default function Footer() {
                     id="email"
                     type="email"
                     name="email"
-                    placeholder="Enter your email address"
+                    placeholder="Email"
                     required
                   />
                   <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />

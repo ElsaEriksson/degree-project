@@ -2,47 +2,81 @@
 import { ProductWithVariants } from "@/app/models/Product";
 import { HoverProvider } from "@/app/providers";
 import ProductCard from "../plp/productCard";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useCallback } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 
 export default function ScrollableProductList({
-  collectionProducts,
+  products,
 }: {
-  collectionProducts: ProductWithVariants[];
+  products: ProductWithVariants[];
 }) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    align: "start",
+  });
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(true);
 
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
+    if (emblaApi) {
+      const onSelect = () => {
+        setCanScrollPrev(emblaApi.canScrollPrev());
+        setCanScrollNext(emblaApi.canScrollNext());
+      };
 
-    const handleWheel = (e: WheelEvent) => {
-      if (window.innerWidth >= 768) {
-        e.preventDefault();
-        scrollContainer.scrollLeft += e.deltaY;
-      }
-    };
+      emblaApi.on("select", onSelect);
+      onSelect();
 
-    scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
+      return () => {
+        emblaApi.off("select", onSelect);
+      };
+    }
+  }, [emblaApi]);
 
-    return () => {
-      scrollContainer.removeEventListener("wheel", handleWheel);
-    };
-  }, []);
+  const handlePrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const handleNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
 
   return (
-    <div className="mt-5 w-full overflow-x-scroll" ref={scrollContainerRef}>
-      <div className="flex">
-        {collectionProducts.map((product: ProductWithVariants) => (
-          <div
-            key={product.product_id}
-            className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_50%] md:flex-[0_0_33.333%] lg:flex-[0_0_25%] pb-4 md:pb-5 lg:pb-8"
-          >
-            <HoverProvider>
-              <ProductCard product={product} />
-            </HoverProvider>
-          </div>
-        ))}
+    <div className="relative mt-5 w-full">
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {products.map((product: ProductWithVariants) => (
+            <div
+              key={product.product_id}
+              className="flex-shrink-0 w-full md:w-1/2 lg:w-1/4"
+            >
+              <HoverProvider>
+                <ProductCard product={product} />
+              </HoverProvider>
+            </div>
+          ))}
+        </div>
       </div>
+      <button
+        onClick={handlePrev}
+        disabled={!canScrollPrev}
+        className={`absolute left-4 top-1/2 -translate-y-3/4 p-2 bg-white/80 rounded-full transition-colors h-9 w-9 flex items-center justify-center ${
+          !canScrollPrev ? "opacity-50 cursor-not-allowed" : "hover:bg-white"
+        }`}
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </button>
+      <button
+        onClick={handleNext}
+        disabled={!canScrollNext}
+        className={`absolute right-4 top-1/2 -translate-y-3/4 p-2 bg-white/80 rounded-full transition-colors h-9 w-9 flex items-center justify-center ${
+          !canScrollNext ? "opacity-50 cursor-not-allowed" : "hover:bg-white"
+        }`}
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
     </div>
   );
 }

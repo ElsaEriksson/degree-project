@@ -62,7 +62,7 @@ export default function SizeButtons({
                 className={
                   variant.stock_quantity === 0
                     ? "bg-white/70 h-full cursor-not-allowed w-full"
-                    : "bg-white h-full border hover:border-black flex justify-center items-center w-full"
+                    : "bg-white h-full border-2 hover:border-gray-600 flex justify-center items-center w-full"
                 }
                 disabled={variant.stock_quantity === 0}
                 title={variant.stock_quantity === 0 ? "sold out" : ""}

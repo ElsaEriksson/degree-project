@@ -85,6 +85,27 @@ export async function fetchProductFromDatabaseWithId(
   }
 }
 
+export async function fetchFeaturedProductsFromDatabase(): Promise<
+  ProductWithVariants[] | undefined
+> {
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/products/featured-products`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const data: ProductWithVariants[] = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    return undefined;
+  }
+}
+
 export async function fetchProductFromDatabaseWithCollectionId(
   id: number
 ): Promise<ProductWithVariants[] | undefined> {
@@ -106,7 +127,7 @@ export async function fetchProductFromDatabaseWithCollectionId(
   }
 }
 
-export async function fetchCollectionFromDatabase(
+export async function fetchCollectionFromDatabaseByName(
   collection_name: string,
   query: string
 ): Promise<
@@ -127,6 +148,22 @@ export async function fetchCollectionFromDatabase(
       throw new Error(`HTTP error! status: ${res.status}`);
     }
     const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    return undefined;
+  }
+}
+
+export async function fetchCollectionFromDatabase() {
+  try {
+    const res = await fetch(`http://localhost:5000/api/collections/`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const data: Collection[] = await res.json();
     return data;
   } catch (error) {
     console.error("Database Error:", error);

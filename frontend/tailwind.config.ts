@@ -26,6 +26,22 @@ export default {
         inconsolata: ["var(--font-inconsolata)"],
         quicksand: ["var(--font-quicksand)"],
       },
+      animation: {
+        "move-sideways": "moveSideways 1s ease-in-out infinite",
+      },
+      keyframes: {
+        moveSideways: {
+          "0%": {
+            transform: "translateX(0)",
+          },
+          "50%": {
+            transform: "translateX(10px)", // Rörelse åt höger
+          },
+          "100%": {
+            transform: "translateX(0)",
+          },
+        },
+      },
     },
   },
   plugins: [require("tailwind-scrollbar-hide")],

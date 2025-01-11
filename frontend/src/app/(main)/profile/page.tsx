@@ -19,10 +19,15 @@ export default async function Page() {
               No orders found.
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 flex flex-col-reverse">
               {orders &&
-                orders.map((order) => (
-                  <Order key={order.order_id} order={order} />
+                orders.map((order, index) => (
+                  <div
+                    key={order.order_id}
+                    className={index === 0 ? "pt-4" : ""}
+                  >
+                    <Order order={order} />
+                  </div>
                 ))}
             </div>
           )}

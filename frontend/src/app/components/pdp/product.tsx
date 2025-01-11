@@ -10,7 +10,7 @@ import ThumbnailsAndMainImage from "./thumbnailsAndMainImage";
 import { addToCart } from "@/app/lib/actions";
 import { CheckIcon } from "lucide-react";
 import Breadcrumbs from "../breadcrumbs";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function Product({
   product,
@@ -25,6 +25,7 @@ export default function Product({
     {}
   );
   const query = useSearchParams();
+  const headline = "YOU MAY ALSO LIKE";
 
   const handleAddToCart = async (quantity = 1) => {
     if (!selectedSize) {
@@ -108,7 +109,7 @@ export default function Product({
               </h1>
               <div className="flex justify-between items-center w-full">
                 <p className="md:text-lg lg:text-xl font-medium mt-2">
-                  {product.price} KR
+                  ${product.price}
                 </p>
                 <FavoriteIcon productId={product.product_id}></FavoriteIcon>
               </div>
@@ -164,7 +165,7 @@ export default function Product({
             YOU MAY ALSO LIKE
           </h1>
           <ScrollableProductList
-            collectionProducts={collectionProducts}
+            products={collectionProducts}
           ></ScrollableProductList>
         </div>
       </div>

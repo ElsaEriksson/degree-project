@@ -27,7 +27,7 @@ export default function ProductCard({
             {product.name}
           </p>
           <p className="text-xs font-semibold pt-1 md:text-sm xl:text-base">
-            {product.price} SEK
+            ${product.price}
           </p>
           {/* <ProductBadges
             product={product}

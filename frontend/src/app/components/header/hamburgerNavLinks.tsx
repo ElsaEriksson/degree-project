@@ -56,7 +56,7 @@ export default function HamburgerNavLinks() {
                 key={link.name}
                 href={link.href}
                 className={clsx(
-                  "flex h-[48px] grow items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-3 uppercase border-gray-400 border-b",
+                  "flex h-[48px] grow items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-3 uppercase border-gray-200 border-b-2",
                   {
                     "bg-gray-200 text-black": pathname === link.href,
                   }
@@ -68,10 +68,13 @@ export default function HamburgerNavLinks() {
             );
           })}
           <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="collections" className="border-gray-400">
+            <AccordionItem
+              value="collections"
+              className="border-b-2 border-gray-200"
+            >
               <AccordionTrigger
                 className={clsx(
-                  "w-full flex h-[48px] grow items-center justify-between bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-3 uppercase border-gray-400",
+                  "w-full flex h-[48px] grow items-center justify-between bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-3 uppercase",
                   {
                     "bg-gray-100 text-black":
                       pathname.startsWith("/collection"),
@@ -108,7 +111,7 @@ export default function HamburgerNavLinks() {
           {isLoggedIn && (
             <Link
               href="/profile"
-              className=" flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-gray-400 border-t"
+              className=" flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-gray-200 border-t-2"
             >
               <User2 className="w-6" />
               <p className="uppercase">Profile</p>
@@ -121,7 +124,7 @@ export default function HamburgerNavLinks() {
                 setIsMenuOpen(false);
               }}
             >
-              <button className="w-full flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-t border-gray-400">
+              <button className="w-full flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-t-2 border-gray-200">
                 <PowerCircle className="w-6" />
                 <div className="uppercase">Sign Out</div>
               </button>
@@ -132,7 +135,7 @@ export default function HamburgerNavLinks() {
                 setAuthFormOpen(true);
                 setIsMenuOpen(false);
               }}
-              className="w-full flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-t border-gray-400"
+              className="w-full flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-t-2 border-gray-200"
             >
               <PowerCircle className="w-6" />
               <span className="uppercase">Log in / Register</span>

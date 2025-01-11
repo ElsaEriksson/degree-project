@@ -14,7 +14,7 @@ export default async function Checkout() {
   const totalPrice = itemsTotalPrice + deliveryCost;
 
   return (
-    <div className="m-auto pb-10 pt-24">
+    <div className="m-auto pb-10 pt-16">
       <div className="uppercase text-xl tracking-wide	pb-4">
         Shopping bag items
       </div>
@@ -24,12 +24,12 @@ export default async function Checkout() {
         Order Summery
       </div>
       <div className="grid grid grid-cols-[1fr_auto] w-full py-1">
-        <p className="font-semibold">SHIPPING</p>
-        <p className="font-semibold">$5.00</p>
+        <p className="font-normal">SHIPPING</p>
+        <p className="font-normal">$5</p>
       </div>
       <div className="grid grid grid-cols-[1fr_auto] w-full pt-1 pb-3">
-        <p className="font-semibold">TOTAL</p>
-        <p className="font-semibold">${totalPrice}</p>
+        <p className="font-normal">TOTAL</p>
+        <p className="font-normal">${totalPrice}</p>
       </div>
       <div className="border border-1 my-2"></div>
       <PaymentFormWrapper
