@@ -32,17 +32,24 @@ export default function ProductImage({
     ? `/product/${product.product_id}-${slug}`
     : `/product/${product.product_id}-${slug}`;
 
+  const comingFromPage = isOnCollectionPage
+    ? `collection`
+    : isOnProductsPage
+    ? "products"
+    : "home";
+
+  const imageShowed =
+    isHovered && product.additional_image
+      ? product.additional_image
+      : product.main_image;
+
   return (
     <>
       <Link
         href={{
           pathname: linkHref,
           query: {
-            frompage: isOnCollectionPage
-              ? `collection`
-              : isOnProductsPage
-              ? "products"
-              : "home",
+            frompage: comingFromPage,
           },
         }}
       >
@@ -51,11 +58,7 @@ export default function ProductImage({
           onMouseLeave={() => handleMouseLeave()}
         >
           <Image
-            src={
-              isHovered && product.additional_image
-                ? product.additional_image
-                : product.main_image
-            }
+            src={imageShowed}
             alt={product.name}
             width={300}
             height={400}

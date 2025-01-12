@@ -40,7 +40,7 @@ export default function FavoriteIcon({ productId }: { productId: number }) {
   );
 }
 
-export const toggleFavorite = (productId: number) => {
+const toggleFavorite = (productId: number) => {
   if (!productId) {
     return;
   }

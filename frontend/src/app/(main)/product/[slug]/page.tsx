@@ -5,13 +5,8 @@ import {
 } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 
-interface SearchParams {
-  [key: string]: string | string[] | undefined;
-}
-
 type PageProps = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<SearchParams>;
 };
 
 export default async function ProductDetails(

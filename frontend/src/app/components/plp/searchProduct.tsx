@@ -1,5 +1,4 @@
 "use client";
-
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Search } from "lucide-react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
@@ -27,9 +26,12 @@ export default function SearchProduct({
     replace(`${pathname}?${params.toString()}`);
   }
 
+  const searchInput = searchParams.get("query")?.toString();
+
   return (
     <>
       <div className="flex gap-2 items-center">
+        {/* Input field for search, displayed when showSeachInput is true */}
         {showSeachInput && (
           <div className="relative flex flex-1 flex-shrink-0">
             <label htmlFor="search" className="sr-only">
@@ -41,11 +43,13 @@ export default function SearchProduct({
               onChange={(e) => {
                 handleSearch(e.target.value);
               }}
-              defaultValue={searchParams.get("query")?.toString()}
+              defaultValue={searchInput}
             />
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
           </div>
         )}
+
+        {/* Search button and label, toggles search input visibility */}
         <div
           className={
             showSeachInput ? "hidden" : "flex gap-1 items-center cursor-pointer"
