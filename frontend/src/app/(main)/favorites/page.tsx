@@ -37,13 +37,13 @@ export default async function Favorites(
 
   return (
     <>
-      <div className="relative px-6 pt-28 h-screen">
-        <p className="text-center uppercase text-[40px] md:text-[70px] lg:text-[100px] pb-4">
+      <div className="relative px-6 pt-28">
+        <p className="uppercase text-[40px] md:text-[70px] lg:text-[100px] pb-4">
           Favorites
         </p>
         {products.length === 0 ? (
           <>
-            <div className="text-center text-gray-500 mt-10">
+            <div className="text-gray-500 mt-10 pb-28">
               <div>No favorites saved.</div>{" "}
             </div>
           </>

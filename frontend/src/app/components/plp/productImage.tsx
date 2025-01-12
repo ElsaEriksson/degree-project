@@ -24,9 +24,12 @@ export default function ProductImage({
 
   const isOnProductPage = pathname === "/product";
   const isOnCollectionPage = pathname.includes("/collection");
+  const isOnProductsPage = pathname.includes("/products");
 
   const linkHref = isOnProductPage
     ? `/${product.product_id}-${slug}`
+    : isOnCollectionPage
+    ? `/product/${product.product_id}-${slug}`
     : `/product/${product.product_id}-${slug}`;
 
   return (
@@ -35,7 +38,11 @@ export default function ProductImage({
         href={{
           pathname: linkHref,
           query: {
-            page: isOnCollectionPage ? `collection` : "products",
+            page: isOnCollectionPage
+              ? `collection`
+              : isOnProductsPage
+              ? "products"
+              : "home",
           },
         }}
       >

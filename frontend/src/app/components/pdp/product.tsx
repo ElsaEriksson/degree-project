@@ -77,11 +77,15 @@ export default function Product({
                 label:
                   page === "collection"
                     ? `Collection ${product.collection_name}`
-                    : "Products",
+                    : page === "products"
+                    ? "Products"
+                    : "Home",
                 href:
                   page === "collection"
                     ? `/collection/${product.collection_name}`
-                    : "/products",
+                    : page === "products"
+                    ? "/products"
+                    : "/",
               },
               {
                 label: product.name,
@@ -164,15 +168,16 @@ export default function Product({
             </div>
           </div>
         </div>
+
         <PdpAccordion product={product}></PdpAccordion>
-        <div className="">
-          <h1 className="text-lg md:text-[25px] lg:text-[32px] xl:text-[40px] font-medium uppercase">
-            YOU MAY ALSO LIKE
-          </h1>
-          <ScrollableProductList
-            products={collectionProducts}
-          ></ScrollableProductList>
-        </div>
+
+        <h1 className="text-lg md:text-[25px] lg:text-[32px] xl:text-[40px] font-medium uppercase">
+          YOU MAY ALSO LIKE
+        </h1>
+
+        <ScrollableProductList
+          products={collectionProducts}
+        ></ScrollableProductList>
       </div>
     </>
   );
