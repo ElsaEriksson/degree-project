@@ -1,3 +1,4 @@
+"use client";
 import { authenticate } from "@/app/lib/actions";
 import {
   ArrowRightIcon,
@@ -7,16 +8,25 @@ import {
 } from "@heroicons/react/24/outline";
 import { useActionState } from "react";
 import { Button } from "../ui/button";
+import { usePathname } from "next/navigation";
 
 export default function LoginForm() {
   const [errorMessage, loginFormAction, isPending2] = useActionState(
     authenticate,
     undefined
   );
+  const path = usePathname();
 
   return (
     <>
       <form action={loginFormAction} className="space-y-3">
+        <input
+          type="text"
+          className="hidden"
+          defaultValue={path}
+          name="path"
+          id="path"
+        />
         <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-4">
           <div>
             <label

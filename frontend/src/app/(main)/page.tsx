@@ -6,9 +6,9 @@ import {
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ScrollableProductList from "../components/pdp/scrollableProducts";
-import { ArrowBigRight } from "lucide-react";
 import ShopButton from "../components/home/shopButton";
 import HeroImages from "../components/home/heroImages";
+import SeeAllProductsButton from "../components/home/seeAllProductsButton";
 
 interface ExtendedCollection {
   title: string;
@@ -27,9 +27,10 @@ export default async function Home() {
   if (!featuredProducts) {
     notFound();
   }
+
   const extendedCollections: ExtendedCollection[] = [
     {
-      title: "BAIGELACE",
+      title: "BEIGELACE",
       image:
         "https://exlriuzrrlvaujqsogjs.supabase.co/storage/v1/object/sign/images/Lace%20Regal%20Cap.jpeg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZXMvTGFjZSBSZWdhbCBDYXAuanBlZyIsImlhdCI6MTczNjU5OTU3NSwiZXhwIjoxNzY4MTM1NTc1fQ.7WO4N80jQAc6qWOFewot8NwMO-YOFjD5eQkLLUDJ64M&t=2025-01-11T12%3A46%3A16.318Z",
       href: "/collection/beigelace",
@@ -94,10 +95,7 @@ export default async function Home() {
         <h2 className="mb-2 text-2xl font-medium tracking-wide text-center">
           FEATURED PRODUCTS
         </h2>
-        <div className="flex items-center justify-center gap-2 pb-3">
-          <p className="font-inconsolata text-center">SEE ALL PRODUCTS</p>
-          <ArrowBigRight className="text-black"></ArrowBigRight>
-        </div>
+        <SeeAllProductsButton />
         <ScrollableProductList
           products={featuredProducts}
         ></ScrollableProductList>

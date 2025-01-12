@@ -13,6 +13,7 @@ import {
 } from "../ui/accordion";
 import { useHeader } from "@/app/providers";
 import HatIcon from "./hatIcon";
+import { revalidateCurrentPath } from "@/app/lib/actions";
 
 const links = [
   { name: "Home", href: "/", icon: HomeIcon },
@@ -62,7 +63,7 @@ export default function HamburgerNavLinks() {
                   }
                 )}
               >
-                <LinkIcon className="w-6" />
+                {/* <LinkIcon className="w-6" /> */}
                 <p>{link.name}</p>
               </Link>
             );
@@ -82,7 +83,7 @@ export default function HamburgerNavLinks() {
                 )}
               >
                 <div className="flex items-center gap-2">
-                  <Layers className="w-6" />
+                  {/* <Layers className="w-6" /> */}
                   <p>Collections</p>
                 </div>
               </AccordionTrigger>
@@ -121,11 +122,12 @@ export default function HamburgerNavLinks() {
             <form
               action={async () => {
                 await signOut();
+                await revalidateCurrentPath(pathname);
                 setIsMenuOpen(false);
               }}
             >
               <button className="w-full flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-t-2 border-gray-200">
-                <PowerCircle className="w-6" />
+                {/* <PowerCircle className="w-6" /> */}
                 <div className="uppercase">Sign Out</div>
               </button>
             </form>
@@ -137,7 +139,7 @@ export default function HamburgerNavLinks() {
               }}
               className="w-full flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-t-2 border-gray-200"
             >
-              <PowerCircle className="w-6" />
+              {/* <PowerCircle className="w-6" /> */}
               <span className="uppercase">Log in / Register</span>
             </button>
           )}

@@ -91,6 +91,11 @@ router.patch("/cart-items/:cartItemId", async (req: Request, res: Response) => {
     return;
   }
 
+  if (typeof quantity !== "number" || quantity < 1) {
+    res.status(400).json({ error: "Invalid quantity" });
+    return;
+  }
+
   try {
     const [result] = await pool.query(
       "UPDATE CartItems SET quantity = ? WHERE cart_item_id = ?",
@@ -103,7 +108,8 @@ router.patch("/cart-items/:cartItemId", async (req: Request, res: Response) => {
       res.status(404).json({ message: "Cart item not found" });
     }
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error("Error updating cart item quantity:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

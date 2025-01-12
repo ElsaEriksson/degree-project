@@ -14,7 +14,7 @@ export default async function Page() {
           <h1 className="uppercase text-[40px] md:text-[70px] lg:text-[100px] text-center pb-4">
             Your Orders
           </h1>
-          {orders && orders.length === 0 ? (
+          {orders?.length === 0 ? (
             <div className="text-center text-gray-500 mt-10">
               No orders found.
             </div>

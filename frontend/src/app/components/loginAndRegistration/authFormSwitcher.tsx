@@ -19,7 +19,7 @@ export default function AuthFormSwitcher() {
         onClick={() => setAuthFormOpen(false)}
         className="fixed inset-0 bg-black opacity-50 cursor-pointer z-20 "
       />
-      <div className="modal fixed z-30 left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] rounded-lg bg-gray-50 px-6 pt-4 md:w-2/5 md:px-6">
+      <div className="modal fixed z-30 left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] rounded-lg bg-gray-50 md:px-6 pt-4 w-4/5 md:w-3/5 lg:w-2/5">
         <button onClick={() => setAuthFormOpen(false)} className="text-right">
           <XMarkIcon className="w-6 absolute right-4 top-4" />
         </button>

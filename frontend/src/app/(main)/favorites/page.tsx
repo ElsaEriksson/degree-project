@@ -35,30 +35,32 @@ export default async function Favorites(
 
   const { products, totalPages } = data;
 
-  if (products.length === 0) {
-    return (
-      <div className="text-center text-gray-500 m-auto uppercase text-base md:text-xl">
-        <div>No favorites saved</div>{" "}
-      </div>
-    );
-  }
-
   return (
     <>
-      <div className="relative mx-6 pt-28">
-        <p className=" uppercase text-[40px] md:text-[70px] lg:text-[100px]">
+      <div className="relative px-6 pt-28 h-screen">
+        <p className="text-center uppercase text-[40px] md:text-[70px] lg:text-[100px] pb-4">
           Favorites
-        </p>{" "}
-        <Suspense fallback={"loading..."}>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 w-full">
-            {products.map((product: ProductWithVariants) => (
-              <HoverProvider key={product.product_id}>
-                <ProductCard product={product} />
-              </HoverProvider>
-            ))}
-          </div>
-        </Suspense>
-        <Pagination totalPages={totalPages} />
+        </p>
+        {products.length === 0 ? (
+          <>
+            <div className="text-center text-gray-500 mt-10">
+              <div>No favorites saved.</div>{" "}
+            </div>
+          </>
+        ) : (
+          <>
+            <Suspense fallback={"loading..."}>
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 w-full">
+                {products.map((product: ProductWithVariants) => (
+                  <HoverProvider key={product.product_id}>
+                    <ProductCard product={product} />
+                  </HoverProvider>
+                ))}
+              </div>
+            </Suspense>
+            <Pagination totalPages={totalPages} />
+          </>
+        )}
       </div>
     </>
   );

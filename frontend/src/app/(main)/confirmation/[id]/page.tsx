@@ -100,7 +100,7 @@ export default async function Confirmation(
                 <p className="capitalize">
                   {data.city}, {data.postal_code}
                 </p>
-                <p className="mt-1">Est. Delivery: 3-5 business days</p>
+                <p className="mt-1">Est. Delivery: 1-3 business days</p>
               </div>
 
               {/* Footer */}

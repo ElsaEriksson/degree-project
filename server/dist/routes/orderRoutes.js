@@ -111,7 +111,7 @@ router.get("/orders/:userId", (req, res) => __awaiter(void 0, void 0, void 0, fu
         o.user_id = ?
     `, [userId]);
         if (results.length === 0) {
-            res.status(404).json({ error: "Order not found" });
+            res.json([]);
             return;
         }
         const ordersMap = new Map();

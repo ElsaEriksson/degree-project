@@ -25,7 +25,6 @@ export default function Product({
     {}
   );
   const query = useSearchParams();
-  const headline = "YOU MAY ALSO LIKE";
 
   const handleAddToCart = async (quantity = 1) => {
     if (!selectedSize) {
@@ -101,8 +100,8 @@ export default function Product({
           {/* Right side - Product details */}
           <div className="space-y-6 flex flex-col justify-between h-full">
             <div className="w-full">
-              <p className="text-base lg:text-lg text-gray-400 tracking-widest font-inconsolata">
-                HOWDY COLLECTION
+              <p className="text-base lg:text-lg text-gray-400 tracking-widest font-inconsolata uppercase">
+                {product.collection_name} COLLECTION
               </p>
               <h1 className="text-lg my-1 md:text-[25px] lg:text-[32px] xl:text-[40px] font-medium md:my-2 uppercase leading-tight">
                 {product.name}
@@ -124,19 +123,25 @@ export default function Product({
                 <div className="grid grid-cols-2 gap-4">
                   {product.variants.map((variant, index) => (
                     <button
+                      disabled={variant.stock_quantity === 0}
                       key={index}
                       onClick={() => {
                         setSelectedSize(variant);
                         setError("");
                       }}
                       className={cn(
-                        "py-2 px-4 border-2 hover:border-gray-400 transition-colors text-base lg:text-lg tracking-widest",
+                        "py-2 px-4 border-2 transition-colors text-base lg:text-lg tracking-widest",
                         selectedSize === variant
                           ? "border-black"
-                          : "border-gray-200"
+                          : "border-gray-200",
+                        variant.stock_quantity === 0
+                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                          : "hover:border-gray-400"
                       )}
                     >
-                      {variant.size}
+                      {variant.stock_quantity === 0
+                        ? variant.size + " (out of stock)"
+                        : variant.size}
                     </button>
                   ))}
                 </div>

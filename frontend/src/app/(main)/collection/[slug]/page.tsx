@@ -28,7 +28,7 @@ export default async function ProductDetails(
 
   return (
     <>
-      <div className="relative mx-2 md:mx-6 pt-28 flex flex-col gap-5">
+      <div className="relative mx-2 md:mx-6 pb-10 pt-28 flex flex-col gap-5">
         <div className="flex items-end gap-2 px-1">
           <div className="uppercase text-[38px] md:text-[70px] lg:text-[100px] leading-none">
             {slug}

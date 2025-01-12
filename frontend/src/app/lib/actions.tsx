@@ -48,7 +48,10 @@ export async function authenticate(
   formData: FormData
 ) {
   try {
+    const path = formData.get("path") as string;
     await signIn("credentials", formData);
+
+    await revalidateCurrentPath(path);
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -170,11 +173,13 @@ async function addToCartForLoggedInUser(
   );
 
   if (existingCartItem) {
+    console.log("Updating existing cart item");
     await updateCartItemQuantity(
       existingCartItem.cart_item_id,
       existingCartItem.quantity + quantity
     );
   } else {
+    console.log("Creating new cart item");
     await createCartItem(
       cartId.cart_id,
       product.product_id,
@@ -260,7 +265,12 @@ export async function updateCartItemQuantity(
   );
 
   if (!res.ok) {
-    throw new Error("Failed to update cart item quantity");
+    const errorData = await res.json();
+    throw new Error(
+      `Failed to update cart item quantity: ${
+        errorData.error || errorData.message || res.statusText
+      }`
+    );
   }
 
   revalidateTag("cart");
@@ -525,3 +535,7 @@ export async function createOrderWithItems(
     return { success: false, error: orderResult.error };
   }
 }
+
+export const revalidateCurrentPath = async (path: string) => {
+  revalidatePath(path);
+};

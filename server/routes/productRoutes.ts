@@ -412,12 +412,12 @@ router.get("/featured-products", async (req: Request, res: Response) => {
       LEFT JOIN 
         Variants v ON p.product_id = v.product_id
       LEFT JOIN 
-        Collections c ON p.collection_id = c.collection_id  
+        Collections c ON p.collection_id = c.collection_id
+      WHERE 
+        p.product_id IN (8, 12, 24, 1, 13, 21, 9, 11, 28)    
       GROUP BY 
         p.product_id
-      ORDER BY 
-      RAND()
-      LIMIT 8;
+      ORDER BY FIELD(p.product_id, 8, 12, 24, 1, 13, 21, 9, 11, 28)
     `
     );
 

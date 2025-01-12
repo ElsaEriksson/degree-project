@@ -24,8 +24,8 @@ export default async function Checkout() {
         Order Summery
       </div>
       <div className="grid grid grid-cols-[1fr_auto] w-full py-1">
-        <p className="font-normal">SHIPPING</p>
-        <p className="font-normal">$5</p>
+        <p className="font-normal text-base">SHIPPING</p>
+        <p className="font-normal text-base">$5</p>
       </div>
       <div className="grid grid grid-cols-[1fr_auto] w-full pt-1 pb-3">
         <p className="font-normal">TOTAL</p>

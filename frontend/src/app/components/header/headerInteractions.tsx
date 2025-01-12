@@ -5,9 +5,10 @@ import { CounterBadge } from "./counterBadge";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { useHeader } from "@/app/providers";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import FadeStaggerCircles from "./fadeStaggerCircles";
 import ScrollMode from "./scrollMode";
+import { revalidateCurrentPath } from "@/app/lib/actions";
 
 export default function HeaderInteractions({
   favoritesCount,
@@ -20,12 +21,14 @@ export default function HeaderInteractions({
   const { setAuthFormOpen, setIsCartOpen, setIsMenuOpen } = useHeader();
   const { data: session, status } = useSession();
   const router = useRouter();
+  const path = usePathname();
 
   const isLoggedIn = status === "authenticated" && session;
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     await signOut();
+    await revalidateCurrentPath(path);
     setIsLoggingOut(false);
   };
 

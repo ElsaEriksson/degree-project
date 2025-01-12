@@ -137,7 +137,7 @@ router.get("/orders/:userId", async (req: Request, res: Response) => {
     );
 
     if (results.length === 0) {
-      res.status(404).json({ error: "Order not found" });
+      res.json([]);
       return;
     }
 
