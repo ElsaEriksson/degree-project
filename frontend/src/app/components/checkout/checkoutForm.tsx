@@ -26,6 +26,11 @@ export default function CheckoutForm({
     return errors.find((error) => error.path[0] === field)?.message;
   };
 
+  const iconClasses =
+    "pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900";
+  const inputBaseClasses =
+    "peer block w-full rounded-md border py-[9px] text-sm outline-2 placeholder:text-gray-500 pl-10";
+
   return (
     <div>
       <label
@@ -36,9 +41,9 @@ export default function CheckoutForm({
       </label>
       <div className="relative">
         <input
-          className={`peer block w-full rounded-md border ${
+          className={`${inputBaseClasses} ${
             getError("email") ? "border-red-500" : "border-gray-200"
-          } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+          }`}
           id="email"
           type="email"
           name="email"
@@ -47,7 +52,7 @@ export default function CheckoutForm({
           value={formData.email}
           onChange={onChange}
         />
-        <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+        <AtSymbolIcon className={iconClasses} />
       </div>
 
       <label
@@ -58,9 +63,9 @@ export default function CheckoutForm({
       </label>
       <div className="relative">
         <input
-          className={`peer block w-full rounded-md border ${
+          className={`${inputBaseClasses} ${
             getError("postal_code") ? "border-red-500" : "border-gray-200"
-          } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+          }`}
           id="postal_code"
           type="text"
           name="postal_code"
@@ -69,7 +74,7 @@ export default function CheckoutForm({
           value={formData.postal_code}
           onChange={onChange}
         />
-        <MapPin className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+        <MapPin className={iconClasses} />
       </div>
 
       <div className="flex gap-5">
@@ -82,9 +87,9 @@ export default function CheckoutForm({
           </label>
           <div className="relative">
             <input
-              className={`peer block w-full rounded-md border ${
+              className={`${inputBaseClasses} ${
                 getError("first_name") ? "border-red-500" : "border-gray-200"
-              } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+              }`}
               id="first_name"
               type="text"
               name="first_name"
@@ -93,7 +98,7 @@ export default function CheckoutForm({
               value={formData.first_name}
               onChange={onChange}
             />
-            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            <UserIcon className={iconClasses} />
           </div>
         </div>
         <div>
@@ -105,9 +110,9 @@ export default function CheckoutForm({
           </label>
           <div className="relative">
             <input
-              className={`peer block w-full rounded-md border ${
+              className={`${inputBaseClasses} ${
                 getError("last_name") ? "border-red-500" : "border-gray-200"
-              } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+              }`}
               id="last_name"
               type="text"
               name="last_name"
@@ -116,7 +121,7 @@ export default function CheckoutForm({
               value={formData.last_name}
               onChange={onChange}
             />
-            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            <UserIcon className={iconClasses} />
           </div>
         </div>
       </div>
@@ -128,9 +133,9 @@ export default function CheckoutForm({
       </label>
       <div className="relative">
         <input
-          className={`peer block w-full rounded-md border ${
+          className={`${inputBaseClasses} ${
             getError("shipping_address") ? "border-red-500" : "border-gray-200"
-          } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+          }`}
           id="shipping_address"
           type="text"
           name="shipping_address"
@@ -139,7 +144,7 @@ export default function CheckoutForm({
           value={formData.shipping_address}
           onChange={onChange}
         />
-        <MapPin className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+        <MapPin className={iconClasses} />
       </div>
       <label
         className="mb-3 mt-5 block text-xs font-medium text-gray-900"
@@ -149,9 +154,9 @@ export default function CheckoutForm({
       </label>
       <div className="relative">
         <input
-          className={`peer block w-full rounded-md border ${
+          className={`${inputBaseClasses} ${
             getError("city") ? "border-red-500" : "border-gray-200"
-          } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+          }`}
           id="city"
           type="text"
           name="city"
@@ -160,7 +165,7 @@ export default function CheckoutForm({
           value={formData.city}
           onChange={onChange}
         />
-        <MapPin className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+        <MapPin className={iconClasses} />
       </div>
       <label
         className="mb-3 mt-5 block text-xs font-medium text-gray-900"
@@ -170,9 +175,9 @@ export default function CheckoutForm({
       </label>
       <div className="relative">
         <input
-          className={`peer block w-full rounded-md border ${
+          className={`${inputBaseClasses} ${
             getError("phone_number") ? "border-red-500" : "border-gray-200"
-          } py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+          }`}
           id="phone_number"
           type="text"
           name="phone_number"
@@ -181,7 +186,7 @@ export default function CheckoutForm({
           value={formData.phone_number}
           onChange={onChange}
         />
-        <Phone className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+        <Phone className={iconClasses} />
       </div>
     </div>
   );

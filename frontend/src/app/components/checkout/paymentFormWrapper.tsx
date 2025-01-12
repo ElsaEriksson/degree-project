@@ -38,6 +38,7 @@ export default function PaymentFormWrapper({
 
   return (
     <>
+      {/* Payment form section */}
       {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
           <PaymentForm

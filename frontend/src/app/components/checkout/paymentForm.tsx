@@ -148,6 +148,7 @@ export default function PaymentForm({
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
+      {/* Checkout form that includes fields for the user's information */}
       <div className="uppercase pt-2 pb-2 text-xl tracking-wide	">
         Your Information
       </div>
@@ -157,8 +158,12 @@ export default function PaymentForm({
         errors={errors}
       />
       <div className="border border-1 mb-2 mt-6"></div>
+
+      {/* Payment element (for handling the payment details securely) */}
       <div className="uppercase mt-6 text-xl tracking-wide">Payment</div>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
+
+      {/* Submit button for the payment form */}
       <Button
         disabled={isLoading || !stripe || !elements}
         id="submit"
