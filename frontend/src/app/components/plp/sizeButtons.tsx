@@ -1,4 +1,5 @@
 "use client";
+import { useAddToCart } from "@/app/hooks/useAddToCart";
 import { addToCart } from "@/app/lib/actions";
 import { ProductWithVariants, Variant } from "@/app/models/Product";
 import { useHover } from "@/app/providers";
@@ -10,37 +11,47 @@ export default function SizeButtons({
 }: {
   product: ProductWithVariants;
 }) {
-  const [addedVariants, setAddedVariants] = useState<Record<number, boolean>>(
-    {}
-  );
+  // const [addedVariants, setAddedVariants] = useState<Record<number, boolean>>(
+  //   {}
+  // );
   const { isHovered, handleMouseEnter, handleMouseLeave, buttonIsHovered } =
     useHover();
 
-  const handleClick = async (variant: Variant, quantity = 1) => {
-    try {
-      const result = await addToCart(product, variant, quantity);
+  const { handleAddToCart, addedVariants, error } = useAddToCart(addToCart);
 
-      if ("success" in result) {
-        if (result.success) {
-          setAddedVariants((prev) => ({
-            ...prev,
-            [variant.variant_id]: true,
-          }));
-
-          setTimeout(() => {
-            setAddedVariants((prev) => ({
-              ...prev,
-              [variant.variant_id]: false,
-            }));
-          }, 2000);
-        } else {
-          console.log("Operation failed.");
-        }
-      }
-    } catch (error: any) {
-      alert(error.message);
-    }
+  const onAddToCart = async (
+    product: ProductWithVariants,
+    variant: Variant,
+    quantity = 1
+  ) => {
+    await handleAddToCart(product, variant, quantity);
   };
+
+  // const handleClick = async (variant: Variant, quantity = 1) => {
+  //   try {
+  //     const result = await addToCart(product, variant, quantity);
+
+  //     if ("success" in result) {
+  //       if (result.success) {
+  //         setAddedVariants((prev) => ({
+  //           ...prev,
+  //           [variant.variant_id]: true,
+  //         }));
+
+  //         setTimeout(() => {
+  //           setAddedVariants((prev) => ({
+  //             ...prev,
+  //             [variant.variant_id]: false,
+  //           }));
+  //         }, 2000);
+  //       } else {
+  //         console.log("Operation failed.");
+  //       }
+  //     }
+  //   } catch (error: any) {
+  //     alert(error.message);
+  //   }
+  // };
 
   return (
     <>
@@ -53,7 +64,7 @@ export default function SizeButtons({
           buttonIsHovered &&
           product.variants.map((variant) => (
             <form
-              action={() => handleClick(variant)}
+              action={() => onAddToCart(product, variant)}
               key={variant.variant_id}
               className="mr-2"
             >

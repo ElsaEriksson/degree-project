@@ -9,8 +9,8 @@ import PdpAccordion from "./pdpAccordion";
 import ThumbnailsAndMainImage from "./thumbnailsAndMainImage";
 import { addToCart } from "@/app/lib/actions";
 import { CheckIcon } from "lucide-react";
-import Breadcrumbs from "../breadcrumbs";
-import { useSearchParams } from "next/navigation";
+import BreadcrumbSwitcher from "./breadCrumbSwitcher";
+import { useAddToCart } from "@/app/hooks/useAddToCart";
 
 export default function Product({
   product,
@@ -20,81 +20,23 @@ export default function Product({
   collectionProducts: ProductWithVariants[];
 }) {
   const [selectedSize, setSelectedSize] = useState<Variant>();
-  const [error, setError] = useState("");
-  const [addedVariants, setAddedVariants] = useState<Record<number, boolean>>(
-    {}
-  );
-  const query = useSearchParams();
 
-  const handleAddToCart = async (quantity = 1) => {
+  const { handleAddToCart, addedVariants, error, setError } =
+    useAddToCart(addToCart);
+
+  const onAddToCart = async (quantity = 1) => {
     if (!selectedSize) {
       setError("Please select a size");
       return;
     }
-    setError("");
-    try {
-      const result = await addToCart(product, selectedSize, quantity);
-
-      if ("success" in result) {
-        if (result.success) {
-          setAddedVariants((prev) => ({
-            ...prev,
-            [selectedSize.variant_id]: true,
-          }));
-
-          setTimeout(() => {
-            setAddedVariants((prev) => ({
-              ...prev,
-              [selectedSize.variant_id]: false,
-            }));
-          }, 2000);
-        } else {
-          console.log("Operation failed.");
-        }
-      }
-    } catch (error: any) {
-      alert(error.message);
-    }
+    await handleAddToCart(product, selectedSize, quantity);
   };
-
-  const generateSlug = (name: string) => {
-    return name
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^\w-]+/g, "");
-  };
-
-  const nameSlug = generateSlug(product.name);
-  const page = query.get("page");
 
   return (
     <>
       <div className="container mx-auto">
-        <div className="pb-4 md:pt-2 md:pb-6">
-          <Breadcrumbs
-            breadcrumbs={[
-              {
-                label:
-                  page === "collection"
-                    ? `Collection ${product.collection_name}`
-                    : page === "products"
-                    ? "Products"
-                    : "Home",
-                href:
-                  page === "collection"
-                    ? `/collection/${product.collection_name}`
-                    : page === "products"
-                    ? "/products"
-                    : "/",
-              },
-              {
-                label: product.name,
-                href: `/product/${product.product_id}-${nameSlug}`,
-                active: true,
-              },
-            ]}
-          />
-        </div>
+        <BreadcrumbSwitcher product={product}></BreadcrumbSwitcher>
+
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Left side - Image gallery */}
           <div className="relative ">
@@ -153,7 +95,7 @@ export default function Product({
               </div>
 
               {/* Add to cart button */}
-              <form action={() => handleAddToCart()}>
+              <form action={() => onAddToCart()}>
                 <Button
                   type="submit"
                   className="w-full py-6 text-base md:text-lg rounded-none flex justify-center bg-black hover:bg-black/90 tracking-wider"

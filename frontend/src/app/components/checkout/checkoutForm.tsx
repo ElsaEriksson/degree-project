@@ -25,6 +25,7 @@ export default function CheckoutForm({
   const getError = (field: string) => {
     return errors.find((error) => error.path[0] === field)?.message;
   };
+
   return (
     <div>
       <label

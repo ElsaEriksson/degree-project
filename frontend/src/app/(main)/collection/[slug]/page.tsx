@@ -4,7 +4,6 @@ import { fetchCollectionFromDatabaseByName } from "@/app/lib/data";
 import { ProductWithVariants } from "@/app/models/Product";
 import { HoverProvider } from "@/app/providers";
 import { SlidersHorizontal } from "lucide-react";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 type PageProps = {
@@ -21,10 +20,6 @@ export default async function ProductDetails(
   const query = (await props.searchParams).query || "";
 
   const data = await fetchCollectionFromDatabaseByName(slug, query);
-
-  if (!data) {
-    notFound();
-  }
 
   return (
     <>

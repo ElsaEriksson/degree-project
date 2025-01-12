@@ -2,23 +2,17 @@
 import { useHeader } from "@/app/providers";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { CartItems } from "@/app/models/Cart";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ItemsInCart from "./itemsInCart";
+import { Button } from "../ui/button";
 
 export default function Cart({ cartItems }: { cartItems: CartItems[] }) {
-  // const [loading, setLoading] = useState(true);
-
   const { setIsCartOpen } = useHeader();
   const router = useRouter();
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
-
-  // if (loading) {
-  //   return <div>Loading cart...</div>;
-  // }
 
   if (cartItems.length === 0) {
     return (
@@ -59,12 +53,12 @@ export default function Cart({ cartItems }: { cartItems: CartItems[] }) {
             <p className="font-semibold">TOTAL</p>
             <p className="font-semibold">${totalPrice}</p>
           </div>
-          <button
+          <Button
             onClick={() => router.push("/checkout")}
-            className="h-12 w-full bg-black text-white uppercase hover:bg-black/80"
+            className="w-full py-6 text-lg md:text-lg rounded-none flex justify-center bg-black hover:bg-black/90 tracking-wider uppercase"
           >
             Checkout
-          </button>
+          </Button>
         </div>
       </div>
     </>

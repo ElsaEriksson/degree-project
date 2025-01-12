@@ -10,6 +10,7 @@ import { CartItems } from "@/app/models/Cart";
 import { createOrderWithItems, updateCookieCart } from "@/app/lib/actions";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
 interface StripePaymentElementOptions {
   layout?: "tabs" | "accordion" | "auto";
@@ -158,19 +159,19 @@ export default function PaymentForm({
       <div className="border border-1 mb-2 mt-6"></div>
       <div className="uppercase mt-6 text-xl tracking-wide">Payment</div>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button
+      <Button
         disabled={isLoading || !stripe || !elements}
         id="submit"
-        className="h-12 w-full bg-black text-white mt-5"
+        className="w-full py-6 rounded-none flex justify-center bg-black hover:bg-black/90 tracking-wider mt-5"
       >
-        <span id="button-text">
+        <span id="button-text" className="text-base">
           {isLoading ? (
             <div className="loading loading-spinner" id="spinner"></div>
           ) : (
-            "Pay now"
+            "PAY NOW"
           )}
         </span>
-      </button>
+      </Button>
     </form>
   );
 }

@@ -38,7 +38,7 @@ export default function ProductImage({
         href={{
           pathname: linkHref,
           query: {
-            page: isOnCollectionPage
+            frompage: isOnCollectionPage
               ? `collection`
               : isOnProductsPage
               ? "products"
