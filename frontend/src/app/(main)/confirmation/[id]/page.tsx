@@ -1,9 +1,6 @@
 import { fetchOrderById } from "@/app/lib/data";
 
 type PageProps = {
-  searchParams: Promise<{
-    orderId?: string;
-  }>;
   params: Promise<{ id: string }>;
 };
 
@@ -23,7 +20,6 @@ export default async function Confirmation(
         <div className="mx-auto max-w-[400px] md:max-w-[500px] ">
           {/* Receipt Paper Effect */}
           <div className="relative bg-white shadow-lg">
-            {/* Serrated Edge Top */}
             <div
               className="absolute top-0 left-0 right-0 h-4 bg-white"
               style={{
@@ -112,7 +108,6 @@ export default async function Confirmation(
               </div>
             </div>
 
-            {/* Serrated Edge Bottom */}
             <div
               className="absolute bottom-0 left-0 right-0 h-4 bg-white"
               style={{

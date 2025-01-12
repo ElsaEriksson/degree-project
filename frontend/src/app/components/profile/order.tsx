@@ -10,9 +10,19 @@ export default function Order({ order }: { order: OrderDataFromDatabase }) {
     setOpenOrderId(openOrderId === orderId ? null : orderId);
   };
 
+  const orderStatusClasses =
+    order.status === "delivered"
+      ? "bg-green-200 text-green-800"
+      : order.status === "shipped"
+      ? "bg-blue-200 text-blue-800"
+      : "bg-yellow-200 text-yellow-800";
+
+  const expandedOrderId = openOrderId === order.order_id;
+
   return (
     <>
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+        {/* Order summary header */}
         <div
           className="p-4 flex justify-between items-center cursor-pointer"
           onClick={() => toggleOrder(order?.order_id)}
@@ -30,24 +40,20 @@ export default function Order({ order }: { order: OrderDataFromDatabase }) {
               ${order.total_price}
             </span>
             <span
-              className={`px-2 py-1 rounded-full text-xs ${
-                order.status === "delivered"
-                  ? "bg-green-200 text-green-800"
-                  : order.status === "shipped"
-                  ? "bg-blue-200 text-blue-800"
-                  : "bg-yellow-200 text-yellow-800"
-              }`}
+              className={`px-2 py-1 rounded-full text-xs ${orderStatusClasses}`}
             >
               {order.status}
             </span>
-            {openOrderId === order.order_id ? (
+            {expandedOrderId ? (
               <ChevronUp className="ml-2" />
             ) : (
               <ChevronDown className="ml-2" />
             )}
           </div>
         </div>
-        {openOrderId === order.order_id && (
+
+        {/* Expanded order details */}
+        {expandedOrderId && (
           <div className="p-4 bg-gray-50 border-t border-dashed">
             <div className="font-mono text-sm mb-4">
               <h3 className="font-bold mb-2">Items:</h3>

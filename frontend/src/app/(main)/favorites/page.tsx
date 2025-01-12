@@ -34,6 +34,7 @@ export default async function Favorites(
   }
 
   const { products, totalPages } = data;
+  const isFavoritesListEmpty = products.length === 0;
 
   return (
     <>
@@ -41,7 +42,9 @@ export default async function Favorites(
         <p className="uppercase text-[40px] md:text-[70px] lg:text-[100px] pb-4">
           Favorites
         </p>
-        {products.length === 0 ? (
+
+        {/* Favorites product list */}
+        {isFavoritesListEmpty ? (
           <>
             <div className="text-gray-500 mt-10 pb-28">
               <div>No favorites saved.</div>{" "}
@@ -58,6 +61,8 @@ export default async function Favorites(
                 ))}
               </div>
             </Suspense>
+
+            {/* Pagination controls */}
             <Pagination totalPages={totalPages} />
           </>
         )}

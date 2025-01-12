@@ -7,6 +7,8 @@ export default async function Page() {
 
   const orders = await fetchOrdersByUserId(Number(session?.user.userId));
 
+  const isOrderListEmpty = orders && orders.length === 0;
+
   return (
     <>
       <div className="min-h-screen relative py-28 bg-gray-100">
@@ -14,7 +16,9 @@ export default async function Page() {
           <h1 className="uppercase text-[40px] md:text-[70px] lg:text-[100px] text-center pb-4">
             Your Orders
           </h1>
-          {orders?.length === 0 ? (
+
+          {/* Orders list */}
+          {isOrderListEmpty ? (
             <div className="text-center text-gray-500 mt-10">
               No orders found.
             </div>
