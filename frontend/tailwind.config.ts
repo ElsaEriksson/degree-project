@@ -25,6 +25,8 @@ export default {
       fontFamily: {
         inconsolata: ["var(--font-inconsolata)"],
         quicksand: ["var(--font-quicksand)"],
+        bodoni: ["var(--font-bodoni)"],
+        playfair: ["var(--font-playfair)"],
       },
       animation: {
         "move-sideways": "moveSideways 1s ease-in-out infinite",

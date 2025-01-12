@@ -164,7 +164,11 @@ export default function PaymentForm({
         className="h-12 w-full bg-black text-white mt-5"
       >
         <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+          {isLoading ? (
+            <div className="loading loading-spinner" id="spinner"></div>
+          ) : (
+            "Pay now"
+          )}
         </span>
       </button>
     </form>

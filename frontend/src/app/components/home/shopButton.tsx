@@ -13,12 +13,12 @@ export default function ShopButton() {
     <>
       <div
         onClick={handleClick}
-        className="w-full flex absolute z-10 top-36 md:top-44 lg:top-48 items-center md:justify-start gap-2 md:gap-4 px-5 lg:px-6 hover:cursor-pointer"
+        className="w-full flex gap-4 absolute z-10 top-1/2 hover:cursor-pointer justify-center items-center"
       >
-        <h1 className="font-inconsolata text-[22px] md:text-[30px] font-bold uppercase text-black tracking-wider">
+        <h1 className="font-inconsolata text-[22px] font-medium uppercase text-white tracking-wider">
           Shop Now
         </h1>
-        <ArrowBigRight className="text-black animate-move-sideways"></ArrowBigRight>
+        <ArrowBigRight className="text-white animate-move-sideways"></ArrowBigRight>
       </div>
     </>
   );

@@ -13,9 +13,11 @@ export default function SeeAllProductsButton() {
     <>
       <div
         onClick={handleClick}
-        className="flex items-center justify-center gap-2 pb-3 hover:underline hover:cursor-pointer"
+        className="flex items-center justify-center gap-2 hover:underline hover:cursor-pointer"
       >
-        <p className="font-inconsolata text-center">SEE ALL PRODUCTS</p>
+        <p className="font-inconsolata text-center text-base md:text-lg lg:text-[16px]">
+          SEE ALL PRODUCTS
+        </p>
         <ArrowBigRight className="text-black"></ArrowBigRight>
       </div>
     </>

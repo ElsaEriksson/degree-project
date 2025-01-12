@@ -3,7 +3,7 @@ import { HomeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { Layers, PowerCircle, User2 } from "lucide-react";
+import { User2 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import {
   Accordion,
@@ -51,11 +51,11 @@ export default function HamburgerNavLinks() {
       <div className="flex flex-col max-h-screen md:space-y-2 h-full">
         <div>
           {links.map((link) => {
-            const LinkIcon = link.icon;
             return (
               <Link
                 key={link.name}
                 href={link.href}
+                onClick={() => setIsMenuOpen(false)}
                 className={clsx(
                   "flex h-[48px] grow items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-3 uppercase border-gray-200 border-b-2",
                   {
@@ -63,7 +63,6 @@ export default function HamburgerNavLinks() {
                   }
                 )}
               >
-                {/* <LinkIcon className="w-6" /> */}
                 <p>{link.name}</p>
               </Link>
             );
@@ -83,7 +82,6 @@ export default function HamburgerNavLinks() {
                 )}
               >
                 <div className="flex items-center gap-2">
-                  {/* <Layers className="w-6" /> */}
                   <p>Collections</p>
                 </div>
               </AccordionTrigger>
@@ -91,6 +89,7 @@ export default function HamburgerNavLinks() {
                 <div className="flex flex-col space-y-2 pl-8 pt-2">
                   {collections.map((collection) => (
                     <Link
+                      onClick={() => setIsMenuOpen(false)}
                       key={collection.name}
                       href={collection.href}
                       className={clsx(
@@ -113,6 +112,7 @@ export default function HamburgerNavLinks() {
             <Link
               href="/profile"
               className=" flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-gray-200 border-t-2"
+              onClick={() => setIsMenuOpen(false)}
             >
               <User2 className="w-6" />
               <p className="uppercase">Profile</p>
@@ -127,7 +127,6 @@ export default function HamburgerNavLinks() {
               }}
             >
               <button className="w-full flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-t-2 border-gray-200">
-                {/* <PowerCircle className="w-6" /> */}
                 <div className="uppercase">Sign Out</div>
               </button>
             </form>
@@ -139,7 +138,6 @@ export default function HamburgerNavLinks() {
               }}
               className="w-full flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-t-2 border-gray-200"
             >
-              {/* <PowerCircle className="w-6" /> */}
               <span className="uppercase">Log in / Register</span>
             </button>
           )}
