@@ -21,9 +21,12 @@ export default async function ProductDetails(
 
   const data = await fetchCollectionFromDatabaseByName(slug, query);
 
+  const isProductListEmpty = !data || data.products.length === 0;
+
   return (
     <>
       <div className="relative mx-2 md:mx-6 pb-10 pt-28 flex flex-col gap-5">
+        {/* Headline and total number of items  */}
         <div className="flex items-end gap-2 px-1">
           <div className="uppercase text-[38px] md:text-[70px] lg:text-[100px] leading-none">
             {slug}
@@ -32,6 +35,8 @@ export default async function ProductDetails(
             {data?.totalProducts || 0} ITEMS
           </div>
         </div>
+
+        {/* Search bar and filter/sort controls */}
         <div className="w-full flex justify-between items-center pt-2 px-1">
           <SearchProduct placeholder="Search products..." />
           <div className="flex gap-2 items-center">
@@ -39,23 +44,24 @@ export default async function ProductDetails(
             <p className="uppercase text-base">Filter & Sort</p>
           </div>
         </div>
+
+        {/* Product list */}
         <Suspense fallback={"loading..."}>
-          {data?.products.length === 0 ? (
+          {isProductListEmpty ? (
             <div className="text-center text-gray-500 mt-10">
               No products found matching your search.
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 w-full">
-              {data &&
-                data.products.map((product: ProductWithVariants) => (
-                  <HoverProvider key={product.product_id}>
-                    <ProductCard product={product} />
-                  </HoverProvider>
-                ))}
+              {data.products.map((product: ProductWithVariants) => (
+                <HoverProvider key={product.product_id}>
+                  <ProductCard product={product} />
+                </HoverProvider>
+              ))}
             </div>
           )}
         </Suspense>
-      </div>{" "}
+      </div>
     </>
   );
 }

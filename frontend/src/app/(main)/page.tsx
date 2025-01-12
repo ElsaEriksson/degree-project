@@ -1,10 +1,4 @@
-import Image from "next/image";
-import {
-  fetchCollectionFromDatabase,
-  fetchFeaturedProductsFromDatabase,
-} from "../lib/data";
-import { notFound } from "next/navigation";
-import Link from "next/link";
+import { fetchFeaturedProductsFromDatabase } from "../lib/data";
 import ScrollableProductList from "../components/pdp/scrollableProducts";
 import ShopButton from "../components/home/shopButton";
 import HeroImages from "../components/home/heroImages";
@@ -16,12 +10,12 @@ import Collections from "../components/home/collections";
 export default async function Home() {
   const featuredProducts = await fetchFeaturedProductsFromDatabase();
 
-  if (!featuredProducts) {
-    notFound();
-  }
+  const isProductListEmppty =
+    !featuredProducts || featuredProducts.length === 0;
 
   return (
     <>
+      {/* Landing page */}
       <div className="relative mt-4 min-h-screen flex grow flex-col gap-4 md:flex-row relative">
         <ScanIcon></ScanIcon>
         <h1 className="w-full text-center text-2xl absolute z-10 top-1/2 -translate-y-8 font-bold uppercase text-white px-5 tracking-wide">
@@ -30,7 +24,10 @@ export default async function Home() {
         <ShopButton></ShopButton>
         <HeroImages></HeroImages>
       </div>
+
       <Testimonials></Testimonials>
+
+      {/* Collections */}
       <section className="px-4 md:px-6 py-16">
         <h2 className="mb-2 text-2xl font-medium tracking-wide text-center">
           COLLECTIONS
@@ -41,14 +38,22 @@ export default async function Home() {
         </p>
         <Collections></Collections>
       </section>
+
+      {/* Featured products list */}
       <section className="px-4 md:px-6 pb-16">
         <h2 className="mb-2 text-2xl font-medium tracking-wide text-center">
           FEATURED PRODUCTS
         </h2>
         <SeeAllProductsButton />
-        <ScrollableProductList
-          products={featuredProducts}
-        ></ScrollableProductList>
+        {isProductListEmppty ? (
+          <div className="text-center text-gray-500 mt-10">
+            No products found.
+          </div>
+        ) : (
+          <ScrollableProductList
+            products={featuredProducts}
+          ></ScrollableProductList>
+        )}
       </section>
     </>
   );

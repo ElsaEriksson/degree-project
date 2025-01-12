@@ -45,6 +45,14 @@ router.get(
       );
 
       const totalProducts = countResult[0]?.total || 0;
+
+      if (totalProducts === 0) {
+        res.json({
+          products: [],
+          totalProducts: 0,
+        });
+        return;
+      }
       // Fetch the product with the given ID and its variants
       const [results] = await pool.query<RowDataPacket[]>(
         `

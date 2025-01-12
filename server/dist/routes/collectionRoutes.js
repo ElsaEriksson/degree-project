@@ -44,6 +44,13 @@ router.get("/collection-product-with-variants/:collectionName", (req, res) => __
               AND (? = '' OR p.name LIKE ? COLLATE utf8mb4_general_ci)
               `, [collectionName, query, `%${query}%`]);
         const totalProducts = ((_a = countResult[0]) === null || _a === void 0 ? void 0 : _a.total) || 0;
+        if (totalProducts === 0) {
+            res.json({
+                products: [],
+                totalProducts: 0,
+            });
+            return;
+        }
         // Fetch the product with the given ID and its variants
         const [results] = yield db_1.default.query(`
         SELECT 
