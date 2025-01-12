@@ -31,7 +31,6 @@ export default function Collections() {
 
   return (
     <>
-      {" "}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {extendedCollections.map((collection) => (
           <Link

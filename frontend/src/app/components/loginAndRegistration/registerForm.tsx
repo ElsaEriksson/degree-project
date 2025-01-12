@@ -44,6 +44,9 @@ export default function RegisterForm({
     });
   };
 
+  {
+    /* Message when register is successfull */
+  }
   if (state.success) {
     return (
       <div className="space-y-4 px-6 py-20">
@@ -65,6 +68,7 @@ export default function RegisterForm({
 
   return (
     <>
+      {/* Register form */}
       <form action={registerFormAction} className="space-y-2">
         <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4">
           <div>

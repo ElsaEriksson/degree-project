@@ -19,6 +19,7 @@ export default function LoginForm() {
 
   return (
     <>
+      {/* Login form */}
       <form action={loginFormAction} className="space-y-3">
         <input
           type="text"

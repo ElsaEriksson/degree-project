@@ -1,7 +1,6 @@
 export default function Testimonials() {
   return (
     <>
-      {" "}
       <div className="px-4 md:px-6 py-12 flex flex-wrap gap-4 md:gap-10 justify-center items-center border-b-2 border-gray-200">
         <p className="text-xl font-bodoni md:text-3xl uppercase tracking-widest">
           Lellé

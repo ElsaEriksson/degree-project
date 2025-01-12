@@ -13,6 +13,26 @@ export default function AuthFormSwitcher() {
 
   if (!isAuthFormOpen) return null;
 
+  const activeIndicatorStyle = {
+    transform: `translateX(${authMode === "login" ? "0" : "calc(233%)"})`,
+  };
+
+  const loginLabelClasses = clsx(
+    "flex h-full w-full cursor-pointer items-center justify-start rounded-l-lg text-sm font-medium transition-colors",
+    {
+      "text-black": authMode === "login",
+      "text-gray-400": authMode !== "login",
+    }
+  );
+
+  const registerLabelClasses = clsx(
+    "flex h-full w-full cursor-pointer items-center justify-end rounded-r-lg text-sm font-medium transition-colors",
+    {
+      "text-black": authMode === "register",
+      "text-gray-400": authMode !== "register",
+    }
+  );
+
   return (
     <>
       <div
@@ -25,6 +45,7 @@ export default function AuthFormSwitcher() {
           <XMarkIcon className="w-6 absolute right-4 top-4" />
         </button>
 
+        {/* RadioGroup to choose between "login" and "register" */}
         <div className="relative mt-2 px-6">
           <RadioGroup
             defaultValue="login"
@@ -34,11 +55,7 @@ export default function AuthFormSwitcher() {
           >
             <div
               className="absolute h-full w-[30%] border-b-2 border-gray-800 transition-transform duration-200 ease-in-out"
-              style={{
-                transform: `translateX(${
-                  authMode === "login" ? "0" : "calc(233%)"
-                })`,
-              }}
+              style={activeIndicatorStyle}
             />
             <div className="relative">
               <RadioGroupItem
@@ -46,16 +63,7 @@ export default function AuthFormSwitcher() {
                 id="login"
                 className="peer sr-only"
               />
-              <label
-                htmlFor="login"
-                className={clsx(
-                  "flex h-full w-full cursor-pointer items-center justify-start rounded-l-lg text-sm font-medium transition-colors",
-                  {
-                    "text-black": authMode === "login",
-                    "text-gray-400": authMode !== "login",
-                  }
-                )}
-              >
+              <label htmlFor="login" className={loginLabelClasses}>
                 SIGN IN
               </label>
             </div>
@@ -65,22 +73,14 @@ export default function AuthFormSwitcher() {
                 id="register"
                 className="peer sr-only"
               />
-              <label
-                htmlFor="register"
-                className={clsx(
-                  "flex h-full w-full cursor-pointer items-center justify-end rounded-r-lg text-sm font-medium transition-colors",
-                  {
-                    "text-black": authMode === "register", // Svart text om authMode är register
-                    "text-gray-400": authMode !== "register", // Grå text annars
-                  }
-                )}
-              >
+              <label htmlFor="register" className={registerLabelClasses}>
                 NEW CUSTOMER
               </label>
             </div>
           </RadioGroup>
         </div>
 
+        {/* Render corret form based on chosen authMode */}
         {authMode === "register" && (
           <RegisterForm
             authMode={authMode}
