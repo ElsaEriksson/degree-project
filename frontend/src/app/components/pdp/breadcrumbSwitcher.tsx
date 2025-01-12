@@ -17,7 +17,21 @@ export default function BreadcrumbSwitcher({
   };
 
   const nameSlug = generateSlug(product.name);
-  const page = query.get("frompage");
+  const fromPage = query.get("frompage");
+
+  const breadCrumbLabel =
+    fromPage === "collection"
+      ? `Collection ${product.collection_name}`
+      : fromPage === "products"
+      ? "Products"
+      : "Home";
+
+  const breadCrumbHref =
+    fromPage === "collection"
+      ? `/collection/${product.collection_name}`
+      : fromPage === "products"
+      ? "/products"
+      : "/";
 
   return (
     <>
@@ -25,18 +39,8 @@ export default function BreadcrumbSwitcher({
         <Breadcrumbs
           breadcrumbs={[
             {
-              label:
-                page === "collection"
-                  ? `Collection ${product.collection_name}`
-                  : page === "products"
-                  ? "Products"
-                  : "Home",
-              href:
-                page === "collection"
-                  ? `/collection/${product.collection_name}`
-                  : page === "products"
-                  ? "/products"
-                  : "/",
+              label: breadCrumbLabel,
+              href: breadCrumbHref,
             },
             {
               label: product.name,

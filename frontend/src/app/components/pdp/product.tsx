@@ -20,9 +20,10 @@ export default function Product({
   collectionProducts: ProductWithVariants[];
 }) {
   const [selectedSize, setSelectedSize] = useState<Variant>();
-
   const { handleAddToCart, addedVariants, error, setError } =
     useAddToCart(addToCart);
+
+  const showCheckIcon = selectedSize && addedVariants[selectedSize.variant_id];
 
   const onAddToCart = async (quantity = 1) => {
     if (!selectedSize) {
@@ -67,29 +68,35 @@ export default function Product({
             <div className="space-y-4 md:space-y-6">
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  {product.variants.map((variant, index) => (
-                    <button
-                      disabled={variant.stock_quantity === 0}
-                      key={index}
-                      onClick={() => {
-                        setSelectedSize(variant);
-                        setError("");
-                      }}
-                      className={cn(
-                        "py-2 px-4 border-2 transition-colors text-base lg:text-lg tracking-widest",
-                        selectedSize === variant
-                          ? "border-black"
-                          : "border-gray-200",
-                        variant.stock_quantity === 0
-                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                          : "hover:border-gray-400"
-                      )}
-                    >
-                      {variant.stock_quantity === 0
-                        ? variant.size + " (out of stock)"
-                        : variant.size}
-                    </button>
-                  ))}
+                  {product.variants.map((variant, index) => {
+                    const isOutOfStock = variant.stock_quantity === 0;
+                    const isSelected = selectedSize === variant;
+                    const buttonText = isOutOfStock
+                      ? `${variant.size} (out of stock)`
+                      : variant.size;
+                    const baseButtonClasses =
+                      "py-2 px-4 border-2 transition-colors text-base lg:text-lg tracking-widest";
+
+                    return (
+                      <button
+                        disabled={isOutOfStock}
+                        key={index}
+                        onClick={() => {
+                          setSelectedSize(variant);
+                          setError("");
+                        }}
+                        className={cn(
+                          baseButtonClasses,
+                          isSelected ? "border-black" : "border-gray-200",
+                          isOutOfStock
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            : "hover:border-gray-400"
+                        )}
+                      >
+                        {buttonText}
+                      </button>
+                    );
+                  })}
                 </div>
                 {error && <p className="text-red-500 text-sm">{error}</p>}
               </div>
@@ -100,7 +107,7 @@ export default function Product({
                   type="submit"
                   className="w-full py-6 text-base md:text-lg rounded-none flex justify-center bg-black hover:bg-black/90 tracking-wider"
                 >
-                  {selectedSize && addedVariants[selectedSize.variant_id] ? (
+                  {showCheckIcon ? (
                     <CheckIcon className="h-5 w-5" />
                   ) : (
                     <p>ADD TO CART</p>
@@ -111,12 +118,14 @@ export default function Product({
           </div>
         </div>
 
+        {/* Product accordion with information */}
         <PdpAccordion product={product}></PdpAccordion>
 
         <h1 className="text-lg md:text-[25px] lg:text-[32px] xl:text-[40px] font-medium uppercase">
           YOU MAY ALSO LIKE
         </h1>
 
+        {/* Products from the same collection */}
         <ScrollableProductList
           products={collectionProducts}
         ></ScrollableProductList>

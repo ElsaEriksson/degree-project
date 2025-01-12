@@ -9,7 +9,6 @@ export default function ThumbnailsAndMainImage({
   product: ProductWithVariants;
 }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
   const images = [
     { src: product.main_image, alt: "Product view 1", type: "image" },
     { src: product.additional_image, alt: "Product view 2", type: "image" },
@@ -20,6 +19,13 @@ export default function ThumbnailsAndMainImage({
       poster: product.main_image,
     },
   ];
+  const currentImage = images[currentImageIndex];
+  const isVideo = images[currentImageIndex].type === "video";
+
+  const baseButtonClasses =
+    "absolute top-1/2 -translate-y-1/2 p-2 bg-white/80 rounded-full hover:bg-white transition-colors";
+  const baseThumbnailClasses =
+    "w-full aspect-square relative overflow-hidden h-[32%] border-2 hover:border-gray-400 transition-colors";
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -28,6 +34,7 @@ export default function ThumbnailsAndMainImage({
   const handleNextImage = () => {
     setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
+
   return (
     <>
       {/* Thumbnails */}
@@ -37,8 +44,7 @@ export default function ThumbnailsAndMainImage({
             key={index}
             onClick={() => setCurrentImageIndex(index)}
             className={cn(
-              "w-full aspect-square relative overflow-hidden h-[32%]",
-              "border-2 hover:border-gray-400 transition-colors",
+              baseThumbnailClasses,
               currentImageIndex === index
                 ? "border-black"
                 : "border-transparent"
@@ -57,19 +63,20 @@ export default function ThumbnailsAndMainImage({
           </button>
         ))}
       </div>
+
       {/* Main image */}
       <div className="relative md:ml-28 md:pl-7">
-        {images[currentImageIndex].type === "video" ? (
+        {isVideo ? (
           <video
             controls
             className="w-full aspect-[3/4] object-cover"
-            src={images[currentImageIndex].src}
-            poster={images[currentImageIndex].poster}
+            src={currentImage.src}
+            poster={currentImage.poster}
           />
         ) : (
           <img
-            src={images[currentImageIndex].src}
-            alt={images[currentImageIndex].alt}
+            src={currentImage.src}
+            alt={currentImage.alt}
             className="w-full aspect-[3/4] object-cover"
           />
         )}
@@ -77,13 +84,13 @@ export default function ThumbnailsAndMainImage({
         {/* Navigation arrows */}
         <button
           onClick={handlePrevImage}
-          className="absolute left-4 md:left-11 top-1/2 -translate-y-1/2 p-2 bg-white/80 rounded-full hover:bg-white transition-colors"
+          className={`${baseButtonClasses} left-4 md:left-11`}
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
         <button
           onClick={handleNextImage}
-          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/80 rounded-full hover:bg-white transition-colors"
+          className={`${baseButtonClasses} right-4`}
         >
           <ChevronRight className="w-6 h-6" />
         </button>

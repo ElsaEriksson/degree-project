@@ -12,79 +12,64 @@ export default function PdpAccordion({
 }: {
   product: ProductWithVariants;
 }) {
+  const accordionTriggerClasses =
+    "w-full flex h-[48px] lg:h-[100px] grow items-center justify-between rounded-md bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-5";
+  const accordionContentClasses =
+    "flex flex-col space-y-2 px-4 md:px-8 pt-4 lg:w-2/3 md:text-base lg:text-lg font-light";
+  const containerHeadlineClasses = "flex items-center gap-2";
+  const headlineClasses = "md:text-lg lg:text-xl uppercase";
+
   return (
     <>
-      {" "}
       <Accordion
         type="single"
         collapsible
         className="w-full py-8 md:py-12 lg:py-16"
       >
         <AccordionItem value="details" className="border-gray-400 border-t">
-          <AccordionTrigger
-            className={clsx(
-              "w-full flex h-[48px] lg:h-[100px] grow items-center justify-between rounded-md bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-5"
-            )}
-          >
-            <div className="flex items-center gap-2">
-              <p className="md:text-lg lg:text-xl uppercase">Details</p>
+          <AccordionTrigger className={clsx(accordionTriggerClasses)}>
+            <div className={containerHeadlineClasses}>
+              <p className={headlineClasses}>Details</p>
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="flex flex-col space-y-2 px-4 md:px-8 pt-4 lg:w-2/3">
-              <p className="md:text-base lg:text-lg font-light">
-                Material: {product.material}
-              </p>
-              <p className="md:text-base lg:text-lg font-light">
-                Gender: {product.gender}
-              </p>
-              <p className="md:text-base lg:text-lg font-light">
-                Season: {product.season}
-              </p>
+            <div className={accordionContentClasses}>
+              <p>Material: {product.material}</p>
+              <p>Gender: {product.gender}</p>
+              <p>Season: {product.season}</p>
             </div>
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="deliveryAndPayment" className="border-gray-400">
-          <AccordionTrigger
-            className={clsx(
-              "w-full flex h-[48px] lg:h-[100px] grow items-center justify-between rounded-md bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-5"
-            )}
-          >
-            <div className="flex items-center gap-2">
-              <p className=" md:text-lg lg:text-xl  uppercase">
-                Delivery & Payment
-              </p>
+          <AccordionTrigger className={clsx(accordionTriggerClasses)}>
+            <div className={containerHeadlineClasses}>
+              <p className={headlineClasses}>Delivery & Payment</p>
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="flex flex-col space-y-2 pl-8 pt-4 w-2/3">
-              <p className="lg:text-base">
-                Description: {product.description_long}
+            <div className={accordionContentClasses}>
+              <p>Payment methods: Credit / Debit card</p>
+              <p className="underline">How will I receive my order? </p>
+              <p>
+                All orders within Sweden are sent with Postnord home delivery or
+                to your nearest pickup point.
               </p>
-              <p className="lg:text-base">Material: {product.material}</p>
-              <p className="lg:text-base">Gender: {product.gender}</p>
-              <p className="lg:text-base">Season: {product.season}</p>
+              <p>
+                Orders to the rest of the world are sent with DHL or UPS. Always
+                traceable.
+              </p>
             </div>
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="reviews" className="border-gray-400">
-          <AccordionTrigger
-            className={clsx(
-              "w-full flex h-[48px] lg:h-[100px] grow items-center justify-between rounded-md bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 md:flex-none md:p-2 md:px-5"
-            )}
-          >
-            <div className="flex items-center gap-2">
-              <p className="md:text-lg lg:text-xl  uppercase">Reviews</p>
+          <AccordionTrigger className={clsx(accordionTriggerClasses)}>
+            <div className={containerHeadlineClasses}>
+              <p className={headlineClasses}>Reviews</p>
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="flex flex-col space-y-2 pl-8 w-2/3">
-              <p className="lg:text-base">
-                Description: {product.description_long}
-              </p>
-              <p className="lg:text-base">Material: {product.material}</p>
-              <p className="lg:text-base">Gender: {product.gender}</p>
-              <p className="lg:text-base">Season: {product.season}</p>
+            <div className={accordionContentClasses}>
+              <p>No reviews yet.</p>
             </div>
           </AccordionContent>
         </AccordionItem>

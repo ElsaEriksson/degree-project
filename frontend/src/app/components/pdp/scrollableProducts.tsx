@@ -19,6 +19,18 @@ export default function ScrollableProductList({
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(true);
 
+  const prevButtonDisabled = !canScrollPrev;
+  const nextButtonDisabled = !canScrollNext;
+
+  const baseButtonClasses =
+    "absolute top-1/2 -translate-y-3/4 p-2 bg-white/80 rounded-full transition-colors h-9 w-9 flex items-center justify-center";
+  const prevButtonClasses = `${baseButtonClasses} left-4 ${
+    prevButtonDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-white"
+  }`;
+  const nextButtonClasses = `${baseButtonClasses} right-4 ${
+    nextButtonDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-white"
+  }`;
+
   useEffect(() => {
     if (emblaApi) {
       const onSelect = () => {
@@ -61,19 +73,15 @@ export default function ScrollableProductList({
       </div>
       <button
         onClick={handlePrev}
-        disabled={!canScrollPrev}
-        className={`absolute left-4 top-1/2 -translate-y-3/4 p-2 bg-white/80 rounded-full transition-colors h-9 w-9 flex items-center justify-center ${
-          !canScrollPrev ? "opacity-50 cursor-not-allowed" : "hover:bg-white"
-        }`}
+        disabled={prevButtonDisabled}
+        className={prevButtonClasses}
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
       <button
         onClick={handleNext}
-        disabled={!canScrollNext}
-        className={`absolute right-4 top-1/2 -translate-y-3/4 p-2 bg-white/80 rounded-full transition-colors h-9 w-9 flex items-center justify-center ${
-          !canScrollNext ? "opacity-50 cursor-not-allowed" : "hover:bg-white"
-        }`}
+        disabled={nextButtonDisabled}
+        className={nextButtonClasses}
       >
         <ChevronRight className="w-6 h-6" />
       </button>
