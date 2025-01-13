@@ -4,7 +4,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2";
 
 const router = Router();
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/create-cart", async (req: Request, res: Response) => {
   const { user_id } = req.body;
 
   try {
@@ -22,7 +22,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/active/:userId", async (req: Request, res: Response) => {
+router.get("/active-cart/:userId", async (req: Request, res: Response) => {
   const user_id = Number(req.params.userId);
 
   if (isNaN(user_id)) {
@@ -129,7 +129,7 @@ router.post("/cart-items", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/cart-items/:userId", async (req: Request, res: Response) => {
+router.get("/cart-items-user/:userId", async (req: Request, res: Response) => {
   const user_id = Number(req.params.userId);
 
   if (isNaN(user_id)) {

@@ -1,16 +1,15 @@
 import { CartItems } from "@/app/models/Cart";
-import { ProductWithVariants } from "@/app/models/Product";
 
 export async function fetchActiveCartForUser(
   user_id: number
 ): Promise<{ cart_id: number }> {
-  const res = await fetch(`http://localhost:5000/api/carts/active/${user_id}`, {
+  const res = await fetch(`http://localhost:5000/cart/active-cart/${user_id}`, {
     next: { revalidate: 60 },
   });
 
   if (!res.ok) {
     if (res.status === 404) {
-      const newCartRes = await fetch(`http://localhost:5000/api/carts`, {
+      const newCartRes = await fetch(`http://localhost:5000/cart/create-cart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +34,7 @@ export async function fetchCartItem(
   variant_id: number
 ): Promise<{ cart_item_id: number; quantity: number } | null> {
   const res = await fetch(
-    `http://localhost:5000/api/carts/cart-items/${cart_id}/${variant_id}`,
+    `http://localhost:5000/cart/cart-items/${cart_id}/${variant_id}`,
     {
       next: { revalidate: 60 },
     }
@@ -55,7 +54,7 @@ export async function fetchCartItemsByUserId(
 ): Promise<CartItems[] | undefined> {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/carts/cart-items/${user_id}`,
+      `http://localhost:5000/cart/cart-items-user/${user_id}`,
       { next: { tags: ["cart"] } }
     );
     if (!res.ok) {

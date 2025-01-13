@@ -1,6 +1,6 @@
 "use server";
 import { z } from "zod";
-import { auth, signIn } from "../../../auth";
+import { signIn } from "../../../auth";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 
@@ -78,7 +78,7 @@ export async function register(
   try {
     const { firstName, lastName, email, password } = validatedFields.data;
 
-    const response = await fetch("http://localhost:5000/test/register", {
+    const response = await fetch("http://localhost:5000/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

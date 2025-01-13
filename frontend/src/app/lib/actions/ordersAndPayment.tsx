@@ -10,14 +10,11 @@ function generateId(): number {
 }
 
 export async function stripePayment(cartItems: CartItems[]) {
-  const res = await fetch(
-    "http://localhost:5000/payment/create-payment-intent",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: cartItems }),
-    }
-  );
+  const res = await fetch("http://localhost:5000/create-payment-intent", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ items: cartItems }),
+  });
 
   if (!res.ok) {
     throw new Error("Failed to create payment");

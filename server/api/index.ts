@@ -1,10 +1,8 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import userRoutes from "../routes/userRoutes";
 import collectionRoutes from "../routes/collectionRoutes";
 import productRoutes from "../routes/productRoutes";
-import variantRoutes from "../routes/variantRoutes";
 import authRoutes from "../routes/authRoutes";
 import cartRoutes from "../routes/cartRoutes";
 import checkoutRoutes from "../routes/checkoutRoutes";
@@ -21,17 +19,11 @@ app.use(express.json());
 
 createTables();
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello world, updated!");
-});
-
-app.use("/users", userRoutes);
-app.use("/api/collections", collectionRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/variants", variantRoutes);
-app.use("/test", authRoutes);
-app.use("/api/carts", cartRoutes);
-app.use("/payment", checkoutRoutes);
+app.use("/", collectionRoutes);
+app.use("/", productRoutes);
+app.use("/auth", authRoutes);
+app.use("/cart", cartRoutes);
+app.use("/", checkoutRoutes);
 app.use("/", orderRoutes);
 
 app.listen(PORT, () => {

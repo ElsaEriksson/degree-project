@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const db_1 = __importDefault(require("../config/db"));
 const router = (0, express_1.Router)();
-router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/create-cart", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user_id } = req.body;
     try {
         const [result] = yield db_1.default.query("INSERT INTO Carts (user_id, created_at, status) VALUES (?, NOW(), 'active')", [user_id]);
@@ -27,7 +27,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(500).json({ error: "Failed to create cart" });
     }
 }));
-router.get("/active/:userId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/active-cart/:userId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user_id = Number(req.params.userId);
     if (isNaN(user_id)) {
         res.status(400).json({ error: "Invalid user ID" });
@@ -107,7 +107,7 @@ router.post("/cart-items", (req, res) => __awaiter(void 0, void 0, void 0, funct
         res.status(500).json({ error: error.message });
     }
 }));
-router.get("/cart-items/:userId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/cart-items-user/:userId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user_id = Number(req.params.userId);
     if (isNaN(user_id)) {
         res.status(400).json({ error: "Invalid user ID" });

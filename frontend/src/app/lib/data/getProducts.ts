@@ -5,7 +5,7 @@ export async function fetchProductWithProductId(
 ): Promise<ProductWithVariants | undefined> {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/products/product-with-variants/${product_id}`,
+      `http://localhost:5000/product-with-variants/${product_id}`,
       {
         next: { revalidate: 60 },
       }
@@ -25,12 +25,9 @@ export async function fetchFeaturedProducts(): Promise<
   ProductWithVariants[] | undefined
 > {
   try {
-    const res = await fetch(
-      `http://localhost:5000/api/products/featured-products`,
-      {
-        next: { revalidate: 60 },
-      }
-    );
+    const res = await fetch(`http://localhost:5000/featured-products`, {
+      next: { revalidate: 60 },
+    });
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
@@ -47,7 +44,7 @@ export async function fetchProductsWithCollectionId(
 ): Promise<ProductWithVariants[] | undefined> {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/products/collection-product-with-variants/${collection_id}`,
+      `http://localhost:5000/products-with-variants-by-collection-id/${collection_id}`,
       {
         next: { revalidate: 60 },
       }
@@ -75,7 +72,7 @@ export async function fetchProductsByCollectionName(
 > {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/collections/collection-product-with-variants/${collection_name}?query=${query}`,
+      `http://localhost:5000/products-with-variants-by-collection-name/${collection_name}?query=${query}`,
       {
         next: { revalidate: 60 },
       }
@@ -105,7 +102,7 @@ export async function fetchProducts(
 > {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/products/variants-with-product-info?page=${page}&query=${query}`,
+      `http://localhost:5000/products-with-variants?page=${page}&query=${query}`,
       {
         next: { revalidate: 60 },
       }
@@ -136,7 +133,7 @@ export async function fetchFavoriteProducts(
 > {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/products/favorite-variants-with-product-info?page=${page}&favoriteIds=${favoriteIds}`,
+      `http://localhost:5000/favorite-products-with-variants?page=${page}&favoriteIds=${favoriteIds}`,
       {
         next: { revalidate: 60 },
       }

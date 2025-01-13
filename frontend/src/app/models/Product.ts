@@ -3,7 +3,7 @@ export interface Product {
   name: string;
   main_image: string;
   video: string;
-  additional_image?: string;
+  additional_image: string;
   collection_id: number;
   collection_name?: string;
   price: number;
@@ -12,14 +12,10 @@ export interface Product {
   material: string;
   gender: string;
   season: string;
-  is_favorite: boolean;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface Variant {
   variant_id: number;
-  product_id?: number;
   size: string;
   stock_quantity: number;
 }

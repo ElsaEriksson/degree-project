@@ -61,13 +61,11 @@ async function addToCartForLoggedInUser(
   );
 
   if (existingCartItem) {
-    console.log("Updating existing cart item");
     await updateCartItemQuantity(
       existingCartItem.cart_item_id,
       existingCartItem.quantity + quantity
     );
   } else {
-    console.log("Creating new cart item");
     await createCartItem(
       cartId.cart_id,
       product.product_id,
@@ -120,7 +118,7 @@ async function addToCartForGuestUser(
 }
 
 async function createNewCart(userId: number) {
-  const res = await fetch("http://localhost:5000/api/carts", {
+  const res = await fetch("http://localhost:5000/cart/create-cart", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_id: userId }),
@@ -144,7 +142,7 @@ export async function updateCartItemQuantity(
   newQuantity: number
 ): Promise<void> {
   const res = await fetch(
-    `http://localhost:5000/api/carts/cart-items/${cart_item_id}`,
+    `http://localhost:5000/cart/cart-items/${cart_item_id}`,
     {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -183,7 +181,7 @@ export async function createCartItem(
   quantity: number,
   price: number
 ): Promise<void> {
-  const res = await fetch("http://localhost:5000/api/carts/cart-items", {
+  const res = await fetch("http://localhost:5000/cart/cart-items", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -255,7 +253,7 @@ async function saveCartToDatabase(userId: number, cart: CartItems[]) {
 export async function removeCartItem(cart_item_id: number) {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/carts/cart-items/${cart_item_id}`,
+      `http://localhost:5000/cart/cart-items/${cart_item_id}`,
       {
         method: "DELETE",
       }

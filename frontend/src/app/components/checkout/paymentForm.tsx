@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { createOrderWithItems } from "@/app/lib/actions/ordersAndPayment";
 import { updateCookieCart } from "@/app/lib/actions/shoppingCart";
+import { useSession } from "next-auth/react";
 
 interface StripePaymentElementOptions {
   layout?: "tabs" | "accordion" | "auto";
@@ -53,6 +54,9 @@ export default function PaymentForm({
   const [errors, setErrors] = useState<z.ZodIssue[]>([]);
   const router = useRouter();
   const cartId = cartItems[0].cart_id;
+
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated" && session;
 
   useEffect(() => {
     if (!stripe) {
@@ -132,9 +136,11 @@ export default function PaymentForm({
       const result = await createOrderWithItems(orderData, orderItems, cartId);
       if (result.success) {
         setMessage(`Order created successfully! Order ID: ${result.orderId}`);
-        const updateCart: CartItems[] = [];
-        await updateCookieCart(updateCart);
         router.push(`/confirmation/${result.orderId}`);
+        if (!isLoggedIn) {
+          const updateCart: CartItems[] = [];
+          await updateCookieCart(updateCart);
+        }
       } else {
         setMessage(`Failed to create order: ${result.error}`);
       }

@@ -9,7 +9,7 @@ export interface User {
   updated_at: string;
 }
 
-export interface ModestUser {
+export interface LoggedInUser {
   user_id: number;
   first_name: string;
   email: string;
