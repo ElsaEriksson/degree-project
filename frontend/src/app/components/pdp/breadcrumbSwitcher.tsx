@@ -28,7 +28,7 @@ export default function BreadcrumbSwitcher({
 
   const breadCrumbHref =
     fromPage === "collection"
-      ? `/collection/${product.collection_name}`
+      ? `/collection/${product.collection_name?.toLocaleLowerCase()}`
       : fromPage === "products"
       ? "/products"
       : "/";

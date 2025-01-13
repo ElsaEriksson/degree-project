@@ -29,18 +29,10 @@ export default function Footer() {
               <Link href="/contact" className="hover:underline">
                 Contact
               </Link>
-              <Link href="/faq" className="hover:underline">
-                FAQ
-              </Link>
-              <Link href="/press" className="hover:underline">
-                Press
-              </Link>
-              <Link href="/terms" className="hover:underline">
-                Terms & Conditions
-              </Link>
-              <Link href="/privacy" className="hover:underline">
-                Privacy Policy
-              </Link>
+              <p>FAQ</p>
+              <p>Press</p>
+              <p>Terms & Conditions</p>
+              <p>Privacy Policy</p>
             </nav>
 
             {/* Newsletter Signup */}
@@ -70,10 +62,8 @@ export default function Footer() {
 
           {/* Footer Bottom */}
           <div className="mt-12 flex flex-col items-center gap-4 md:flex-row md:justify-between">
-            <Link href="https://instagram.com" className="hover:opacity-70">
-              <Instagram className="h-6 w-6" />
-              <span className="sr-only">Follow us on Instagram</span>
-            </Link>
+            <Instagram className="h-6 w-6" />
+            <span className="sr-only">Follow us on Instagram</span>
             <p className="text-sm">© 2025 - handcraftedhats.com</p>
           </div>
         </div>

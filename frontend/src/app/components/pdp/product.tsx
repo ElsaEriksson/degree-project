@@ -11,6 +11,7 @@ import { CheckIcon } from "lucide-react";
 import { useAddToCart } from "@/app/hooks/useAddToCart";
 import BreadcrumbSwitcher from "./breadcrumbSwitcher";
 import { addToCart } from "@/app/lib/actions/shoppingCart";
+import Link from "next/link";
 
 export default function Product({
   product,
@@ -47,9 +48,13 @@ export default function Product({
           {/* Right side - Product details */}
           <div className="space-y-6 flex flex-col justify-between h-full">
             <div className="w-full">
-              <p className="text-base lg:text-lg text-gray-400 tracking-widest font-inconsolata uppercase">
-                {product.collection_name} COLLECTION
-              </p>
+              <Link
+                href={`/collection/${product.collection_name?.toLocaleLowerCase()}`}
+              >
+                <p className="text-base lg:text-lg text-gray-400 tracking-widest font-inconsolata uppercase">
+                  {product.collection_name} COLLECTION
+                </p>
+              </Link>
               <h1 className="text-lg my-1 md:text-[25px] lg:text-[32px] xl:text-[40px] font-medium md:my-2 uppercase leading-tight">
                 {product.name}
               </h1>
