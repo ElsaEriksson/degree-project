@@ -4,7 +4,6 @@ import { cn } from "@/app/utils/utils";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import FavoriteIcon from "../plp/favoriteIcon";
-import ScrollableProductList from "./scrollableProducts";
 import PdpAccordion from "./pdpAccordion";
 import ThumbnailsAndMainImage from "./thumbnailsAndMainImage";
 import { CheckIcon } from "lucide-react";
@@ -12,6 +11,7 @@ import { useAddToCart } from "@/app/hooks/useAddToCart";
 import BreadcrumbSwitcher from "./breadcrumbSwitcher";
 import { addToCart } from "@/app/lib/actions/shoppingCart";
 import Link from "next/link";
+import HorizontalProductList from "../horizontalProductList";
 
 export default function Product({
   product,
@@ -131,9 +131,9 @@ export default function Product({
         </h1>
 
         {/* Products from the same collection */}
-        <ScrollableProductList
+        <HorizontalProductList
           products={collectionProducts}
-        ></ScrollableProductList>
+        ></HorizontalProductList>
       </div>
     </>
   );

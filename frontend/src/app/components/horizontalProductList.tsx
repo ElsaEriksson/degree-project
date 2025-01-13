@@ -1,13 +1,13 @@
 "use client";
 import { ProductWithVariants } from "@/app/models/Product";
 import { HoverProvider } from "@/app/providers";
-import ProductCard from "../plp/productCard";
+import ProductCard from "./plp/productCard";
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
-export default function ScrollableProductList({
+export default function HorizontalProductList({
   products,
 }: {
   products: ProductWithVariants[];

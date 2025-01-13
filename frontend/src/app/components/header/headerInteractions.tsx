@@ -9,6 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import FadeStaggerCircles from "./fadeStaggerCircles";
 import ScrollMode from "./scrollMode";
 import { revalidateCurrentPath } from "@/app/lib/actions/auth";
+import Link from "next/link";
 
 export default function HeaderInteractions({
   favoritesCount,
@@ -48,9 +49,9 @@ export default function HeaderInteractions({
           </button>
 
           {/* Header logo */}
-          <a href="/" className="text-xl font-medium text-center">
+          <Link href="/" className="text-xl font-medium text-center relative">
             H&H
-          </a>
+          </Link>
 
           <div className="flex items-center justify-end gap-4 text-right">
             {/* Sign in / register and sign out buttons */}

@@ -1,4 +1,3 @@
-import ScrollableProductList from "../components/pdp/scrollableProducts";
 import ShopButton from "../components/home/shopButton";
 import HeroImages from "../components/home/heroImages";
 import SeeAllProductsButton from "../components/home/seeAllProductsButton";
@@ -6,6 +5,7 @@ import Testimonials from "../components/home/testimonials";
 import ScanIcon from "../components/home/scanIcon";
 import Collections from "../components/home/collections";
 import { fetchFeaturedProducts } from "../lib/data/getProducts";
+import HorizontalProductList from "../components/horizontalProductList";
 
 export default async function Home() {
   const featuredProducts = await fetchFeaturedProducts();
@@ -50,9 +50,9 @@ export default async function Home() {
             No products found.
           </div>
         ) : (
-          <ScrollableProductList
+          <HorizontalProductList
             products={featuredProducts}
-          ></ScrollableProductList>
+          ></HorizontalProductList>
         )}
       </section>
     </>

@@ -2,12 +2,13 @@ export default function HatIcon() {
   return (
     <>
       <svg
-        width="30"
-        height="30"
+        width="28"
+        height="28"
         viewBox="0 0 63 63"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
+        className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 "
       >
         <rect width="63" height="63" fill="url(#pattern0_154_106)" />
         <defs>
