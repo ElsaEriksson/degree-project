@@ -5,12 +5,14 @@ import { auth } from "../../../auth";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 
+const BACKEND_URL = process.env.BACKEND_URL;
+
 function generateId(): number {
   return Math.floor(100000 + Math.random() * 900000);
 }
 
 export async function stripePayment(cartItems: CartItems[]) {
-  const res = await fetch("http://localhost:5000/create-payment-intent", {
+  const res = await fetch(`${BACKEND_URL}/create-payment-intent`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ items: cartItems }),
@@ -42,7 +44,7 @@ async function createOrder(orderData: OrderData, cart_id: number) {
       orderData.cart_id = null;
     }
 
-    const response = await fetch(`http://localhost:5000/order`, {
+    const response = await fetch(`${BACKEND_URL}/order`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +75,7 @@ async function createOrder(orderData: OrderData, cart_id: number) {
 
 async function createOrderItems(orderId: number, items: OrderItem[]) {
   try {
-    const response = await fetch(`http://localhost:5000/order-items`, {
+    const response = await fetch(`${BACKEND_URL}/order-items`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,10 +1,12 @@
 import { OrderDataFromDatabase } from "../../models/Orders";
 
+const BACKEND_URL = process.env.BACKEND_URL;
+
 export async function fetchOrderByOrderId(
   order_id: string
 ): Promise<OrderDataFromDatabase | undefined> {
   try {
-    const res = await fetch(`http://localhost:5000/order/${order_id}`, {
+    const res = await fetch(`${BACKEND_URL}/order/${order_id}`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) {
@@ -22,7 +24,7 @@ export async function fetchOrdersByUserId(
   user_id: number
 ): Promise<OrderDataFromDatabase[] | undefined> {
   try {
-    const res = await fetch(`http://localhost:5000/orders/${user_id}`, {
+    const res = await fetch(`${BACKEND_URL}/orders/${user_id}`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) {

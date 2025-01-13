@@ -35,7 +35,7 @@ export default async function Favorites(
 
   return (
     <>
-      <div className="relative px-6 pt-28">
+      <div className="relative px-6 pt-28 min-h-screen">
         <p className="uppercase text-[40px] md:text-[70px] lg:text-[100px] pb-4">
           Favorites
         </p>

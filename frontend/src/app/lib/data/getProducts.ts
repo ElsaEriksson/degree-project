@@ -1,11 +1,13 @@
 import { ProductWithVariants } from "@/app/models/Product";
 
+const BACKEND_URL = process.env.BACKEND_URL;
+
 export async function fetchProductWithProductId(
   product_id: string
 ): Promise<ProductWithVariants | undefined> {
   try {
     const res = await fetch(
-      `http://localhost:5000/product-with-variants/${product_id}`,
+      `${BACKEND_URL}/product-with-variants/${product_id}`,
       {
         next: { revalidate: 60 },
       }
@@ -25,7 +27,7 @@ export async function fetchFeaturedProducts(): Promise<
   ProductWithVariants[] | undefined
 > {
   try {
-    const res = await fetch(`http://localhost:5000/featured-products`, {
+    const res = await fetch(`${BACKEND_URL}/featured-products`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) {
@@ -44,7 +46,7 @@ export async function fetchProductsWithCollectionId(
 ): Promise<ProductWithVariants[] | undefined> {
   try {
     const res = await fetch(
-      `http://localhost:5000/products-with-variants-by-collection-id/${collection_id}`,
+      `${BACKEND_URL}/products-with-variants-by-collection-id/${collection_id}`,
       {
         next: { revalidate: 60 },
       }
@@ -72,7 +74,7 @@ export async function fetchProductsByCollectionName(
 > {
   try {
     const res = await fetch(
-      `http://localhost:5000/products-with-variants-by-collection-name/${collection_name}?query=${query}`,
+      `${BACKEND_URL}/products-with-variants-by-collection-name/${collection_name}?query=${query}`,
       {
         next: { revalidate: 60 },
       }
@@ -102,7 +104,7 @@ export async function fetchProducts(
 > {
   try {
     const res = await fetch(
-      `http://localhost:5000/products-with-variants?page=${page}&query=${query}`,
+      `${BACKEND_URL}/products-with-variants?page=${page}&query=${query}`,
       {
         next: { revalidate: 60 },
       }
@@ -133,7 +135,7 @@ export async function fetchFavoriteProducts(
 > {
   try {
     const res = await fetch(
-      `http://localhost:5000/favorite-products-with-variants?page=${page}&favoriteIds=${favoriteIds}`,
+      `${BACKEND_URL}/favorite-products-with-variants?page=${page}&favoriteIds=${favoriteIds}`,
       {
         next: { revalidate: 60 },
       }

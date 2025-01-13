@@ -6,6 +6,8 @@ import { authConfig } from "./auth.config";
 import { JWT } from "next-auth/jwt";
 import { migrateCartFromCookiesToDatabase } from "./app/lib/actions/shoppingCart";
 
+const BACKEND_URL = process.env.BACKEND_URL;
+
 declare module "next-auth" {
   interface Session {
     user: {
@@ -41,7 +43,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         const { email, password } = parsedCredentials.data;
 
         try {
-          const res = await fetch("http://localhost:5000/auth/login", {
+          const res = await fetch(`${BACKEND_URL}/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),

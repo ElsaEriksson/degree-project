@@ -10,6 +10,8 @@ import { CartItems } from "@/app/models/Cart";
 import { auth } from "../../../auth";
 import { cookies } from "next/headers";
 
+const BACKEND_URL = process.env.BACKEND_URL;
+
 export async function addToCart(
   product: Product,
   variant: Variant,
@@ -118,7 +120,7 @@ async function addToCartForGuestUser(
 }
 
 async function createNewCart(userId: number) {
-  const res = await fetch("http://localhost:5000/cart/create-cart", {
+  const res = await fetch(`${BACKEND_URL}/cart/create-cart`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_id: userId }),
@@ -141,14 +143,11 @@ export async function updateCartItemQuantity(
   cart_item_id: number,
   newQuantity: number
 ): Promise<void> {
-  const res = await fetch(
-    `http://localhost:5000/cart/cart-items/${cart_item_id}`,
-    {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ quantity: newQuantity }),
-    }
-  );
+  const res = await fetch(`${BACKEND_URL}/cart/cart-items/${cart_item_id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ quantity: newQuantity }),
+  });
 
   if (!res.ok) {
     const errorData = await res.json();
@@ -181,7 +180,7 @@ export async function createCartItem(
   quantity: number,
   price: number
 ): Promise<void> {
-  const res = await fetch("http://localhost:5000/cart/cart-items", {
+  const res = await fetch(`${BACKEND_URL}/cart/cart-items`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -252,12 +251,9 @@ async function saveCartToDatabase(userId: number, cart: CartItems[]) {
 
 export async function removeCartItem(cart_item_id: number) {
   try {
-    const res = await fetch(
-      `http://localhost:5000/cart/cart-items/${cart_item_id}`,
-      {
-        method: "DELETE",
-      }
-    );
+    const res = await fetch(`${BACKEND_URL}/cart/cart-items/${cart_item_id}`, {
+      method: "DELETE",
+    });
 
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);

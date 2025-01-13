@@ -27,7 +27,7 @@ export default async function Products(
 
   return (
     <>
-      <div className="relative mx-2 md:mx-6 pt-28 flex flex-col gap-5">
+      <div className="relative mx-2 md:mx-6 pt-28 flex flex-col gap-5 min-h-screen">
         {/* Headline and total number of items  */}
         <div className="flex items-end gap-2 px-1">
           <div className="uppercase text-[38px] md:text-[70px] lg:text-[100px] leading-none">
@@ -50,7 +50,7 @@ export default async function Products(
         {/* Product list */}
         <Suspense fallback={"loading..."}>
           {isProductListEmpty ? (
-            <div className="text-center text-gray-500 mt-10">
+            <div className="text-center text-gray-500 mt-10 pb-10">
               No products found matching your search.
             </div>
           ) : (

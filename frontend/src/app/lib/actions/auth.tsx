@@ -4,6 +4,8 @@ import { signIn } from "../../../auth";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 
+const BACKEND_URL = process.env.BACKEND_URL;
+
 const RegisterSchema = z.object({
   firstName: z
     .string()
@@ -78,7 +80,7 @@ export async function register(
   try {
     const { firstName, lastName, email, password } = validatedFields.data;
 
-    const response = await fetch("http://localhost:5000/auth/register", {
+    const response = await fetch(`${BACKEND_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
