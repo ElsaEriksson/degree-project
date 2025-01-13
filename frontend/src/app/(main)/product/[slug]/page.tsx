@@ -1,8 +1,8 @@
 import Product from "@/app/components/pdp/product";
 import {
-  fetchProductFromDatabaseWithCollectionId,
-  fetchProductFromDatabaseWithId,
-} from "@/app/lib/data";
+  fetchProductsWithCollectionId,
+  fetchProductWithProductId,
+} from "@/app/lib/data/getProducts";
 import { notFound } from "next/navigation";
 
 type PageProps = {
@@ -14,13 +14,13 @@ export default async function ProductDetails(
 ): Promise<React.ReactElement> {
   const slug = (await props.params).slug || "";
   const productId = slug.split("-")[0];
-  const product = await fetchProductFromDatabaseWithId(productId);
+  const product = await fetchProductWithProductId(productId);
 
   if (!product) {
     notFound();
   }
 
-  const collectionProducts = await fetchProductFromDatabaseWithCollectionId(
+  const collectionProducts = await fetchProductsWithCollectionId(
     product.collection_id
   );
 

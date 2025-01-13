@@ -5,13 +5,13 @@ import { z } from "zod";
 import { cookies } from "next/headers";
 import { CartItems } from "../models/Cart";
 import { Product, Variant } from "../models/Product";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { OrderData, OrderItem } from "../models/Orders";
 import {
   fetchActiveCartForUser,
   fetchCartItem,
-  fetchCartItemsForUser,
-} from "./data";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { OrderData, OrderItem } from "../models/Orders";
+  fetchCartItemsByUserId,
+} from "./data/getCarts";
 
 const RegisterSchema = z.object({
   firstName: z
@@ -396,7 +396,7 @@ export async function getCartItems() {
   const session = await auth();
 
   if (session !== null && session.user.userId) {
-    const cartItemsFromDatabase = await fetchCartItemsForUser(
+    const cartItemsFromDatabase = await fetchCartItemsByUserId(
       session.user.userId
     );
     if (cartItemsFromDatabase) {

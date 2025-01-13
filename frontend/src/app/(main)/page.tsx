@@ -1,4 +1,3 @@
-import { fetchFeaturedProductsFromDatabase } from "../lib/data";
 import ScrollableProductList from "../components/pdp/scrollableProducts";
 import ShopButton from "../components/home/shopButton";
 import HeroImages from "../components/home/heroImages";
@@ -6,9 +5,10 @@ import SeeAllProductsButton from "../components/home/seeAllProductsButton";
 import Testimonials from "../components/home/testimonials";
 import ScanIcon from "../components/home/scanIcon";
 import Collections from "../components/home/collections";
+import { fetchFeaturedProducts } from "../lib/data/getProducts";
 
 export default async function Home() {
-  const featuredProducts = await fetchFeaturedProductsFromDatabase();
+  const featuredProducts = await fetchFeaturedProducts();
 
   const isProductListEmppty =
     !featuredProducts || featuredProducts.length === 0;

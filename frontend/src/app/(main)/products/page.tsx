@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import Pagination from "../../components/pagination";
 import ProductCard from "../../components/plp/productCard";
-import { fetchProductVariantsFromDatabase } from "../../lib/data";
 import { ProductWithVariants } from "../../models/Product";
 import { HoverProvider } from "../../providers";
 import { SlidersHorizontal } from "lucide-react";
 import SearchProduct from "@/app/components/plp/searchProduct";
+import { fetchProducts } from "@/app/lib/data/getProducts";
 
 type PageProps = {
   searchParams: Promise<{
@@ -20,7 +20,7 @@ export default async function Products(
   const query = (await props.searchParams).query || "";
   const currentPage = Number((await props.searchParams).page) || 1;
 
-  const data = await fetchProductVariantsFromDatabase(currentPage, query);
+  const data = await fetchProducts(currentPage, query);
 
   const isProductListEmpty = data?.products.length === 0;
   const hasProducts = data && data.products.length > 0;

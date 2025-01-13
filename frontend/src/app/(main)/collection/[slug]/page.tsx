@@ -1,6 +1,6 @@
 import ProductCard from "@/app/components/plp/productCard";
 import SearchProduct from "@/app/components/plp/searchProduct";
-import { fetchCollectionFromDatabaseByName } from "@/app/lib/data";
+import { fetchProductsByCollectionName } from "@/app/lib/data/getProducts";
 import { ProductWithVariants } from "@/app/models/Product";
 import { HoverProvider } from "@/app/providers";
 import { SlidersHorizontal } from "lucide-react";
@@ -19,7 +19,7 @@ export default async function ProductDetails(
   const slug = (await props.params).slug || "";
   const query = (await props.searchParams).query || "";
 
-  const data = await fetchCollectionFromDatabaseByName(slug, query);
+  const data = await fetchProductsByCollectionName(slug, query);
 
   const isProductListEmpty = !data || data.products.length === 0;
 

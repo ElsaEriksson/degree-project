@@ -3,8 +3,8 @@ import ProductCard from "../../components/plp/productCard";
 import { Suspense } from "react";
 import { ProductWithVariants } from "@/app/models/Product";
 import Pagination from "../../components/pagination";
-import { fetchFavoritesWithProductVariantsFromDatabase } from "../../lib/data";
 import { HoverProvider } from "../../providers";
+import { fetchFavoriteProducts } from "@/app/lib/data/getProducts";
 
 type PageProps = {
   searchParams: Promise<{
@@ -24,10 +24,7 @@ export default async function Favorites(
     favoritesArray = JSON.parse(favorites?.value).toString() ?? "";
   }
 
-  const data = await fetchFavoritesWithProductVariantsFromDatabase(
-    currentPage,
-    favoritesArray
-  );
+  const data = await fetchFavoriteProducts(currentPage, favoritesArray);
 
   if (!data) {
     return <div>Error loading products</div>;

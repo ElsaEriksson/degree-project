@@ -1,4 +1,4 @@
-import { fetchOrderById } from "@/app/lib/data";
+import { fetchOrderByOrderId } from "@/app/lib/data/getOrders";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -8,7 +8,7 @@ export default async function Confirmation(
   props: Readonly<PageProps>
 ): Promise<React.ReactElement> {
   const orderId = (await props.params).id || "";
-  const data = await fetchOrderById(orderId);
+  const data = await fetchOrderByOrderId(orderId);
 
   if (!data) return <div>Error creating receipt</div>;
 

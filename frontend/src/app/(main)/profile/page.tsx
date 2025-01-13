@@ -1,4 +1,4 @@
-import { fetchOrdersByUserId } from "@/app/lib/data";
+import { fetchOrdersByUserId } from "@/app/lib/data/getOrders";
 import { auth } from "../../../auth";
 import Order from "@/app/components/profile/order";
 
