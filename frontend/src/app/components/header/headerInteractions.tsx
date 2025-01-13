@@ -2,35 +2,33 @@
 import { RotatingBanner } from "./rotatingBanner";
 import { Heart, Menu, ShoppingBag, User2 } from "lucide-react";
 import { CounterBadge } from "./counterBadge";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { useHeader } from "@/app/providers";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import FadeStaggerCircles from "./fadeStaggerCircles";
 import ScrollMode from "./scrollMode";
-import { revalidateCurrentPath } from "@/app/lib/actions/auth";
 import Link from "next/link";
+import { Session } from "next-auth";
 
 export default function HeaderInteractions({
   favoritesCount,
   cartItemsCount,
+  session,
 }: {
   favoritesCount: number;
   cartItemsCount: number;
+  session: Session | null;
 }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { setAuthFormOpen, setIsCartOpen, setIsMenuOpen } = useHeader();
-  const { data: session, status } = useSession();
   const router = useRouter();
-  const path = usePathname();
 
-  const isLoggedIn = status === "authenticated" && session;
-  const isLoading = status === "loading";
+  const isLoggedIn = session && session.user;
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     setIsLoggingOut(true);
-    await signOut();
-    await revalidateCurrentPath(path);
+    signOut();
     setIsLoggingOut(false);
   };
 
@@ -69,11 +67,10 @@ export default function HeaderInteractions({
             ) : (
               <button
                 onClick={() => setAuthFormOpen(true)}
-                disabled={isLoading}
                 className="rounded-lg px-6 text-base font-medium text-black transition-colors hover:underline hidden lg:block tracking-widest"
               >
                 <div className="uppercase font-inconsolata">
-                  {isLoading ? <FadeStaggerCircles /> : "Sign in / Register"}
+                  {"Sign in / Register"}
                 </div>
               </button>
             )}

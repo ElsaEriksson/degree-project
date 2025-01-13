@@ -3,8 +3,15 @@ import Image from "next/image";
 import RemoveCartItem from "./removeCartItem";
 import UpdateCartItem from "./updateCartItem";
 import { CartItems } from "@/app/models/Cart";
+import { Session } from "next-auth";
 
-export default function ItemsInCart({ cartItems }: { cartItems: CartItems[] }) {
+export default function ItemsInCart({
+  cartItems,
+  session,
+}: {
+  cartItems: CartItems[];
+  session: Session | null;
+}) {
   return (
     <>
       {cartItems.map((item) => (
@@ -20,6 +27,7 @@ export default function ItemsInCart({ cartItems }: { cartItems: CartItems[] }) {
                 priority
               />
             </div>
+
             <div className="pl-3 w-full flex flex-col justify-between">
               <div className="grid grid-cols-[1fr_auto]">
                 <div className="flex flex-col">
@@ -28,16 +36,20 @@ export default function ItemsInCart({ cartItems }: { cartItems: CartItems[] }) {
                     Size: {item.size}
                   </p>
                 </div>
+
                 <RemoveCartItem
                   cart_item_id={item.cart_item_id}
                   cartItems={cartItems}
+                  session={session}
                 ></RemoveCartItem>
               </div>
+
               <div className="flex">
                 <UpdateCartItem
                   cartItems={cartItems}
                   item={item}
-                ></UpdateCartItem>{" "}
+                  session={session}
+                ></UpdateCartItem>
                 <p className="font-medium text-base">${item.price}</p>
               </div>
             </div>

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { CartItems } from "@/app/models/Cart";
 import PaymentForm from "./paymentForm";
 import { stripePayment } from "@/app/lib/actions/ordersAndPayment";
+import { Session } from "next-auth";
 
 const stripePromise = loadStripe(
   "pk_test_51PJeAX2LDDRd0nb94oPYuwNucVCMguiDxFVh7DKXG5L0Ny5cz7jGfGoDJRGDAVOJ9xyJODpCKvT6vPs9hrq1Fu1600JsmHuDmK"
@@ -13,9 +14,11 @@ const stripePromise = loadStripe(
 export default function PaymentFormWrapper({
   cartItems,
   totalPrice,
+  session,
 }: {
   cartItems: CartItems[];
   totalPrice: number;
+  session: Session | null;
 }) {
   const [clientSecret, setClientSecret] = useState("");
 
@@ -45,6 +48,7 @@ export default function PaymentFormWrapper({
             cartItems={cartItems}
             totalPrice={totalPrice}
             clientSecret={clientSecret}
+            session={session}
           />
         </Elements>
       )}

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { User2 } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
 import {
   Accordion,
   AccordionContent,
@@ -13,7 +12,8 @@ import {
 } from "../ui/accordion";
 import { useHeader } from "@/app/providers";
 import HatIcon from "./hatIcon";
-import { revalidateCurrentPath } from "@/app/lib/actions/auth";
+import { signOut } from "next-auth/react";
+import { Session } from "next-auth";
 
 const links = [
   { name: "Home", href: "/", icon: HomeIcon },
@@ -30,12 +30,15 @@ const collections = [
   { name: "Colorfur", href: "/collection/colorfur" },
 ];
 
-export default function HamburgerNavLinks() {
+export default function HamburgerNavLinks({
+  session,
+}: {
+  session: Session | null;
+}) {
   const { setAuthFormOpen, setIsMenuOpen } = useHeader();
-  const { data: session, status } = useSession();
   const pathname = usePathname();
 
-  const isLoggedIn = status === "authenticated" && session;
+  const isLoggedIn = session && session.user;
 
   return (
     <>
@@ -129,9 +132,8 @@ export default function HamburgerNavLinks() {
           {/* Sign in / register and Sign out buttons */}
           {isLoggedIn ? (
             <form
-              action={async () => {
-                await signOut();
-                await revalidateCurrentPath(pathname);
+              action={() => {
+                signOut();
                 setIsMenuOpen(false);
               }}
             >

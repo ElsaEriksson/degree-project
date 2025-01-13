@@ -1,24 +1,25 @@
 "use client";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useTransition } from "react";
-import { useSession } from "next-auth/react";
 import { CartItems } from "@/app/models/Cart";
 import {
   removeCartItem,
   updateCookieCart,
 } from "@/app/lib/actions/shoppingCart";
+import { Session } from "next-auth";
 
 export default function RemoveCartItem({
   cart_item_id,
   cartItems,
+  session,
 }: {
   cart_item_id: number;
   cartItems: CartItems[];
+  session: Session | null;
 }) {
   const [isPending, startTransition] = useTransition();
-  const { data: session, status } = useSession();
 
-  const isLoggedIn = status === "authenticated" && session;
+  const isLoggedIn = session && session.user;
 
   const handleRemove = () => {
     startTransition(async () => {

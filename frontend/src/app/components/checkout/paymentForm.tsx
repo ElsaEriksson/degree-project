@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { createOrderWithItems } from "@/app/lib/actions/ordersAndPayment";
 import { updateCookieCart } from "@/app/lib/actions/shoppingCart";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
 
 interface StripePaymentElementOptions {
   layout?: "tabs" | "accordion" | "auto";
@@ -32,10 +32,12 @@ export default function PaymentForm({
   cartItems,
   totalPrice,
   clientSecret,
+  session,
 }: {
   cartItems: CartItems[];
   totalPrice: number;
   clientSecret: string;
+  session: Session | null;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -55,8 +57,7 @@ export default function PaymentForm({
   const router = useRouter();
   const cartId = cartItems[0].cart_id;
 
-  const { data: session, status } = useSession();
-  const isLoggedIn = status === "authenticated" && session;
+  const isLoggedIn = session && session.user;
 
   useEffect(() => {
     if (!stripe) {

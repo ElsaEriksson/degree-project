@@ -2,7 +2,6 @@
 import { z } from "zod";
 import { signIn } from "../../../auth";
 import { AuthError } from "next-auth";
-import { revalidatePath } from "next/cache";
 
 const BACKEND_URL = process.env.BACKEND_URL;
 
@@ -41,10 +40,7 @@ export async function authenticate(
   formData: FormData
 ) {
   try {
-    const path = formData.get("path") as string;
     await signIn("credentials", formData);
-
-    await revalidateCurrentPath(path);
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -114,7 +110,3 @@ export async function register(
     };
   }
 }
-
-export const revalidateCurrentPath = async (path: string) => {
-  revalidatePath(path);
-};

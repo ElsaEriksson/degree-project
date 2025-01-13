@@ -5,8 +5,15 @@ import { CartItems } from "@/app/models/Cart";
 import { useRouter } from "next/navigation";
 import ItemsInCart from "./itemsInCart";
 import { Button } from "../ui/button";
+import { Session } from "next-auth";
 
-export default function Cart({ cartItems }: { cartItems: CartItems[] }) {
+export default function Cart({
+  cartItems,
+  session,
+}: {
+  cartItems: CartItems[];
+  session: Session | null;
+}) {
   const { setIsCartOpen } = useHeader();
   const router = useRouter();
   const totalPrice = cartItems.reduce(
@@ -45,7 +52,7 @@ export default function Cart({ cartItems }: { cartItems: CartItems[] }) {
         </div>
 
         <ScrollArea className="flex-grow overflow-y-auto scrollbar-hide">
-          <ItemsInCart cartItems={cartItems} />
+          <ItemsInCart cartItems={cartItems} session={session} />
         </ScrollArea>
 
         <div className="w-full border-t-2 mt-2">

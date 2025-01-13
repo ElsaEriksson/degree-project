@@ -4,17 +4,18 @@ import {
 } from "@/app/lib/actions/shoppingCart";
 import { CartItems } from "@/app/models/Cart";
 import { Minus, Plus } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
 
 export default function UpdateCartItem({
   item,
   cartItems,
+  session,
 }: {
   item: CartItems;
   cartItems: CartItems[];
+  session: Session | null;
 }) {
-  const { data: session, status } = useSession();
-  const isLoggedIn = status === "authenticated" && session;
+  const isLoggedIn = session && session.user;
   const disabledMinusButton = item.quantity === 1;
   const disabledPlusButton = item.quantity > item.stock_quantity;
 
