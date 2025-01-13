@@ -12,8 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const productsPlaceholderData_1 = require("./productsPlaceholderData");
-const variantsPlaceholderData_1 = require("./variantsPlaceholderData");
+const placeholderData_1 = require("./placeholderData");
 const db_1 = __importDefault(require("../config/db"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const createProductsTable = (connection) => __awaiter(void 0, void 0, void 0, function* () {
@@ -40,7 +39,7 @@ const createProductsTable = (connection) => __awaiter(void 0, void 0, void 0, fu
     console.log("Products table created successfully!");
 });
 const insertInitialProducts = (connection) => __awaiter(void 0, void 0, void 0, function* () {
-    yield Promise.all(productsPlaceholderData_1.products.map((product) => __awaiter(void 0, void 0, void 0, function* () {
+    yield Promise.all(placeholderData_1.products.map((product) => __awaiter(void 0, void 0, void 0, function* () {
         const [existingProduct] = yield connection.query("SELECT * FROM Products WHERE name = ?", [product.name]);
         if (existingProduct.length === 0) {
             yield connection.query(`INSERT INTO Products (name, main_image, video, additional_image, collection_id, price, description_short, description_long, material, gender, season)
@@ -100,7 +99,7 @@ const createVariantsTable = (connection) => __awaiter(void 0, void 0, void 0, fu
     console.log("Variants table created successfully!");
 });
 const insertInitialVariants = (connection) => __awaiter(void 0, void 0, void 0, function* () {
-    yield Promise.all(variantsPlaceholderData_1.productVariants.map((variant) => __awaiter(void 0, void 0, void 0, function* () {
+    yield Promise.all(placeholderData_1.productVariants.map((variant) => __awaiter(void 0, void 0, void 0, function* () {
         const [existingVariant] = yield connection.query("SELECT * FROM Variants WHERE variant_id = ?", [variant.variant_id]);
         if (existingVariant.length === 0) {
             yield connection.query(`INSERT INTO Variants (product_id, size, stock_quantity)

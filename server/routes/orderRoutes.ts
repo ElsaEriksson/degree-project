@@ -1,11 +1,11 @@
 import express, { Request, Response } from "express";
 import pool from "../config/db";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { OrderData, OrderItem, OrderStatus } from "../models/Order";
+import { OrderData, OrderItem } from "../models/Order";
 
 const router = express.Router();
 
-router.post("/orders", async (req: Request, res: Response) => {
+router.post("/order", async (req: Request, res: Response) => {
   const {
     user_id,
     guest_id,
@@ -69,7 +69,7 @@ router.post("/order-items", async (req: Request, res: Response) => {
 
   try {
     const values = items.map(
-      ({ product_id, variant_id, quantity, price }: any) => [
+      ({ product_id, variant_id, quantity, price }: OrderItem) => [
         order_id,
         product_id,
         variant_id,

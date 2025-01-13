@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("../config/db"));
 const router = express_1.default.Router();
-router.post("/orders", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/order", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user_id, guest_id, cart_id, total_price, first_name, last_name, phone_number, shipping_address, postal_code, city, email, } = req.body;
     try {
         const [orderResult] = yield db_1.default.query(`INSERT INTO Orders (

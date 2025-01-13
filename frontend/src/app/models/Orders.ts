@@ -1,4 +1,4 @@
-export type OrderStatus =
+type OrderStatus =
   | "pending"
   | "confirmed"
   | "shipped"
@@ -6,7 +6,6 @@ export type OrderStatus =
   | "cancelled";
 
 export interface OrderData {
-  order_id?: number;
   user_id?: number | null;
   guest_id?: number | null;
   cart_id?: number | null;
@@ -21,8 +20,6 @@ export interface OrderData {
 }
 
 export interface OrderItem {
-  order_items_id?: number;
-  order_id?: number;
   product_id: number;
   variant_id: number;
   quantity: number;
@@ -41,10 +38,10 @@ export interface OrderDataFromDatabase {
   city: string;
   status: OrderStatus;
   created_at: string;
-  items: OrderItemFromDatabase[];
+  items: DetailedOrderItemFromDatabase[];
 }
 
-export interface OrderItemFromDatabase {
+export interface DetailedOrderItemFromDatabase {
   product_name: string;
   size: string;
   quantity: number;

@@ -12,11 +12,4 @@ const pool = promise_1.default.createPool({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
 });
-// connection.connect((err) => {
-//   if (err) {
-//     console.error("Error connecting to the database:", err.message);
-//     process.exit(1);
-//   }
-//   console.log("Connected to MySQL database");
-// });
 exports.default = pool;

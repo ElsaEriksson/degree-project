@@ -1,5 +1,4 @@
-import { products } from "./productsPlaceholderData";
-import { productVariants } from "./variantsPlaceholderData";
+import { products, productVariants } from "./placeholderData";
 import pool from "../config/db";
 import bcrypt from "bcrypt";
 

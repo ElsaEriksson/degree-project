@@ -45,7 +45,7 @@ async function createOrder(orderData: OrderData, cart_id: number) {
       orderData.cart_id = null;
     }
 
-    const response = await fetch(`http://localhost:5000/orders`, {
+    const response = await fetch(`http://localhost:5000/order`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
