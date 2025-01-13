@@ -24,12 +24,17 @@ export default function ScrollMode({
     setIsHomePage(pathname === "/");
   }, [pathname]);
 
+  const headerBackgroundColor =
+    isScrolled || !isHomePage ? "bg-white" : "bg-transparent";
+
   return (
     <>
+      {/* Manages the behavior and styling of a fixed header
+       * based on the user's scroll position and the current page. */}
       <div
         className={cn(
           "fixed top-0 left-0 right-0 z-30 transition-colors duration-300",
-          isScrolled || !isHomePage ? "bg-white" : "bg-transparent"
+          headerBackgroundColor
         )}
       >
         {children}

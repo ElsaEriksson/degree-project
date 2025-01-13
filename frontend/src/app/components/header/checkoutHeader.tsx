@@ -9,7 +9,6 @@ export default function CheckoutHeader() {
             H&H
           </a>
           <div className="flex gap-1">
-            {/* <ArrowLeftIcon></ArrowLeftIcon> */}
             <a href="/" className="text-base font-semibold flex gap-1">
               <ArrowLeftIcon></ArrowLeftIcon>
               Back to shopping

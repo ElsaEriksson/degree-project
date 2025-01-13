@@ -39,6 +39,7 @@ export default function HamburgerNavLinks() {
 
   return (
     <>
+      {/* Hamburger menu headline and close button */}
       <div className="flex justify-between w-full items-center border-b-2">
         <h2 className="text-xl font-semibold mb-4">Menu</h2>
         <p
@@ -48,8 +49,10 @@ export default function HamburgerNavLinks() {
           CLOSE
         </p>
       </div>
+
       <div className="flex flex-col max-h-screen md:space-y-2 h-full">
         <div>
+          {/* Hamburger menu links */}
           {links.map((link) => {
             return (
               <Link
@@ -67,6 +70,8 @@ export default function HamburgerNavLinks() {
               </Link>
             );
           })}
+
+          {/* Collections dropdown */}
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem
               value="collections"
@@ -107,7 +112,9 @@ export default function HamburgerNavLinks() {
             </AccordionItem>
           </Accordion>
         </div>
+
         <div className="flex grow gap-2 flex-col justify-end w-full">
+          {/* Profile icon and link */}
           {isLoggedIn && (
             <Link
               href="/profile"
@@ -118,6 +125,8 @@ export default function HamburgerNavLinks() {
               <p className="uppercase">Profile</p>
             </Link>
           )}
+
+          {/* Sign in / register and Sign out buttons */}
           {isLoggedIn ? (
             <form
               action={async () => {

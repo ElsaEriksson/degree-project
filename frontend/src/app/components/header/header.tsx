@@ -17,19 +17,23 @@ export default async function Header() {
 
   return (
     <header>
+      {/* Header buttons, links and icons */}
       <HeaderInteractions
         favoritesCount={favorites.length}
         cartItemsCount={cartItemsCount}
       />
 
+      {/* Auth form modal */}
       <AuthFormSwitcher />
 
+      {/* Sliding panels for hamburger menu */}
       <SlidingPanel side="left">
         <div className="p-4 h-full flex grow flex-col justify-between">
           <HamburgerNavLinks />
         </div>
       </SlidingPanel>
 
+      {/* Sliding panels for cart */}
       <SlidingPanel side="right">
         <Cart cartItems={cartItems} />
       </SlidingPanel>

@@ -5,7 +5,7 @@ import { CounterBadge } from "./counterBadge";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { useHeader } from "@/app/providers";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import FadeStaggerCircles from "./fadeStaggerCircles";
 import ScrollMode from "./scrollMode";
 import { revalidateCurrentPath } from "@/app/lib/actions";
@@ -24,6 +24,7 @@ export default function HeaderInteractions({
   const path = usePathname();
 
   const isLoggedIn = status === "authenticated" && session;
+  const isLoading = status === "loading";
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -36,7 +37,9 @@ export default function HeaderInteractions({
     <>
       <ScrollMode>
         <RotatingBanner />
+
         <div className="h-16 px-2 md:px-4 grid grid-cols-3 items-center border-b">
+          {/* Hamburger menu button and icon */}
           <button
             onClick={() => setIsMenuOpen(true)}
             className="p-2 hover:bg-gray-100 rounded-full text-left w-max"
@@ -44,11 +47,13 @@ export default function HeaderInteractions({
             <Menu className="h-6 w-6" />
           </button>
 
+          {/* Header logo */}
           <a href="/" className="text-xl font-medium text-center">
             H&H
           </a>
 
           <div className="flex items-center justify-end gap-4 text-right">
+            {/* Sign in / register and sign out buttons */}
             {isLoggedIn ? (
               <form onSubmit={handleLogout}>
                 <button
@@ -63,18 +68,16 @@ export default function HeaderInteractions({
             ) : (
               <button
                 onClick={() => setAuthFormOpen(true)}
-                disabled={status === "loading"}
+                disabled={isLoading}
                 className="rounded-lg px-6 text-base font-medium text-black transition-colors hover:underline hidden lg:block tracking-widest"
               >
                 <div className="uppercase font-inconsolata">
-                  {status === "loading" ? (
-                    <FadeStaggerCircles />
-                  ) : (
-                    "Sign in / Register"
-                  )}
+                  {isLoading ? <FadeStaggerCircles /> : "Sign in / Register"}
                 </div>
               </button>
             )}
+
+            {/* Favorites icon and counter */}
             <button
               onClick={() => router.push("/favorites")}
               className="p-2 hover:bg-gray-100 rounded-full relative"
@@ -83,6 +86,7 @@ export default function HeaderInteractions({
               <CounterBadge count={favoritesCount} />
             </button>
 
+            {/* Profile icon */}
             {isLoggedIn && (
               <button
                 className="p-2 hidden hover:bg-gray-100 rounded-full lg:block"
@@ -94,6 +98,7 @@ export default function HeaderInteractions({
               </button>
             )}
 
+            {/* Cart icon and counter */}
             <button
               onClick={() => setIsCartOpen(true)}
               className="p-2 hover:bg-gray-100 rounded-full relative"

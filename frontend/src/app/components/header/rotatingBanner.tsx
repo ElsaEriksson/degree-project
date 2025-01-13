@@ -28,24 +28,26 @@ export function RotatingBanner() {
   }, [controls]);
 
   return (
-    <div className="bg-black flex items-center text-white overflow-hidden h-8">
-      <motion.div
-        ref={containerRef}
-        animate={controls}
-        className="flex whitespace-nowrap"
-        style={{ width: "max-content" }}
-      >
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="flex justify-between gap-8 mx-8 text-sm font-normal"
-          >
-            {bannerText.map((text, index) => (
-              <span key={index}>{text}</span>
-            ))}
-          </div>
-        ))}
-      </motion.div>
-    </div>
+    <>
+      <div className="bg-black flex items-center text-white overflow-hidden h-8">
+        <motion.div
+          ref={containerRef}
+          animate={controls}
+          className="flex whitespace-nowrap"
+          style={{ width: "max-content" }}
+        >
+          {[...Array(6)].map((_, i) => (
+            <div
+              key={i}
+              className="flex justify-between gap-8 mx-8 text-sm font-normal"
+            >
+              {bannerText.map((text, index) => (
+                <span key={index}>{text}</span>
+              ))}
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </>
   );
 }

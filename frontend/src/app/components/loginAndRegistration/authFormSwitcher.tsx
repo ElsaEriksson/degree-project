@@ -80,7 +80,7 @@ export default function AuthFormSwitcher() {
           </RadioGroup>
         </div>
 
-        {/* Render corret form based on chosen authMode */}
+        {/* Render correct form based on chosen authMode */}
         {authMode === "register" && (
           <RegisterForm
             authMode={authMode}
