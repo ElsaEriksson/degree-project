@@ -2,8 +2,11 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useTransition } from "react";
 import { useSession } from "next-auth/react";
-import { removeCartItem, updateCookieCart } from "@/app/lib/actions";
 import { CartItems } from "@/app/models/Cart";
+import {
+  removeCartItem,
+  updateCookieCart,
+} from "@/app/lib/actions/shoppingCart";
 
 export default function RemoveCartItem({
   cart_item_id,

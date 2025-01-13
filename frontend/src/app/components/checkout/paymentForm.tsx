@@ -7,10 +7,11 @@ import {
 } from "@stripe/react-stripe-js";
 import CheckoutForm from "./checkoutForm";
 import { CartItems } from "@/app/models/Cart";
-import { createOrderWithItems, updateCookieCart } from "@/app/lib/actions";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
+import { createOrderWithItems } from "@/app/lib/actions/ordersAndPayment";
+import { updateCookieCart } from "@/app/lib/actions/shoppingCart";
 
 interface StripePaymentElementOptions {
   layout?: "tabs" | "accordion" | "auto";

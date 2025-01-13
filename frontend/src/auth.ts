@@ -4,7 +4,7 @@ import { z } from "zod";
 import { LoggedInUser } from "@/app/models/User";
 import { authConfig } from "./auth.config";
 import { JWT } from "next-auth/jwt";
-import { migrateCartFromCookiesToDatabase } from "@/app/lib/actions";
+import { migrateCartFromCookiesToDatabase } from "./app/lib/actions/shoppingCart";
 
 declare module "next-auth" {
   interface Session {

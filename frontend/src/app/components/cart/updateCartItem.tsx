@@ -1,4 +1,7 @@
-import { updateCartItemQuantity, updateCookieCart } from "@/app/lib/actions";
+import {
+  updateCartItemQuantity,
+  updateCookieCart,
+} from "@/app/lib/actions/shoppingCart";
 import { CartItems } from "@/app/models/Cart";
 import { Minus, Plus } from "lucide-react";
 import { useSession } from "next-auth/react";

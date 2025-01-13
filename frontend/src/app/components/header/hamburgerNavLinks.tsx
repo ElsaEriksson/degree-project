@@ -13,7 +13,7 @@ import {
 } from "../ui/accordion";
 import { useHeader } from "@/app/providers";
 import HatIcon from "./hatIcon";
-import { revalidateCurrentPath } from "@/app/lib/actions";
+import { revalidateCurrentPath } from "@/app/lib/actions/auth";
 
 const links = [
   { name: "Home", href: "/", icon: HomeIcon },

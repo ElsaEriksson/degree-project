@@ -8,7 +8,7 @@ import { useHeader } from "@/app/providers";
 import { usePathname, useRouter } from "next/navigation";
 import FadeStaggerCircles from "./fadeStaggerCircles";
 import ScrollMode from "./scrollMode";
-import { revalidateCurrentPath } from "@/app/lib/actions";
+import { revalidateCurrentPath } from "@/app/lib/actions/auth";
 
 export default function HeaderInteractions({
   favoritesCount,

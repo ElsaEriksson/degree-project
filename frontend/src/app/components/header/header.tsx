@@ -2,9 +2,10 @@ import { SlidingPanel } from "./slidingPanel";
 import HeaderInteractions from "./headerInteractions";
 import HamburgerNavLinks from "./hamburgerNavLinks";
 import AuthFormSwitcher from "../loginAndRegistration/authFormSwitcher";
-import { getCartItems, getFavorites } from "@/app/lib/actions";
+import { getFavorites } from "@/app/lib/actions/favorites";
 import { CartItems } from "@/app/models/Cart";
 import Cart from "../cart/cart";
+import { getCartItems } from "@/app/lib/actions/shoppingCart";
 
 export default async function Header() {
   const favorites = await getFavorites();

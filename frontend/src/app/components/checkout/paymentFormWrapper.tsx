@@ -3,8 +3,8 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 import { CartItems } from "@/app/models/Cart";
-import { stripePayment } from "@/app/lib/actions";
 import PaymentForm from "./paymentForm";
+import { stripePayment } from "@/app/lib/actions/ordersAndPayment";
 
 const stripePromise = loadStripe(
   "pk_test_51PJeAX2LDDRd0nb94oPYuwNucVCMguiDxFVh7DKXG5L0Ny5cz7jGfGoDJRGDAVOJ9xyJODpCKvT6vPs9hrq1Fu1600JsmHuDmK"

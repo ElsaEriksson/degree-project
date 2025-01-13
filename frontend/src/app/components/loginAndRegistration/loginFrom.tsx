@@ -1,5 +1,4 @@
 "use client";
-import { authenticate } from "@/app/lib/actions";
 import {
   ArrowRightIcon,
   AtSymbolIcon,
@@ -9,6 +8,7 @@ import {
 import { useActionState } from "react";
 import { Button } from "../ui/button";
 import { usePathname } from "next/navigation";
+import { authenticate } from "@/app/lib/actions/auth";
 
 export default function LoginForm() {
   const [errorMessage, loginFormAction, isPending2] = useActionState(

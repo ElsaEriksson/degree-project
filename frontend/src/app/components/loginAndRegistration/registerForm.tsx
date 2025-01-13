@@ -12,9 +12,9 @@ import {
   useEffect,
   useTransition,
 } from "react";
-import { register, State } from "@/app/lib/actions";
 import { Button } from "../ui/button";
 import { StarsIcon } from "lucide-react";
+import { register, State } from "@/app/lib/actions/auth";
 
 export default function RegisterForm({
   authMode,

@@ -1,126 +1,14 @@
 "use server";
-import { AuthError } from "next-auth";
-import { auth, signIn } from "../../auth";
-import { z } from "zod";
-import { cookies } from "next/headers";
-import { CartItems } from "../models/Cart";
-import { Product, Variant } from "../models/Product";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { OrderData, OrderItem } from "../models/Orders";
+import { Product, Variant } from "@/app/models/Product";
+import { revalidateTag } from "next/cache";
 import {
   fetchActiveCartForUser,
   fetchCartItem,
   fetchCartItemsByUserId,
-} from "./data/getCarts";
-
-const RegisterSchema = z.object({
-  firstName: z
-    .string()
-    .min(2, "First name must be at least 2 characters long.")
-    .regex(/^[A-Za-z\s]+$/, "First name can only contain letters and spaces."),
-  lastName: z
-    .string()
-    .min(2, "Last name must be at least 2 characters long.")
-    .regex(/^[A-Za-z\s]+$/, "Last name can only contain letters and spaces."),
-  email: z.string().email("Invalid email format."),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters long.")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."
-    ),
-});
-
-export type State = {
-  errors?: {
-    firstName?: string[];
-    lastName?: string[];
-    email?: string[];
-    password?: string[];
-  };
-  message?: string | null;
-  success?: boolean;
-};
-
-export async function authenticate(
-  prevState: string | undefined,
-  formData: FormData
-) {
-  try {
-    const path = formData.get("path") as string;
-    await signIn("credentials", formData);
-
-    await revalidateCurrentPath(path);
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return "Invalid credentials.";
-        default:
-          return "Something went wrong.";
-      }
-    }
-    throw error;
-  }
-}
-
-export async function register(
-  prevState: State | undefined,
-  formData: FormData
-) {
-  const validatedFields = RegisterSchema.safeParse({
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    email: formData.get("email"),
-    password: formData.get("password"),
-  });
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: "Invalid input. Please check your registration details.",
-    };
-  }
-
-  try {
-    const { firstName, lastName, email, password } = validatedFields.data;
-
-    const response = await fetch("http://localhost:5000/test/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        password,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        success: false,
-        error: errorData.error || "Registration failed",
-      };
-    }
-
-    const user = await response.json();
-    if (user) {
-      return { success: true, user };
-    }
-    return { success: false, message: "Registration failed" };
-  } catch (error) {
-    return {
-      success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "An unexpected error occurred during registration",
-    };
-  }
-}
+} from "../data/getCarts";
+import { CartItems } from "@/app/models/Cart";
+import { auth } from "../../../auth";
+import { cookies } from "next/headers";
 
 export async function addToCart(
   product: Product,
@@ -231,7 +119,7 @@ async function addToCartForGuestUser(
   return cart;
 }
 
-export async function createNewCart(userId: number) {
+async function createNewCart(userId: number) {
   const res = await fetch("http://localhost:5000/api/carts", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -330,7 +218,7 @@ export async function migrateCartFromCookiesToDatabase(userId: number) {
   }
 }
 
-export async function saveCartToDatabase(userId: number, cart: CartItems[]) {
+async function saveCartToDatabase(userId: number, cart: CartItems[]) {
   let cartId = await fetchActiveCartForUser(userId);
 
   if (!cartId) {
@@ -409,133 +297,3 @@ export async function getCartItems() {
     return cartItemsFromCookie;
   }
 }
-
-export const revalidateFavorites = async () => {
-  revalidatePath("favorites");
-};
-
-export async function getFavorites() {
-  const cookieStore = await cookies();
-  const favoritesCookie = cookieStore.get("favorites");
-  return favoritesCookie ? JSON.parse(favoritesCookie.value) : [];
-}
-
-export async function stripePayment(cartItems: CartItems[]) {
-  const res = await fetch(
-    "http://localhost:5000/payment/create-payment-intent",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: cartItems }),
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to create payment");
-  }
-
-  const data = await res.json();
-
-  if (!data.clientSecret) {
-    throw new Error("Server did not return a valid clientSecret");
-  }
-
-  return data.clientSecret;
-}
-
-export async function createOrder(orderData: OrderData, cart_id: number) {
-  try {
-    const session = await auth();
-    if (session) {
-      orderData.user_id = session.user.userId;
-      orderData.guest_id = null;
-      orderData.cart_id = cart_id;
-    } else {
-      orderData.guest_id = generateId();
-      orderData.user_id = null;
-      orderData.cart_id = null;
-    }
-
-    const response = await fetch(`http://localhost:5000/orders`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: orderData.user_id,
-        guest_id: orderData.guest_id,
-        cart_id: orderData.cart_id,
-        ...orderData,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to create order");
-    }
-
-    const data = await response.json();
-
-    return { success: true, orderId: data.orderId };
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors };
-    }
-    console.error("Error creating order:", error);
-    return { success: false, error: "Failed to create order" };
-  }
-}
-
-export async function createOrderItems(orderId: number, items: OrderItem[]) {
-  try {
-    const response = await fetch(`http://localhost:5000/order-items`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ order_id: orderId, items }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to create order items");
-    }
-
-    const data = await response.json();
-    return { success: true, message: data.message };
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors };
-    }
-    console.error("Error creating order items:", error);
-    return { success: false, error: "Failed to create order items" };
-  }
-}
-
-export async function createOrderWithItems(
-  orderData: OrderData,
-  items: OrderItem[],
-  cart_id: number
-) {
-  const orderResult = await createOrder(orderData, cart_id);
-
-  if (orderResult.success) {
-    const orderItemsResult = await createOrderItems(orderResult.orderId, items);
-
-    if (orderItemsResult.success) {
-      revalidatePath("/profile");
-      return {
-        success: true,
-        orderId: orderResult.orderId,
-        message: "Order and items created successfully",
-      };
-    } else {
-      // If order items creation fails, you might want to handle this case (e.g., delete the created order)
-      return { success: false, error: orderItemsResult.error };
-    }
-  } else {
-    return { success: false, error: orderResult.error };
-  }
-}
-
-export const revalidateCurrentPath = async (path: string) => {
-  revalidatePath(path);
-};

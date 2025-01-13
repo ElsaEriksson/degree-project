@@ -7,10 +7,10 @@ import FavoriteIcon from "../plp/favoriteIcon";
 import ScrollableProductList from "./scrollableProducts";
 import PdpAccordion from "./pdpAccordion";
 import ThumbnailsAndMainImage from "./thumbnailsAndMainImage";
-import { addToCart } from "@/app/lib/actions";
 import { CheckIcon } from "lucide-react";
-import BreadcrumbSwitcher from "./breadCrumbSwitcher";
 import { useAddToCart } from "@/app/hooks/useAddToCart";
+import BreadcrumbSwitcher from "./breadcrumbSwitcher";
+import { addToCart } from "@/app/lib/actions/shoppingCart";
 
 export default function Product({
   product,

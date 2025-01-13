@@ -1,6 +1,6 @@
 "use client";
 import { getCookie, setCookie } from "cookies-next";
-import { revalidateFavorites } from "@/app/lib/actions";
+import { revalidateFavorites } from "@/app/lib/actions/favorites";
 import { useEffect, useState } from "react";
 
 export default function FavoriteIcon({ productId }: { productId: number }) {
