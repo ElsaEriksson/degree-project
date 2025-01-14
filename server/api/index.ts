@@ -19,7 +19,7 @@ app.use(express.json());
 
 createTables();
 
-app.use("/", collectionRoutes);
+app.use("/collections", collectionRoutes);
 app.use("/", productRoutes);
 app.use("/auth", authRoutes);
 app.use("/cart", cartRoutes);

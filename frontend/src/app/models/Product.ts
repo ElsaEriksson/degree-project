@@ -26,9 +26,9 @@ export interface ProductWithVariants extends Product {
 
 export interface Collection {
   collection_id: number;
-  name: string;
-  description_short: string;
-  description_long: string;
+  collection_name: string;
+  description: string;
+  image: string;
 }
 
 export interface Color {
