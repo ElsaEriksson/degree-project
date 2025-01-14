@@ -13,6 +13,8 @@ import {
 import { useHeader } from "@/app/providers";
 import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
+import { useState } from "react";
+import FadeStaggerCircles from "./fadeStaggerCircles";
 
 const links = [
   { name: "Home", href: "/", icon: HomeIcon },
@@ -33,10 +35,18 @@ export default function HamburgerNavLinks({
 }: {
   session: Session | null;
 }) {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { setAuthFormOpen, setIsMenuOpen } = useHeader();
   const pathname = usePathname();
 
   const isLoggedIn = session && session.user;
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    await signOut();
+    setIsMenuOpen(false);
+    setIsLoggingOut(false);
+  };
 
   return (
     <>
@@ -129,16 +139,14 @@ export default function HamburgerNavLinks({
 
           {/* Sign in / register and Sign out buttons */}
           {isLoggedIn ? (
-            <form
-              action={() => {
-                signOut();
-                setIsMenuOpen(false);
-              }}
+            <button
+              onClick={handleLogout}
+              className="w-full flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-t-2 border-gray-200"
             >
-              <button className="w-full flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-t-2 border-gray-200">
-                <div className="uppercase">Sign Out</div>
-              </button>
-            </form>
+              <div className="uppercase">
+                {isLoggingOut ? <FadeStaggerCircles /> : "Sign Out"}
+              </div>
+            </button>
           ) : (
             <button
               onClick={() => {
@@ -147,7 +155,7 @@ export default function HamburgerNavLinks({
               }}
               className="w-full flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-t-2 border-gray-200"
             >
-              <span className="uppercase">Log in / Register</span>
+              <span className="uppercase">Sign in / Register</span>
             </button>
           )}
         </div>

@@ -26,9 +26,9 @@ export default function HeaderInteractions({
 
   const isLoggedIn = session && session.user;
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsLoggingOut(true);
-    signOut();
+    await signOut();
     setIsLoggingOut(false);
   };
 
@@ -54,16 +54,15 @@ export default function HeaderInteractions({
           <div className="flex items-center justify-end gap-4 text-right">
             {/* Sign in / register and sign out buttons */}
             {isLoggedIn ? (
-              <form onSubmit={handleLogout}>
-                <button
-                  disabled={isLoggingOut}
-                  className="rounded-lg px-6 py-3 hidden lg:block transition-colors hover:underline tracking-widest"
-                >
-                  <div className="uppercase font-inconsolata text-black text-base">
-                    {isLoggingOut ? <FadeStaggerCircles /> : "Sign Out"}
-                  </div>
-                </button>
-              </form>
+              <button
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className="rounded-lg px-6 py-3 hidden lg:block transition-colors hover:underline tracking-widest"
+              >
+                <div className="uppercase font-inconsolata text-black text-base">
+                  {isLoggingOut ? <FadeStaggerCircles /> : "Sign Out"}
+                </div>
+              </button>
             ) : (
               <button
                 onClick={() => setAuthFormOpen(true)}
