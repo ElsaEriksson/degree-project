@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import pool from "../config/db";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { OrderData, OrderItem } from "../models/Order";
+import { OrderData, OrderItem } from "../api/definitions";
 
 const router = express.Router();
 

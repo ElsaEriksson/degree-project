@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { RowDataPacket } from "mysql2";
 import pool from "../config/db";
-import { ProductWithVariants } from "../models/Product";
+import { ProductWithVariants } from "../api/definitions";
 
 const router = express.Router();
 

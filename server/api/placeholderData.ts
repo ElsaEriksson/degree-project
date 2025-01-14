@@ -1,4 +1,4 @@
-import { Variant } from "../models/Product";
+import { Variant } from "./definitions";
 
 const sizes = ["S/M", "M/L"];
 const placeholderData: Variant[] = [];

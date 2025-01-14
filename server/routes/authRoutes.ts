@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { User } from "../models/User";
 import pool from "../config/db";
 import dotenv from "dotenv";
+import { User } from "../api/definitions";
 
 dotenv.config();
 

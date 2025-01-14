@@ -2,7 +2,7 @@ import NextAuth, { DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import { LoggedInUser } from "@/app/models/User";
-import { authConfig } from "./auth.config";
+import { authConfig } from "../auth.config";
 import { JWT } from "next-auth/jwt";
 import { migrateCartFromCookiesToDatabase } from "./app/lib/actions/shoppingCart";
 

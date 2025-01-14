@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
-import { CartItems } from "../models/Cart";
 import dotenv from "dotenv";
+import { CartItems } from "../api/definitions";
 
 const router = Router();
 dotenv.config();
