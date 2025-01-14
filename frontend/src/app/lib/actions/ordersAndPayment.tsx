@@ -1,7 +1,7 @@
 "use server";
 import { auth } from "../../../auth";
 import { z } from "zod";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { CartItems, OrderData, OrderItem } from "../definitions";
 
 const BACKEND_URL = process.env.BACKEND_URL;
@@ -33,6 +33,7 @@ export async function stripePayment(cartItems: CartItems[]) {
 async function createOrder(orderData: OrderData, cart_id: number) {
   try {
     const session = await auth();
+
     if (session) {
       orderData.user_id = session.user.userId;
       orderData.guest_id = null;
@@ -109,13 +110,13 @@ export async function createOrderWithItems(
 
     if (orderItemsResult.success) {
       revalidatePath("/profile");
+      revalidateTag("cart");
       return {
         success: true,
         orderId: orderResult.orderId,
         message: "Order and items created successfully",
       };
     } else {
-      // If order items creation fails, you might want to handle this case (e.g., delete the created order)
       return { success: false, error: orderItemsResult.error };
     }
   } else {

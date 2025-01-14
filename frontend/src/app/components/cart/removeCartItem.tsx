@@ -24,12 +24,12 @@ export default function RemoveCartItem({
   const handleRemove = () => {
     startTransition(async () => {
       if (isLoggedIn) {
-        const result = await removeCartItem(cart_item_id);
+        await removeCartItem(cart_item_id);
       } else {
         const updatedCart = cartItems.filter(
           (item) => item.cart_item_id !== cart_item_id
         );
-        const result = await updateCookieCart(updatedCart);
+        await updateCookieCart(updatedCart);
       }
     });
   };

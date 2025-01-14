@@ -1,5 +1,5 @@
 "use client";
-import { OrderDataFromDatabase } from "@/app/models/Orders";
+import { OrderDataFromDatabase } from "@/app/lib/definitions";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 

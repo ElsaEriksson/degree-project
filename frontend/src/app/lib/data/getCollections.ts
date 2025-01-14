@@ -4,9 +4,7 @@ const BACKEND_URL = process.env.BACKEND_URL;
 
 export async function fetchCollections(): Promise<Collection[] | undefined> {
   try {
-    const res = await fetch(`${BACKEND_URL}/collections`, {
-      next: { revalidate: 60 },
-    });
+    const res = await fetch(`${BACKEND_URL}/collections`);
 
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);

@@ -37,7 +37,7 @@ export default {
             transform: "translateX(0)",
           },
           "50%": {
-            transform: "translateX(10px)", // Rörelse åt höger
+            transform: "translateX(10px)",
           },
           "100%": {
             transform: "translateX(0)",

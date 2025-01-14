@@ -5,9 +5,7 @@ const BACKEND_URL = process.env.BACKEND_URL;
 export async function fetchActiveCartForUser(
   user_id: number
 ): Promise<{ cart_id: number }> {
-  const res = await fetch(`${BACKEND_URL}/cart/active-cart/${user_id}`, {
-    next: { revalidate: 60 },
-  });
+  const res = await fetch(`${BACKEND_URL}/cart/active-cart/${user_id}`);
 
   if (!res.ok) {
     if (res.status === 404) {
@@ -36,10 +34,7 @@ export async function fetchCartItem(
   variant_id: number
 ): Promise<{ cart_item_id: number; quantity: number } | null> {
   const res = await fetch(
-    `${BACKEND_URL}/cart/cart-items/${cart_id}/${variant_id}`,
-    {
-      next: { revalidate: 60 },
-    }
+    `${BACKEND_URL}/cart/cart-items/${cart_id}/${variant_id}`
   );
 
   if (!res.ok) {
@@ -48,6 +43,7 @@ export async function fetchCartItem(
     }
     throw new Error("Failed to fetch cart item");
   }
+
   return await res.json();
 }
 
@@ -58,10 +54,13 @@ export async function fetchCartItemsByUserId(
     const res = await fetch(`${BACKEND_URL}/cart/cart-items-user/${user_id}`, {
       next: { tags: ["cart"] },
     });
+
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
+
     const data: CartItems[] = await res.json();
+
     return data;
   } catch (error) {
     console.error("Database Error:", error);

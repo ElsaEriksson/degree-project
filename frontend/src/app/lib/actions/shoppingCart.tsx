@@ -209,7 +209,6 @@ export async function migrateCartFromCookiesToDatabase(userId: number) {
       cookieStore.delete("cart");
     } catch (error) {
       console.error("Failed to migrate cart:", error);
-      // Här kan du välja att behålla cookie-varukorgen om migreringen misslyckas
     }
   }
 }

@@ -100,7 +100,6 @@ router.get(
     let whereClause = "";
     let queryParams: any[] = [ITEMS_PER_PAGE, offset];
 
-    // Om favoriteIds är tom, returnera ett tomt resultat direkt
     if (favoriteIds.length === 0) {
       res.json({
         products: [],
@@ -116,7 +115,6 @@ router.get(
       queryParams = [favoriteIds, ITEMS_PER_PAGE, offset];
     }
 
-    // First, get the total count of products
     const [countResult] = await pool.query<RowDataPacket[]>(
       `
       SELECT COUNT(DISTINCT p.product_id) as total
@@ -207,7 +205,6 @@ router.get(
     }
 
     try {
-      // Fetch the product with the given ID and its variants
       const [results] = await pool.query<RowDataPacket[]>(
         `
         SELECT 
@@ -239,13 +236,11 @@ router.get(
         [productId]
       );
 
-      // Check if product was found
       if (results.length === 0) {
         res.status(404).json({ error: "Product not found" });
         return;
       }
 
-      // Map the product data with variants
       const product = results[0];
       const productWithVariants: ProductWithVariants = {
         product_id: product.product_id,
@@ -291,7 +286,6 @@ router.get(
     }
 
     try {
-      // Fetch the product with the given ID and its variants
       const [results] = await pool.query<RowDataPacket[]>(
         `
         SELECT 
@@ -320,7 +314,6 @@ router.get(
         [collectionId]
       );
 
-      // Check if product was found
       if (results.length === 0) {
         res.status(404).json({ error: "Product not found" });
         return;
@@ -435,7 +428,6 @@ router.get(
     }
 
     try {
-      // Get total number of matching products
       const [countResult] = await pool.query<RowDataPacket[]>(
         `
               SELECT COUNT(DISTINCT p.product_id) as total
@@ -457,7 +449,6 @@ router.get(
         });
         return;
       }
-      // Fetch the product with the given ID and its variants
       const [results] = await pool.query<RowDataPacket[]>(
         `
         SELECT 

@@ -27,13 +27,11 @@ export function useAddToCart(addToCart: AddToCartFunction) {
       const result = await addToCart(product, variant, quantity);
 
       if (result.success) {
-        // Mark the variant as added
         setAddedVariants((prev) => ({
           ...prev,
           [variant.variant_id]: true,
         }));
 
-        // Reset the variant's added state after 2 seconds
         setTimeout(() => {
           setAddedVariants((prev) => ({
             ...prev,

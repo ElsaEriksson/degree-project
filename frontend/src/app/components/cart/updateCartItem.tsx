@@ -30,6 +30,7 @@ export default function UpdateCartItem({
       const existingItemIndex = cartItems.findIndex(
         (item) => item.variant_id === variantId
       );
+
       if (existingItemIndex > -1) {
         const updatedCartItems = [...cartItems];
 

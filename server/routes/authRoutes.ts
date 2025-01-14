@@ -77,14 +77,12 @@ router.post("/register", async (req: Request, res: Response) => {
       return;
     }
 
-    // Validera e-postadress
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
       res.status(400).json({ error: "Invalid email format." });
       return;
     }
 
-    // Kontrollera om e-postadressen redan finns
     const [existingUser] = await pool.query<RowDataPacket[]>(
       "SELECT * FROM Users WHERE email = ?",
       [email]
@@ -95,7 +93,6 @@ router.post("/register", async (req: Request, res: Response) => {
       return;
     }
 
-    // Validera lösenord
     if (password.length < 8) {
       res
         .status(400)

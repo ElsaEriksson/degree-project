@@ -135,9 +135,11 @@ export default function PaymentForm({
       }));
 
       const result = await createOrderWithItems(orderData, orderItems, cartId);
+
       if (result.success) {
         setMessage(`Order created successfully! Order ID: ${result.orderId}`);
         router.push(`/confirmation/${result.orderId}`);
+
         if (!isLoggedIn) {
           const updateCart: CartItems[] = [];
           await updateCookieCart(updateCart);
