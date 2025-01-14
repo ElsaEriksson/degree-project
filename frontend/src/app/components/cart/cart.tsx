@@ -1,11 +1,11 @@
 "use client";
 import { useHeader } from "@/app/providers";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { CartItems } from "@/app/models/Cart";
 import { useRouter } from "next/navigation";
 import ItemsInCart from "./itemsInCart";
 import { Button } from "../ui/button";
 import { Session } from "next-auth";
+import { CartItems } from "@/app/lib/definitions";
 
 export default function Cart({
   cartItems,

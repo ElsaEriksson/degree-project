@@ -2,8 +2,8 @@
 import Image from "next/image";
 import RemoveCartItem from "./removeCartItem";
 import UpdateCartItem from "./updateCartItem";
-import { CartItems } from "@/app/models/Cart";
 import { Session } from "next-auth";
+import { CartItems } from "@/app/lib/definitions";
 
 export default function ItemsInCart({
   cartItems,

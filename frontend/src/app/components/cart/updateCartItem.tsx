@@ -2,7 +2,7 @@ import {
   updateCartItemQuantity,
   updateCookieCart,
 } from "@/app/lib/actions/shoppingCart";
-import { CartItems } from "@/app/models/Cart";
+import { CartItems } from "@/app/lib/definitions";
 import { Minus, Plus } from "lucide-react";
 import { Session } from "next-auth";
 

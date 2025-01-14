@@ -1,14 +1,13 @@
 "use server";
-import { Product, Variant } from "@/app/models/Product";
 import { revalidateTag } from "next/cache";
 import {
   fetchActiveCartForUser,
   fetchCartItem,
   fetchCartItemsByUserId,
 } from "../data/getCarts";
-import { CartItems } from "@/app/models/Cart";
 import { auth } from "../../../auth";
 import { cookies } from "next/headers";
+import { CartItems, Product, Variant } from "../definitions";
 
 const BACKEND_URL = process.env.BACKEND_URL;
 

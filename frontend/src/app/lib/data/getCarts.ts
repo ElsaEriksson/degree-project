@@ -1,4 +1,4 @@
-import { CartItems } from "@/app/models/Cart";
+import { CartItems } from "../definitions";
 
 const BACKEND_URL = process.env.BACKEND_URL;
 

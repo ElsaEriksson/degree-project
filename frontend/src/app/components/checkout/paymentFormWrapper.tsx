@@ -2,10 +2,10 @@
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
-import { CartItems } from "@/app/models/Cart";
 import PaymentForm from "./paymentForm";
 import { stripePayment } from "@/app/lib/actions/ordersAndPayment";
 import { Session } from "next-auth";
+import { CartItems } from "@/app/lib/definitions";
 
 const stripePromise = loadStripe(
   "pk_test_51PJeAX2LDDRd0nb94oPYuwNucVCMguiDxFVh7DKXG5L0Ny5cz7jGfGoDJRGDAVOJ9xyJODpCKvT6vPs9hrq1Fu1600JsmHuDmK"

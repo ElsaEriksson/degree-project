@@ -1,9 +1,8 @@
 "use server";
-import { CartItems } from "@/app/models/Cart";
-import { OrderData, OrderItem } from "@/app/models/Orders";
 import { auth } from "../../../auth";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { CartItems, OrderData, OrderItem } from "../definitions";
 
 const BACKEND_URL = process.env.BACKEND_URL;
 

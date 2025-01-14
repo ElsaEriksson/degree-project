@@ -1,4 +1,4 @@
-import { OrderDataFromDatabase } from "../../models/Orders";
+import { OrderDataFromDatabase } from "../definitions";
 
 const BACKEND_URL = process.env.BACKEND_URL;
 

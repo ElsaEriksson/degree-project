@@ -1,7 +1,7 @@
 "use client";
 import { useAddToCart } from "@/app/hooks/useAddToCart";
 import { addToCart } from "@/app/lib/actions/shoppingCart";
-import { ProductWithVariants, Variant } from "@/app/models/Product";
+import { ProductWithVariants, Variant } from "@/app/lib/definitions";
 import { useHover } from "@/app/providers";
 import { CheckIcon } from "lucide-react";
 

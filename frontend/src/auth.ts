@@ -1,10 +1,10 @@
 import NextAuth, { DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
-import { LoggedInUser } from "@/app/models/User";
 import { authConfig } from "../auth.config";
 import { JWT } from "next-auth/jwt";
 import { migrateCartFromCookiesToDatabase } from "./app/lib/actions/shoppingCart";
+import { LoggedInUser } from "./app/lib/definitions";
 
 const BACKEND_URL = process.env.BACKEND_URL;
 

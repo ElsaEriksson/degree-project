@@ -1,6 +1,6 @@
 import { useSearchParams } from "next/navigation";
 import Breadcrumbs from "../breadcrumbs";
-import { ProductWithVariants } from "@/app/models/Product";
+import { ProductWithVariants } from "@/app/lib/definitions";
 
 export default function BreadcrumbSwitcher({
   product,

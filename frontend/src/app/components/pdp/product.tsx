@@ -1,5 +1,4 @@
 "use client";
-import { ProductWithVariants, Variant } from "@/app/models/Product";
 import { cn } from "@/app/utils/utils";
 import { useState } from "react";
 import { Button } from "../ui/button";
@@ -12,6 +11,7 @@ import BreadcrumbSwitcher from "./breadcrumbSwitcher";
 import { addToCart } from "@/app/lib/actions/shoppingCart";
 import Link from "next/link";
 import HorizontalProductList from "../horizontalProductList";
+import { ProductWithVariants, Variant } from "@/app/lib/definitions";
 
 export default function Product({
   product,

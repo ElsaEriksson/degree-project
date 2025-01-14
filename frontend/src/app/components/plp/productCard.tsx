@@ -1,4 +1,4 @@
-import { ProductWithVariants } from "@/app/models/Product";
+import { ProductWithVariants } from "@/app/lib/definitions";
 import FavoriteIcon from "./favoriteIcon";
 import ProductImage from "./productImage";
 import SizeButtons from "./sizeButtons";

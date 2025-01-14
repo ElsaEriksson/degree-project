@@ -1,4 +1,4 @@
-import { Collection } from "@/app/models/Product";
+import { Collection } from "@/app/lib/definitions";
 import Image from "next/image";
 import Link from "next/link";
 

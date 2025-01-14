@@ -1,4 +1,4 @@
-import { ProductWithVariants } from "@/app/models/Product";
+import { ProductWithVariants } from "../definitions";
 
 const BACKEND_URL = process.env.BACKEND_URL;
 

@@ -1,5 +1,5 @@
 "use client";
-import { ProductWithVariants } from "@/app/models/Product";
+import { ProductWithVariants } from "@/app/lib/definitions";
 import { useHover } from "@/app/providers";
 import Image from "next/image";
 import Link from "next/link";

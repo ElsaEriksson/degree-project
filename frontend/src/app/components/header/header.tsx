@@ -3,10 +3,10 @@ import HeaderInteractions from "./headerInteractions";
 import HamburgerNavLinks from "./hamburgerNavLinks";
 import AuthFormSwitcher from "../loginAndRegistration/authFormSwitcher";
 import { getFavorites } from "@/app/lib/actions/favorites";
-import { CartItems } from "@/app/models/Cart";
 import Cart from "../cart/cart";
 import { getCartItems } from "@/app/lib/actions/shoppingCart";
 import { auth } from "@/auth";
+import { CartItems } from "@/app/lib/definitions";
 
 export default async function Header() {
   const favorites = await getFavorites();

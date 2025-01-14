@@ -1,10 +1,10 @@
 import { cookies } from "next/headers";
 import ProductCard from "../../components/plp/productCard";
 import { Suspense } from "react";
-import { ProductWithVariants } from "@/app/models/Product";
 import Pagination from "../../components/pagination";
 import { HoverProvider } from "../../providers";
 import { fetchFavoriteProducts } from "@/app/lib/data/getProducts";
+import { ProductWithVariants } from "@/app/lib/definitions";
 
 type PageProps = {
   searchParams: Promise<{

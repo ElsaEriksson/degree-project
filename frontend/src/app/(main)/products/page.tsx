@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import Pagination from "../../components/pagination";
 import ProductCard from "../../components/plp/productCard";
-import { ProductWithVariants } from "../../models/Product";
 import { HoverProvider } from "../../providers";
 import { SlidersHorizontal } from "lucide-react";
 import SearchProduct from "@/app/components/plp/searchProduct";
 import { fetchProducts } from "@/app/lib/data/getProducts";
+import { ProductWithVariants } from "@/app/lib/definitions";
 
 type PageProps = {
   searchParams: Promise<{

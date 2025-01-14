@@ -1,4 +1,4 @@
-import { Collection } from "@/app/models/Product";
+import { Collection } from "../definitions";
 
 const BACKEND_URL = process.env.BACKEND_URL;
 

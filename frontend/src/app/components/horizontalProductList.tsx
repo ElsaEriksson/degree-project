@@ -1,11 +1,11 @@
 "use client";
-import { ProductWithVariants } from "@/app/models/Product";
 import { HoverProvider } from "@/app/providers";
 import ProductCard from "./plp/productCard";
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import { ProductWithVariants } from "../lib/definitions";
 
 export default function HorizontalProductList({
   products,

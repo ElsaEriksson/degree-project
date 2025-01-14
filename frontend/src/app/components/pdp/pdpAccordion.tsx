@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
-import { ProductWithVariants } from "@/app/models/Product";
+import { ProductWithVariants } from "@/app/lib/definitions";
 
 export default function PdpAccordion({
   product,

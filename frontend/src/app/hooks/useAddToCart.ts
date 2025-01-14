@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ProductWithVariants, Variant } from "../models/Product";
+import { ProductWithVariants, Variant } from "../lib/definitions";
 
 interface AddToCartResult {
   success: boolean;

@@ -1,7 +1,7 @@
 import ProductCard from "@/app/components/plp/productCard";
 import SearchProduct from "@/app/components/plp/searchProduct";
 import { fetchProductsByCollectionName } from "@/app/lib/data/getProducts";
-import { ProductWithVariants } from "@/app/models/Product";
+import { ProductWithVariants } from "@/app/lib/definitions";
 import { HoverProvider } from "@/app/providers";
 import { SlidersHorizontal } from "lucide-react";
 import { Suspense } from "react";

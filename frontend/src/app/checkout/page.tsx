@@ -1,8 +1,8 @@
-import { CartItems } from "../models/Cart";
 import ItemsInCart from "../components/cart/itemsInCart";
 import PaymentFormWrapper from "../components/checkout/paymentFormWrapper";
 import { getCartItems } from "../lib/actions/shoppingCart";
 import { auth } from "@/auth";
+import { CartItems } from "../lib/definitions";
 
 export default async function Checkout() {
   const cartItems: CartItems[] = await getCartItems();
