@@ -11,7 +11,6 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { useHeader } from "@/app/providers";
-import HatIcon from "./hatIcon";
 import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
 
@@ -20,7 +19,6 @@ const links = [
   {
     name: "Shop All Products",
     href: "/products",
-    icon: HatIcon,
   },
 ];
 

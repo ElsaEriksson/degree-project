@@ -22,7 +22,7 @@ export default function CollectionCard({
           sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
         />
         <div className="absolute inset-0 bg-black/30 transition-opacity duration-300 group-hover:bg-black/40" />
-        <h3 className="absolute uppercase inset-0 flex items-center justify-center text-xl font-medium tracking-wider text-white">
+        <h3 className="absolute uppercase inset-0 flex items-center justify-center text-[20px] font-medium tracking-wider text-white">
           {collection.collection_name}
         </h3>
       </Link>
