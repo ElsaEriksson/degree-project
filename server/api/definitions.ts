@@ -53,9 +53,6 @@ export interface User {
   last_name: string;
   email: string;
   password: string;
-  role: string;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface Product {

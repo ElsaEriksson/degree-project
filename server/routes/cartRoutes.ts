@@ -1,71 +1,107 @@
-import { Router, Request, Response } from "express";
-import pool from "../config/db";
+import express, { Request, Response, NextFunction } from "express";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { z } from "zod";
+import pool from "../config/db";
 
-const router = Router();
+const router = express.Router();
 
-router.post("/create-cart", async (req: Request, res: Response) => {
-  const { user_id } = req.body;
+const userIdSchema = z.number().int().positive();
+const cartIdSchema = z.number().int().positive();
+const productIdSchema = z.number().int().positive();
+const variantIdSchema = z.number().int().positive();
+const quantitySchema = z.number().int().positive();
+const priceSchema = z.number().positive();
 
-  try {
-    const [result] = await pool.query<ResultSetHeader>(
-      "INSERT INTO Carts (user_id, created_at, status) VALUES (?, NOW(), 'active')",
-      [user_id]
-    );
+const errorHandler = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.error(err.stack);
+  res
+    .status(500)
+    .json({ success: false, message: "An unexpected error occurred" });
+};
 
-    const cartId = result.insertId;
+const validate =
+  (schema: z.ZodTypeAny) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      schema.parse(req.body);
+      next();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res
+          .status(400)
+          .json({ success: false, message: error.errors[0].message });
+      } else {
+        next(error);
+      }
+    }
+  };
 
-    res.status(201).json({ cart_id: cartId });
-  } catch (error: any) {
-    console.error("Error creating cart:", error);
-    res.status(500).json({ error: "Failed to create cart" });
-  }
-});
+router.post(
+  "/create-cart",
+  validate(z.object({ user_id: userIdSchema })),
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { user_id } = req.body;
 
-router.get("/active-cart/:userId", async (req: Request, res: Response) => {
-  const user_id = Number(req.params.userId);
-
-  if (isNaN(user_id)) {
-    res.status(400).json({ error: "Invalid user ID" });
-    return;
-  }
-  try {
-    const [results] = await pool.query<RowDataPacket[]>(
-      "SELECT cart_id FROM Carts WHERE user_id = ? AND status = 'active' ORDER BY created_at DESC LIMIT 1",
-      [user_id]
-    );
-
-    if (results.length > 0) {
-      res.json(results[0]);
-    } else {
-      const [newCart] = await pool.query<ResultSetHeader>(
-        "INSERT INTO Carts (user_id, status) VALUES (?, 'active')",
+    try {
+      const [result] = await pool.query<ResultSetHeader>(
+        "INSERT INTO Carts (user_id, created_at, status) VALUES (?, NOW(), 'active')",
         [user_id]
       );
-      res.json({ cart_id: newCart.insertId });
+
+      res.status(201).json({ cart_id: result.insertId });
+    } catch (error) {
+      next(error);
     }
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
   }
-});
+);
+
+router.get(
+  "/active-cart/:userId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user_id = Number(req.params.userId);
+
+    try {
+      userIdSchema.parse(user_id);
+
+      const [results] = await pool.query<RowDataPacket[]>(
+        "SELECT cart_id FROM Carts WHERE user_id = ? AND status = 'active' ORDER BY created_at DESC LIMIT 1",
+        [user_id]
+      );
+
+      if (results.length > 0) {
+        res.json(results[0]);
+      } else {
+        const [newCart] = await pool.query<ResultSetHeader>(
+          "INSERT INTO Carts (user_id, status) VALUES (?, 'active')",
+          [user_id]
+        );
+        res.json({ cart_id: newCart.insertId });
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid user ID" });
+      } else {
+        next(error);
+      }
+    }
+  }
+);
 
 router.get(
   "/cart-items/:cartId/:variantId",
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const cart_id = Number(req.params.cartId);
     const variant_id = Number(req.params.variantId);
 
-    if (isNaN(cart_id)) {
-      res.status(400).json({ error: "Invalid cart ID" });
-      return;
-    }
-
-    if (isNaN(variant_id)) {
-      res.status(400).json({ error: "Invalid variant ID" });
-      return;
-    }
-
     try {
+      cartIdSchema.parse(cart_id);
+      variantIdSchema.parse(variant_id);
+
       const [results] = await pool.query<RowDataPacket[]>(
         "SELECT cart_item_id, quantity FROM CartItems WHERE cart_id = ? AND variant_id = ?",
         [cart_id, variant_id]
@@ -76,70 +112,98 @@ router.get(
       } else {
         res.status(404).json({ message: "Item not found in the cart" });
       }
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: error.errors[0].message });
+      } else {
+        next(error);
+      }
     }
   }
 );
 
-router.patch("/cart-items/:cartItemId", async (req: Request, res: Response) => {
-  const cart_item_id = Number(req.params.cartItemId);
-  const { quantity } = req.body;
+router.patch(
+  "/cart-items/:cartItemId",
+  validate(z.object({ quantity: quantitySchema })),
+  async (req: Request, res: Response, next: NextFunction) => {
+    const cart_item_id = Number(req.params.cartItemId);
+    const { quantity } = req.body;
 
-  if (isNaN(cart_item_id)) {
-    res.status(400).json({ error: "Invalid cart item ID" });
-    return;
-  }
+    try {
+      z.number().int().positive().parse(cart_item_id);
 
-  if (typeof quantity !== "number" || quantity < 1) {
-    res.status(400).json({ error: "Invalid quantity" });
-    return;
-  }
+      const [result] = await pool.query<ResultSetHeader>(
+        "UPDATE CartItems SET quantity = ? WHERE cart_item_id = ?",
+        [quantity, cart_item_id]
+      );
 
-  try {
-    const [result] = await pool.query(
-      "UPDATE CartItems SET quantity = ? WHERE cart_item_id = ?",
-      [quantity, cart_item_id]
-    );
-
-    if ((result as any).affectedRows > 0) {
-      res.json({ message: "Cart item quantity updated successfully" });
-    } else {
-      res.status(404).json({ message: "Cart item not found" });
+      if (result.affectedRows > 0) {
+        res.json({
+          success: true,
+          message: "Cart item quantity updated successfully",
+        });
+      } else {
+        res
+          .status(404)
+          .json({ success: false, message: "Cart item not found" });
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res
+          .status(400)
+          .json({ success: false, message: "Invalid cart item ID" });
+      } else {
+        next(error);
+      }
     }
-  } catch (error: any) {
-    console.error("Error updating cart item quantity:", error);
-    res.status(500).json({ error: "Internal server error" });
   }
-});
+);
 
-router.post("/cart-items", async (req: Request, res: Response) => {
-  const { cart_id, product_id, variant_id, quantity, price } = req.body;
+router.post(
+  "/cart-items",
+  validate(
+    z.object({
+      cart_id: cartIdSchema,
+      product_id: productIdSchema,
+      variant_id: variantIdSchema,
+      quantity: quantitySchema,
+      price: priceSchema,
+    })
+  ),
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { cart_id, product_id, variant_id, quantity, price } = req.body;
 
-  try {
-    const [result] = await pool.query(
-      "INSERT INTO CartItems (cart_id, product_id, variant_id, quantity, price) VALUES (?, ?, ?, ?, ?)",
-      [cart_id, product_id, variant_id, quantity, price]
-    );
+    try {
+      const [result] = await pool.query<ResultSetHeader>(
+        "INSERT INTO CartItems (cart_id, product_id, variant_id, quantity, price) VALUES (?, ?, ?, ?, ?)",
+        [cart_id, product_id, variant_id, quantity, price]
+      );
 
-    const cartItemId = (result as any).insertId;
-    res.status(201).json({ cartItemId });
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
+      if (result.affectedRows > 0) {
+        res
+          .status(201)
+          .json({ success: true, message: "Cart item created successfully" });
+      } else {
+        res
+          .status(500)
+          .json({ success: false, message: "Failed to insert cart item" });
+      }
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.get("/cart-items-user/:userId", async (req: Request, res: Response) => {
-  const user_id = Number(req.params.userId);
+router.get(
+  "/cart-items-user/:userId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user_id = Number(req.params.userId);
 
-  if (isNaN(user_id)) {
-    res.status(400).json({ error: "Invalid user ID" });
-    return;
-  }
+    try {
+      userIdSchema.parse(user_id);
 
-  try {
-    const [rows] = await pool.query<RowDataPacket[]>(
-      `
+      const [rows] = await pool.query<RowDataPacket[]>(
+        `
       SELECT 
           ci.cart_item_id,
           ci.cart_id,
@@ -171,43 +235,54 @@ router.get("/cart-items-user/:userId", async (req: Request, res: Response) => {
               LIMIT 1
           )
       `,
-      [user_id, user_id]
-    );
+        [user_id, user_id]
+      );
 
-    res.status(200).json(rows);
-  } catch (error) {
-    console.error("Error fetching active cart items:", error);
-    res.status(500).json({ error: "Failed to fetch active cart items" });
+      res.status(200).json(rows);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ success: false, message: "Invalid user ID" });
+      } else {
+        next(error);
+      }
+    }
   }
-});
+);
 
 router.delete(
   "/cart-items/:cartItemId",
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const cart_item_id = Number(req.params.cartItemId);
 
-    if (isNaN(cart_item_id)) {
-      res.status(400).json({ error: "Invalid cart item ID" });
-      return;
-    }
-
     try {
+      z.number().int().positive().parse(cart_item_id);
+
       const [result] = await pool.query<ResultSetHeader>(
         "DELETE FROM CartItems WHERE cart_item_id = ?",
         [cart_item_id]
       );
 
-      if (result.affectedRows === 0) {
-        res.status(404).json({ error: "Cart item not found" });
-        return;
+      if (result.affectedRows > 0) {
+        res
+          .status(200)
+          .json({ success: true, message: "Cart item deleted successfully" });
+      } else {
+        res
+          .status(404)
+          .json({ success: false, message: "Cart item not found" });
       }
-
-      res.status(200).json({ message: "Cart item deleted successfully" });
     } catch (error) {
-      console.error("Error deleting cart item:", error);
-      res.status(500).json({ error: "Failed to delete cart item" });
+      if (error instanceof z.ZodError) {
+        res
+          .status(400)
+          .json({ success: false, message: "Invalid cart item ID" });
+      } else {
+        next(error);
+      }
     }
   }
 );
+
+router.use(errorHandler);
 
 export default router;
