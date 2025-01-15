@@ -30,7 +30,10 @@ export async function stripePayment(cartItems: CartItems[]) {
   return data.clientSecret;
 }
 
-async function createOrder(orderData: OrderData, cart_id: number) {
+async function createOrder(
+  orderData: OrderData,
+  cart_id: number
+): Promise<{ success: boolean; orderId: number }> {
   try {
     const session = await auth();
 
@@ -63,17 +66,17 @@ async function createOrder(orderData: OrderData, cart_id: number) {
 
     const data = await response.json();
 
-    return { success: true, orderId: data.orderId };
+    return { success: data.success, orderId: data.orderId };
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors };
-    }
     console.error("Error creating order:", error);
-    return { success: false, error: "Failed to create order" };
+    throw new Error("Failed to create order.");
   }
 }
 
-async function createOrderItems(orderId: number, items: OrderItem[]) {
+async function createOrderItems(
+  orderId: number,
+  items: OrderItem[]
+): Promise<{ success: boolean; message?: string; error?: string }> {
   try {
     const response = await fetch(`${BACKEND_URL}/order-items`, {
       method: "POST",
@@ -88,13 +91,10 @@ async function createOrderItems(orderId: number, items: OrderItem[]) {
     }
 
     const data = await response.json();
-    return { success: true, message: data.message };
+    return { success: data.success, message: data.message };
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors };
-    }
     console.error("Error creating order items:", error);
-    return { success: false, error: "Failed to create order items" };
+    return { success: false, message: "Failed to create order items" };
   }
 }
 
@@ -117,9 +117,15 @@ export async function createOrderWithItems(
         message: "Order and items created successfully",
       };
     } else {
-      return { success: false, error: orderItemsResult.error };
+      return {
+        success: false,
+        message: "Unable to save order items. Your order might be incomplete.",
+      };
     }
   } else {
-    return { success: false, error: orderResult.error };
+    return {
+      success: false,
+      message: "An error occurred while processing your order.",
+    };
   }
 }

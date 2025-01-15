@@ -145,7 +145,9 @@ export default function PaymentForm({
           await updateCookieCart(updateCart);
         }
       } else {
-        setMessage(`Failed to create order: ${result.error}`);
+        setMessage(`Failed to create order: ${result.message}`);
+        router.push(`/`);
+        alert(message);
       }
     }
 

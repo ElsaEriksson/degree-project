@@ -7,7 +7,22 @@ export const revalidateFavorites = async () => {
 };
 
 export async function getFavorites() {
-  const cookieStore = await cookies();
-  const favoritesCookie = cookieStore.get("favorites");
-  return favoritesCookie ? JSON.parse(favoritesCookie.value) : [];
+  try {
+    const cookieStore = await cookies();
+    const favoritesCookie = cookieStore.get("favorites");
+
+    if (!favoritesCookie) {
+      return [];
+    }
+
+    try {
+      return JSON.parse(favoritesCookie.value);
+    } catch (error) {
+      console.error("Failed to parse favorites cookie:", error);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error retrieving favorites:", error);
+    throw new Error("Failed to retrieve favorites. Please try again later.");
+  }
 }

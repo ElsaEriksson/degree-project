@@ -57,10 +57,10 @@ router.post("/order", async (req: Request, res: Response) => {
       [cart_id]
     );
 
-    res.status(201).json({ message: "Order placed successfully!", orderId });
+    res.status(201).json({ success: true, orderId: orderId });
   } catch (error: any) {
     console.error("Error placing order:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "An unexpected error occurred." });
   }
 });
 
@@ -89,10 +89,14 @@ router.post("/order-items", async (req: Request, res: Response) => {
       [values]
     );
 
-    res.status(201).json({ message: "Order items added successfully!" });
+    res
+      .status(201)
+      .json({ success: true, message: "Order items added successfully!" });
   } catch (error: any) {
     console.error("Error adding order items:", error);
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ success: false, error: "An unexpected error occurred." });
   }
 });
 
@@ -100,7 +104,7 @@ router.get("/orders/:userId", async (req: Request, res: Response) => {
   const userId = Number(req.params.userId);
 
   if (isNaN(userId)) {
-    res.status(400).json({ error: "Invalid user ID" });
+    res.status(400).json({ message: "Invalid user ID" });
     return;
   }
 
@@ -174,7 +178,8 @@ router.get("/orders/:userId", async (req: Request, res: Response) => {
 
     res.json(ordersList);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ error: "An unexpected error occurred." });
   }
 });
 
@@ -182,7 +187,7 @@ router.get("/order/:orderId", async (req: Request, res: Response) => {
   const orderId = Number(req.params.orderId);
 
   if (isNaN(orderId)) {
-    res.status(400).json({ error: "Invalid order ID" });
+    res.status(400).json({ message: "Invalid order ID" });
     return;
   }
 
@@ -219,7 +224,7 @@ router.get("/order/:orderId", async (req: Request, res: Response) => {
     );
 
     if (results.length === 0) {
-      res.status(404).json({ error: "Order not found" });
+      res.status(404).json({ message: "Order not found" });
       return;
     }
 
@@ -244,7 +249,8 @@ router.get("/order/:orderId", async (req: Request, res: Response) => {
 
     res.json(orderWithExtraData);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error("Error fetching orderr:", error);
+    res.status(500).json({ error: "An unexpected error occurred." });
   }
 });
 
