@@ -4,6 +4,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2";
 import pool from "../config/db";
 import dotenv from "dotenv";
 import { User } from "../api/definitions";
+import { body, validationResult } from "express-validator";
 
 dotenv.config();
 
@@ -53,90 +54,75 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/register", async (req: Request, res: Response) => {
-  try {
-    const { first_name, last_name, email, password, role } = req.body;
+const registerValidation = [
+  body("first_name")
+    .isLength({ min: 2 })
+    .withMessage("First name must be at least 2 characters long.")
+    .matches(/^[A-Za-z\s]+$/)
+    .withMessage("First name can only contain letters and spaces."),
+  body("last_name")
+    .isLength({ min: 2 })
+    .withMessage("Last name must be at least 2 characters long.")
+    .matches(/^[A-Za-z\s]+$/)
+    .withMessage("Last name can only contain letters and spaces."),
+  body("email").isEmail().withMessage("Invalid email format."),
+  body("password")
+    .isLength({ min: 8 })
+    .withMessage("Password must be at least 8 characters long.")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    )
+    .withMessage(
+      "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."
+    ),
+];
 
-    if (!first_name || !last_name || !email || !password) {
-      res.status(400).json({ error: "All fields are required." });
-      return;
-    }
+router.post(
+  "/register",
+  registerValidation,
+  async (req: express.Request, res: express.Response) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res
+          .status(400)
+          .json({ success: false, message: errors.array()[0].msg });
+        return;
+      }
 
-    if (first_name.length < 2 || last_name.length < 2) {
-      res.status(400).json({
-        error: "First name and last name must be at least 2 characters long.",
+      const { first_name, last_name, email, password, role } = req.body;
+
+      const [existingUser] = await pool.query<RowDataPacket[]>(
+        "SELECT * FROM Users WHERE email = ?",
+        [email]
+      );
+
+      if (existingUser.length > 0) {
+        res
+          .status(400)
+          .json({ success: false, message: "E-mail already exists." });
+        return;
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      await pool.query<ResultSetHeader>(
+        `INSERT INTO Users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)`,
+        [first_name, last_name, email, hashedPassword, role || "user"]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: "Registration successfull!",
       });
-      return;
-    }
-
-    const nameRegex = /^[A-Za-z\s]+$/;
-    if (!nameRegex.test(first_name) || !nameRegex.test(last_name)) {
-      res.status(400).json({
-        error: "First name and last name can only contain letters and spaces.",
+    } catch (error) {
+      console.error("Registration error:", error);
+      res.status(500).json({
+        success: false,
+        message: "An unexpected error occurred. Please try again later.",
       });
-      return;
     }
-
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      res.status(400).json({ error: "Invalid email format." });
-      return;
-    }
-
-    const [existingUser] = await pool.query<RowDataPacket[]>(
-      "SELECT * FROM Users WHERE email = ?",
-      [email]
-    );
-
-    if (existingUser.length > 0) {
-      res.status(400).json({ error: "Email already exists." });
-      return;
-    }
-
-    if (password.length < 8) {
-      res
-        .status(400)
-        .json({ error: "Password must be at least 8 characters long." });
-      return;
-    }
-
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!passwordRegex.test(password)) {
-      res.status(400).json({
-        error:
-          "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
-      });
-      return;
-    }
-
-    const allowedRoles = ["user", "admin"];
-    if (role && !allowedRoles.includes(role)) {
-      res.status(400).json({ error: "Invalid role." });
-      return;
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const [result] = await pool.query<ResultSetHeader>(
-      `INSERT INTO Users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)`,
-      [first_name, last_name, email, hashedPassword, role || "user"]
-    );
-
-    const newUserId = result.insertId;
-
-    res.status(201).json({
-      user: {
-        user_id: newUserId,
-        first_name,
-        email,
-        role: role || "user",
-      },
-    });
-  } catch (error) {
-    console.error("Registration error:", error);
-    res.status(500).json({ error: "An error occurred during registration" });
   }
-});
+);
 
 export default router;

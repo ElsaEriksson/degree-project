@@ -24,16 +24,82 @@ const RegisterSchema = z.object({
     ),
 });
 
-export type State = {
-  errors?: {
-    firstName?: string[];
-    lastName?: string[];
-    email?: string[];
-    password?: string[];
-  };
-  message?: string | null;
-  success?: boolean;
+type RegisterResponse = {
+  success: boolean;
+  message: string;
 };
+
+export type State = {
+  errors?: Record<string, string[]>;
+  message?: string | null;
+  success: boolean;
+};
+
+export async function register(
+  prevState: State | undefined,
+  formData: FormData
+): Promise<State> {
+  const validatedFields = RegisterSchema.safeParse({
+    firstName: formData.get("firstName"),
+    lastName: formData.get("lastName"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      errors: validatedFields.error.flatten().fieldErrors || {},
+      message: "Please fix the errors in the form and try again.",
+    };
+  }
+
+  const { firstName, lastName, email, password } = validatedFields.data;
+
+  try {
+    const apiResponse = await registerUser({
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      password,
+    });
+
+    return {
+      success: apiResponse.success,
+      message: apiResponse.message,
+    };
+  } catch (error) {
+    console.error("Registration error:", error);
+    return {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred.",
+    };
+  }
+}
+
+async function registerUser(payload: {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+}): Promise<RegisterResponse> {
+  const response = await fetch(`${BACKEND_URL}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const data = (await response.json()) as RegisterResponse;
+
+  if (!response.ok) {
+    throw new Error(data.message || "Registration failed.");
+  }
+
+  return data;
+}
 
 export async function authenticate(
   prevState: string | undefined,
@@ -51,62 +117,5 @@ export async function authenticate(
       }
     }
     throw error;
-  }
-}
-
-export async function register(
-  prevState: State | undefined,
-  formData: FormData
-) {
-  const validatedFields = RegisterSchema.safeParse({
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    email: formData.get("email"),
-    password: formData.get("password"),
-  });
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: "Invalid input. Please check your registration details.",
-    };
-  }
-
-  try {
-    const { firstName, lastName, email, password } = validatedFields.data;
-
-    const response = await fetch(`${BACKEND_URL}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        password,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        success: false,
-        error: errorData.error || "Registration failed",
-      };
-    }
-
-    const user = await response.json();
-    if (user) {
-      return { success: true, user };
-    }
-    return { success: false, message: "Registration failed" };
-  } catch (error) {
-    return {
-      success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "An unexpected error occurred during registration",
-    };
   }
 }
