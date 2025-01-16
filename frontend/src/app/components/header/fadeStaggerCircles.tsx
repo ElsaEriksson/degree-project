@@ -1,4 +1,4 @@
-export default function FadeStaggerCircles() {
+export default function FadeStaggerCircles({ color }: { color: string }) {
   return (
     <>
       {/* Loading component for auth interaction in header*/}
@@ -8,8 +8,8 @@ export default function FadeStaggerCircles() {
         className="w-11 h-11"
       >
         <circle
-          fill="#000000"
-          stroke="#000000"
+          fill={color}
+          stroke={color}
           strokeWidth="15"
           r="15"
           cx="40"
@@ -26,8 +26,8 @@ export default function FadeStaggerCircles() {
           ></animate>
         </circle>
         <circle
-          fill="#000000"
-          stroke="#000000"
+          fill={color}
+          stroke={color}
           strokeWidth="15"
           r="15"
           cx="100"
@@ -44,8 +44,8 @@ export default function FadeStaggerCircles() {
           ></animate>
         </circle>
         <circle
-          fill="#000000"
-          stroke="#000000"
+          fill={color}
+          stroke={color}
           strokeWidth="15"
           r="15"
           cx="160"

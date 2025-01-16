@@ -13,6 +13,7 @@ import { createOrderWithItems } from "@/app/lib/actions/ordersAndPayment";
 import { updateCookieCart } from "@/app/lib/actions/shoppingCart";
 import { Session } from "next-auth";
 import { CartItems } from "@/app/lib/definitions";
+import FadeStaggerCircles from "../header/fadeStaggerCircles";
 
 interface StripePaymentElementOptions {
   layout?: "tabs" | "accordion" | "auto";
@@ -130,6 +131,7 @@ export default function PaymentForm({
       const orderItems = cartItems.map((item) => ({
         product_id: item.product_id,
         variant_id: item.variant_id,
+        stock_quantity: item.stock_quantity,
         quantity: item.quantity,
         price: item.price,
       }));
@@ -182,11 +184,7 @@ export default function PaymentForm({
         className="w-full py-6 rounded-none flex justify-center bg-black hover:bg-black/90 tracking-wider mt-5"
       >
         <span id="button-text" className="text-base">
-          {isLoading ? (
-            <div className="loading loading-spinner" id="spinner"></div>
-          ) : (
-            "PAY NOW"
-          )}
+          {isLoading ? <FadeStaggerCircles color={"#ffffff"} /> : "PAY NOW"}
         </span>
       </Button>
     </form>

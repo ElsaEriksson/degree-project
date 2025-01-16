@@ -144,7 +144,11 @@ export default function HamburgerNavLinks({
               className="w-full flex h-[48px] items-center gap-2 bg-white p-3 text-sm font-medium hover:bg-gray-100 hover:text-gray-600 lg:hidden border-t-2 border-gray-200"
             >
               <div className="uppercase">
-                {isLoggingOut ? <FadeStaggerCircles /> : "Sign Out"}
+                {isLoggingOut ? (
+                  <FadeStaggerCircles color={"#000000"} />
+                ) : (
+                  "Sign Out"
+                )}
               </div>
             </button>
           ) : (

@@ -35,6 +35,7 @@ export interface OrderData {
 export interface OrderItem {
   product_id: number;
   variant_id: number;
+  stock_quantity: number;
   quantity: number;
   price: number;
 }

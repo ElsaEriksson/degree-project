@@ -60,7 +60,11 @@ export default function HeaderInteractions({
                 className="rounded-lg px-6 py-3 hidden lg:block transition-colors hover:underline tracking-widest"
               >
                 <div className="uppercase font-inconsolata text-black text-base">
-                  {isLoggingOut ? <FadeStaggerCircles /> : "Sign Out"}
+                  {isLoggingOut ? (
+                    <FadeStaggerCircles color={"#000000"} />
+                  ) : (
+                    "Sign Out"
+                  )}
                 </div>
               </button>
             ) : (

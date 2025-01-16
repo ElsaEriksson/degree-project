@@ -103,6 +103,20 @@ export async function createOrderWithItems(
   items: OrderItem[],
   cart_id: number
 ) {
+  for (const item of items) {
+    if (item.stock_quantity <= 0) {
+      throw new Error(
+        `The variant with ID ${item.variant_id} is out of stock and cannot be added to the cart.`
+      );
+    }
+
+    if (item.stock_quantity < item.quantity) {
+      throw new Error(
+        `Only ${item.stock_quantity} items of variant ID ${item.variant_id} are available in stock.`
+      );
+    }
+  }
+
   const orderResult = await createOrder(orderData, cart_id);
 
   if (orderResult.success) {
