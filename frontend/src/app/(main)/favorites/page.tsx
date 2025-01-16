@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import ProductCard from "../../components/plp/productCard";
 import { Suspense } from "react";
 import Pagination from "../../components/pagination";
