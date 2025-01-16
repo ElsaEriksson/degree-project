@@ -17,9 +17,7 @@ export default async function Favorites(
 ): Promise<React.ReactElement> {
   const currentPage = Number((await props.searchParams).page) || 1;
 
-  const favoritesArray = await getFavoritesList();
-
-  const data = await fetchFavoriteProducts(currentPage, favoritesArray);
+  const data = await fetchFavoriteProducts(currentPage);
 
   if (!data) {
     return <div>Error loading products</div>;
