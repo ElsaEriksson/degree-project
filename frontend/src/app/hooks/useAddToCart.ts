@@ -15,7 +15,7 @@ export function useAddToCart(addToCart: AddToCartFunction) {
   const [addedVariants, setAddedVariants] = useState<Record<string, boolean>>(
     {}
   );
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<any | null>(null);
 
   const handleAddToCart = async (
     product: ProductWithVariants,

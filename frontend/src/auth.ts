@@ -2,7 +2,7 @@ import NextAuth, { DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import { authConfig } from "../auth.config";
-import { JWT } from "next-auth/jwt";
+import { JWT } from "next-auth/jwt"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import { migrateCartFromCookiesToDatabase } from "./app/lib/actions/shoppingCart";
 import { LoggedInUser } from "./app/lib/definitions";
 

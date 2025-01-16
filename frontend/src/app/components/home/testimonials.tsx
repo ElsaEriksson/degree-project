@@ -8,7 +8,7 @@ export default function Testimonials() {
         <p className="text-base md:text-lg uppercase font-bold">What a wear</p>
         <p className="text-xl font-bodoni md:text-3xl uppercase">Bāzelle</p>
         <p className="text-xl font-playfair md:text-3xl font-medium">
-          L'Ofivue
+          L&apos;Ofivue
         </p>
         <p className="text-xl font-bodoni md:text-3xl uppercase font-bold">
           Vogenta

@@ -113,7 +113,7 @@ async function addToCartForGuestUser(
   try {
     const cookieStore = await cookies();
     const cartCookie = cookieStore.get("cart");
-    let cart: CartItems[] = cartCookie ? JSON.parse(cartCookie.value) : [];
+    const cart: CartItems[] = cartCookie ? JSON.parse(cartCookie.value) : [];
 
     const existingItemIndex = cart.findIndex(
       (item) => item.variant_id === variant.variant_id
