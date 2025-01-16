@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Button } from "./ui/button";
 import { Instagram } from "lucide-react";
 import { AtSymbolIcon } from "@heroicons/react/24/outline";
@@ -20,15 +19,9 @@ export default function Footer() {
 
             {/* Navigation Links */}
             <nav className="grid gap-2 text-base">
-              <Link href="/store" className="hover:underline">
-                Store
-              </Link>
-              <Link href="/our-story" className="hover:underline">
-                About
-              </Link>
-              <Link href="/contact" className="hover:underline">
-                Contact
-              </Link>
+              <p>Store</p>
+              <p>About</p>
+              <p>Contact</p>
               <p>FAQ</p>
               <p>Press</p>
               <p>Terms & Conditions</p>
@@ -53,7 +46,10 @@ export default function Footer() {
                   <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
                 </div>
 
-                <Button className="rounded-full border-2 hover:bg-black hover:text-white transition-colors">
+                <Button
+                  disabled
+                  className="rounded-full border-2 hover:bg-black hover:text-white transition-colors"
+                >
                   SUBSCRIBE
                 </Button>
               </div>
