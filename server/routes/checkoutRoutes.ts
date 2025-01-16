@@ -44,14 +44,12 @@ router.post("/create-payment-intent", async (req: Request, res: Response) => {
       },
     });
 
-    console.log(paymentIntent);
-
     res.send({
       clientSecret: paymentIntent.client_secret,
     });
   } catch (error) {
     console.error("Error creating payment intent:", error);
-    res.status(500).send({ error: "Failed to create payment intent" });
+    res.status(500).send({ error: "An unexpected error occurred." });
   }
 });
 

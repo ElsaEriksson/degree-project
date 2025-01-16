@@ -14,7 +14,7 @@ export async function fetchCollections(): Promise<Collection[] | undefined> {
 
     return data;
   } catch (error) {
-    console.error("Database Error:", error);
+    console.error("Error fetching collections", error);
     return undefined;
   }
 }

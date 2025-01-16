@@ -15,7 +15,8 @@ router.get("/", async (req: Request, res: Response) => {
 
     res.json(collections);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error("Error fetching collections:", error);
+    res.status(500).json({ error: "An unexpected error occurred." });
   }
 });
 
