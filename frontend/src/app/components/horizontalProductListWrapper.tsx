@@ -10,8 +10,6 @@ export default async function HorizontalProductListWrapper({
 }: {
   product?: ProductWithVariants;
 }) {
-  await new Promise((resolve) => setTimeout(resolve, 6000));
-
   const products = product
     ? await fetchProductsWithCollectionId(product.collection_id)
     : await fetchFeaturedProducts();
