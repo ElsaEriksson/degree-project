@@ -15,7 +15,7 @@ export function useAddToCart(addToCart: AddToCartFunction) {
   const [addedVariants, setAddedVariants] = useState<Record<string, boolean>>(
     {}
   );
-  const [error, setError] = useState<any | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleAddToCart = async (
     product: ProductWithVariants,
@@ -43,8 +43,12 @@ export function useAddToCart(addToCart: AddToCartFunction) {
       }
 
       return result;
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
       throw error;
     }
   };
