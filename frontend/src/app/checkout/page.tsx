@@ -8,11 +8,14 @@ export default async function Checkout() {
   const cartItems: CartItems[] = await getCartItems();
   const session = await auth();
 
-  const deliveryCost = 5.0;
+  const isCartEmpty = !cartItems || cartItems.length === 0;
+
+  const deliveryCost = isCartEmpty ? 0.0 : 5.0;
   const itemsTotalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
+
   const totalPrice = itemsTotalPrice + deliveryCost;
 
   return (
@@ -21,7 +24,11 @@ export default async function Checkout() {
       <div className="uppercase text-xl tracking-wide	pb-4">
         Shopping bag items
       </div>
-      <ItemsInCart cartItems={cartItems} session={session} />
+      {isCartEmpty ? (
+        <p className="py-4">Your cart is empty.</p>
+      ) : (
+        <ItemsInCart cartItems={cartItems} session={session} />
+      )}
       <div className="border border-1 mb-2 mt-6"></div>
       {/* Order summary */}
       <div className="uppercase pt-2 pb-2 text-xl tracking-wide	">
@@ -29,7 +36,7 @@ export default async function Checkout() {
       </div>
       <div className="grid grid grid-cols-[1fr_auto] w-full py-1">
         <p className="font-normal text-base">SHIPPING</p>
-        <p className="font-normal text-base">$5.00</p>
+        <p className="font-normal text-base">${deliveryCost}.00</p>
       </div>
       <div className="grid grid grid-cols-[1fr_auto] w-full pt-1 pb-3">
         <p className="font-normal">TOTAL</p>
@@ -37,11 +44,15 @@ export default async function Checkout() {
       </div>
       <div className="border border-1 my-2"></div>
       {/* Wrapper for payment form section */}
-      <PaymentFormWrapper
-        cartItems={cartItems}
-        totalPrice={totalPrice}
-        session={session}
-      ></PaymentFormWrapper>
+      {isCartEmpty ? (
+        ""
+      ) : (
+        <PaymentFormWrapper
+          cartItems={cartItems}
+          totalPrice={totalPrice}
+          session={session}
+        ></PaymentFormWrapper>
+      )}
     </div>
   );
 }

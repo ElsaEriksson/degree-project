@@ -1,3 +1,4 @@
+"use client";
 import { useSearchParams } from "next/navigation";
 import Breadcrumbs from "../breadcrumbs";
 import { ProductWithVariants } from "@/app/lib/definitions";

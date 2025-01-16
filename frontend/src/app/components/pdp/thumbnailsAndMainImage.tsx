@@ -1,3 +1,4 @@
+"use client";
 import { ProductWithVariants } from "@/app/lib/definitions";
 import { cn } from "@/app/utils/utils";
 import { ChevronLeft, ChevronRight, Play } from "lucide-react";

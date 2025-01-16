@@ -4,7 +4,6 @@ import { fetchProductsByCollectionName } from "@/app/lib/data/getProducts";
 import { ProductWithVariants } from "@/app/lib/definitions";
 import { HoverProvider } from "@/app/providers";
 import { SlidersHorizontal } from "lucide-react";
-import { Suspense } from "react";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -46,21 +45,19 @@ export default async function ProductDetails(
         </div>
 
         {/* Product list */}
-        <Suspense fallback={"loading..."}>
-          {isProductListEmpty ? (
-            <div className="text-center text-gray-500 mt-10">
-              No products found matching your search.
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 w-full">
-              {data.products.map((product: ProductWithVariants) => (
-                <HoverProvider key={product.product_id}>
-                  <ProductCard product={product} />
-                </HoverProvider>
-              ))}
-            </div>
-          )}
-        </Suspense>
+        {isProductListEmpty ? (
+          <div className="text-center text-gray-500 mt-10">
+            No products found matching your search.
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 w-full">
+            {data.products.map((product: ProductWithVariants) => (
+              <HoverProvider key={product.product_id}>
+                <ProductCard product={product} />
+              </HoverProvider>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

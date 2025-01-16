@@ -3,20 +3,15 @@ import HeroImages from "../components/home/heroImages";
 import SeeAllProductsButton from "../components/home/seeAllProductsButton";
 import Testimonials from "../components/home/testimonials";
 import ScanIcon from "../components/home/scanIcon";
-import { fetchFeaturedProducts } from "../lib/data/getProducts";
-import HorizontalProductList from "../components/horizontalProductList";
-import { fetchCollections } from "../lib/data/getCollections";
-import CollectionCard from "../components/home/collections";
+import Collections from "../components/home/collections";
+import { Suspense } from "react";
+import {
+  AnimatedCollectionsSkeleton,
+  AnimatedProductListingSkeleton,
+} from "../components/skeletons";
+import HorizontalProductListWrapper from "../components/horizontalProductListWrapper";
 
 export default async function Home() {
-  const featuredProducts = await fetchFeaturedProducts();
-  const collections = await fetchCollections();
-
-  const isProductListEmppty =
-    !featuredProducts || featuredProducts.length === 0;
-
-  const isCollectoinsListEmpty = !collections || collections.length === 0;
-
   return (
     <>
       {/* Landing page */}
@@ -40,20 +35,9 @@ export default async function Home() {
           Discover our exclusive collections of handcrafted hats, made with
           passion and precision. Find your next signature hat today!
         </p>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {isCollectoinsListEmpty ? (
-            <div className="text-center text-gray-500 mt-10 pb-10">
-              No collections found.
-            </div>
-          ) : (
-            collections.map((collection, index) => (
-              <CollectionCard
-                key={index}
-                collection={collection}
-              ></CollectionCard>
-            ))
-          )}
-        </div>
+        <Suspense fallback={<AnimatedCollectionsSkeleton />}>
+          <Collections />
+        </Suspense>
       </section>
 
       {/* Featured products list */}
@@ -62,15 +46,13 @@ export default async function Home() {
           FEATURED PRODUCTS
         </h2>
         <SeeAllProductsButton />
-        {isProductListEmppty ? (
-          <div className="text-center text-gray-500 mt-10">
-            No products found.
-          </div>
-        ) : (
-          <HorizontalProductList
-            products={featuredProducts}
-          ></HorizontalProductList>
-        )}
+        <Suspense
+          fallback={
+            <AnimatedProductListingSkeleton></AnimatedProductListingSkeleton>
+          }
+        >
+          <HorizontalProductListWrapper />
+        </Suspense>
       </section>
     </>
   );
