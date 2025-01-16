@@ -5,6 +5,9 @@ import Pagination from "../../components/pagination";
 import { HoverProvider } from "../../providers";
 import { fetchFavoriteProducts } from "@/app/lib/data/getProducts";
 import { ProductWithVariants } from "@/app/lib/definitions";
+import { getFavoritesList } from "@/app/lib/actions/favorites";
+
+export const dynamic = "force-dynamic";
 
 type PageProps = {
   searchParams: Promise<{
@@ -17,12 +20,7 @@ export default async function Favorites(
 ): Promise<React.ReactElement> {
   const currentPage = Number((await props.searchParams).page) || 1;
 
-  const cookieStore = await cookies();
-  const favorites = cookieStore.get("favorites");
-  let favoritesArray = "";
-  if (favorites?.value) {
-    favoritesArray = JSON.parse(favorites?.value).toString() ?? "";
-  }
+  const favoritesArray = await getFavoritesList();
 
   const data = await fetchFavoriteProducts(currentPage, favoritesArray);
 

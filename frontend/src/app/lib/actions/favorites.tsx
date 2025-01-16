@@ -26,3 +26,14 @@ export async function getFavorites() {
     throw new Error("Failed to retrieve favorites. Please try again later.");
   }
 }
+
+export async function getFavoritesList(): Promise<string> {
+  const cookieStore = await cookies();
+  const favorites = cookieStore.get("favorites");
+
+  if (favorites?.value) {
+    return JSON.parse(favorites.value).toString();
+  }
+
+  return "";
+}
