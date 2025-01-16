@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import RemoveCartItem from "./removeCartItem";
 import UpdateCartItem from "./updateCartItem";

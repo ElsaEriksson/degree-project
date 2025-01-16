@@ -231,7 +231,7 @@ router.get("/cart-items-user/:userId", async (req: Request, res: Response) => {
 
     res.status(200).json(rows);
   } catch (error) {
-    console.error(`Error fetching cart items for cart_id ${user_id}:`, error);
+    console.error(`Error fetching cart items for user_id ${user_id}:`, error);
     res.status(500).json({ error: "An unexpected error occurred." });
   }
 });

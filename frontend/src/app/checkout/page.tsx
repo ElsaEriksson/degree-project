@@ -1,8 +1,8 @@
-import ItemsInCart from "../components/cart/itemsInCart";
 import PaymentFormWrapper from "../components/checkout/paymentFormWrapper";
 import { getCartItems } from "../lib/actions/shoppingCart";
 import { auth } from "@/auth";
 import { CartItems } from "../lib/definitions";
+import ItemsInCart from "../components/cart/itemsInCart";
 
 export default async function Checkout() {
   const cartItems: CartItems[] = await getCartItems();
@@ -21,7 +21,7 @@ export default async function Checkout() {
       <div className="uppercase text-xl tracking-wide	pb-4">
         Shopping bag items
       </div>
-      <ItemsInCart cartItems={cartItems} session={session}></ItemsInCart>
+      <ItemsInCart cartItems={cartItems} session={session} />
       <div className="border border-1 mb-2 mt-6"></div>
       {/* Order summary */}
       <div className="uppercase pt-2 pb-2 text-xl tracking-wide	">
@@ -29,11 +29,11 @@ export default async function Checkout() {
       </div>
       <div className="grid grid grid-cols-[1fr_auto] w-full py-1">
         <p className="font-normal text-base">SHIPPING</p>
-        <p className="font-normal text-base">$5</p>
+        <p className="font-normal text-base">$5.00</p>
       </div>
       <div className="grid grid grid-cols-[1fr_auto] w-full pt-1 pb-3">
         <p className="font-normal">TOTAL</p>
-        <p className="font-normal">${totalPrice}</p>
+        <p className="font-normal">${totalPrice}.00</p>
       </div>
       <div className="border border-1 my-2"></div>
       {/* Wrapper for payment form section */}

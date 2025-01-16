@@ -42,7 +42,7 @@ export default function ProductCard({
             {product.name}
           </p>
           <p className="text-xs font-semibold pt-1 md:text-sm xl:text-base">
-            ${product.price}
+            ${product.price}.00
           </p>
         </div>
       </div>

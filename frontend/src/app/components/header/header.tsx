@@ -7,6 +7,10 @@ import Cart from "../cart/cart";
 import { getCartItems } from "@/app/lib/actions/shoppingCart";
 import { auth } from "@/auth";
 import { CartItems } from "@/app/lib/definitions";
+import CartWrapper from "../cart/cartWrapper";
+import { Suspense } from "react";
+import { CardsSkeleton } from "../skeletons";
+import CartHeader from "../cart/cartHeader";
 
 export default async function Header() {
   const favorites = await getFavorites();
@@ -38,7 +42,12 @@ export default async function Header() {
 
       {/* Sliding panels for cart */}
       <SlidingPanel side="right">
-        <Cart cartItems={cartItems} session={session} />
+        <div className="p-4 flex flex-col h-full max-h-screen relative">
+          <CartHeader />
+          <Suspense fallback={<CardsSkeleton />}>
+            <CartWrapper />
+          </Suspense>
+        </div>
       </SlidingPanel>
     </header>
   );

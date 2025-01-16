@@ -60,7 +60,7 @@ export default function Product({
               </h1>
               <div className="flex justify-between items-center w-full">
                 <p className="md:text-lg lg:text-xl font-medium mt-2">
-                  ${product.price}
+                  ${product.price}.00
                 </p>
                 <FavoriteIcon productId={product.product_id}></FavoriteIcon>
               </div>
