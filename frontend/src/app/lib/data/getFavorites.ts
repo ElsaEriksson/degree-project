@@ -5,7 +5,13 @@ export async function getFavoritesList(): Promise<string> {
   const favorites = cookieStore.get("favorites");
 
   if (favorites?.value) {
-    return JSON.parse(favorites.value).toString();
+    try {
+      const parsed = JSON.parse(favorites.value);
+      return Array.isArray(parsed) ? parsed.toString() : "";
+    } catch {
+      console.warn("Failed to parse favorites cookie");
+      return "";
+    }
   }
 
   return "";
