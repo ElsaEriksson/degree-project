@@ -6,8 +6,6 @@ import { fetchFavoriteProducts } from "@/app/lib/data/getProducts";
 import { ProductWithVariants } from "@/app/lib/definitions";
 import { getFavoritesList } from "@/app/lib/actions/favorites";
 
-export const dynamic = "force-dynamic";
-
 type PageProps = {
   searchParams: Promise<{
     page?: string;
