@@ -1,4 +1,3 @@
-import { getFavoritesList } from "../actions/favorites";
 import { ProductWithVariants } from "../definitions";
 
 const BACKEND_URL = process.env.BACKEND_URL;
