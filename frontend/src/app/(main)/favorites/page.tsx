@@ -4,6 +4,7 @@ import Pagination from "../../components/pagination";
 import { HoverProvider } from "../../providers";
 import { fetchFavoriteProducts } from "@/app/lib/data/getProducts";
 import { ProductWithVariants } from "@/app/lib/definitions";
+import { getFavoritesList } from "@/app/lib/actions/favorites";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,9 @@ export default async function Favorites(
 ): Promise<React.ReactElement> {
   const currentPage = Number((await props.searchParams).page) || 1;
 
-  const data = await fetchFavoriteProducts(currentPage);
+  const favoritesArray = await getFavoritesList();
+
+  const data = await fetchFavoriteProducts(currentPage, favoritesArray);
 
   if (!data) {
     return <div>Error loading products</div>;

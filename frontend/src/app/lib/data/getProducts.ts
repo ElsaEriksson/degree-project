@@ -122,7 +122,10 @@ export async function fetchProducts(
   }
 }
 
-export async function fetchFavoriteProducts(page: number = 1): Promise<
+export async function fetchFavoriteProducts(
+  page: number = 1,
+  favoriteIds: string = ""
+): Promise<
   | {
       products: ProductWithVariants[];
       currentPage: number;
@@ -132,10 +135,8 @@ export async function fetchFavoriteProducts(page: number = 1): Promise<
   | undefined
 > {
   try {
-    const favoritesArray = await getFavoritesList();
-
     const res = await fetch(
-      `${BACKEND_URL}/favorite-products-with-variants?page=${page}&favoriteIds=${favoritesArray}`
+      `${BACKEND_URL}/favorite-products-with-variants?page=${page}&favoriteIds=${favoriteIds}`
     );
 
     if (!res.ok) {
