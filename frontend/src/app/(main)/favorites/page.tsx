@@ -5,6 +5,8 @@ import { HoverProvider } from "../../providers";
 import { fetchFavoriteProducts } from "@/app/lib/data/getProducts";
 import { ProductWithVariants } from "@/app/lib/definitions";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = {
   searchParams: Promise<{
     page?: string;
