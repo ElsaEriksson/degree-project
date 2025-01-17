@@ -4,7 +4,7 @@ import Pagination from "../../components/pagination";
 import { HoverProvider } from "../../providers";
 import { fetchFavoriteProducts } from "@/app/lib/data/getProducts";
 import { ProductWithVariants } from "@/app/lib/definitions";
-import { getFavoritesList } from "@/app/lib/data/getFavorites";
+import { getFavoritesList } from "@/app/lib/actions/favorites";
 
 type PageProps = {
   searchParams: Promise<{
